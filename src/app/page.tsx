@@ -52,10 +52,10 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             <Suspense fallback={<LoadingSkeleton />}>
-              <Quests questPromise={questPromise} />
+              <WellnessNook />
             </Suspense>
             <Suspense fallback={<LoadingSkeleton />}>
-              <WellnessNook />
+              <Quests questPromise={questPromise} />
             </Suspense>
             <div className="space-y-8">
               <Suspense fallback={<LoadingSkeleton />}>
