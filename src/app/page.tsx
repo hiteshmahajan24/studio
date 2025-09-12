@@ -50,7 +50,7 @@ export default async function Home() {
             </Suspense>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
             <Suspense fallback={<LoadingSkeleton />}>
               <WellnessNook />
             </Suspense>
