@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "student-avatar",
+      "description": "Avatar for the logged-in student",
+      "imageUrl": "https://picsum.photos/seed/student1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "mentor-1",
+      "description": "Avatar for mentor Evelyn Reed",
+      "imageUrl": "https://picsum.photos/seed/mentor1/100/100",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "mentor-2",
+      "description": "Avatar for mentor David Chen",
+      "imageUrl": "https://picsum.photos/seed/mentor2/100/100",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "mentor-3",
+      "description": "Avatar for mentor Sarah Jones",
+      "imageUrl": "https://picsum.photos/seed/mentor3/100/100",
+      "imageHint": "woman portrait"
+    }
+  ]
 }
