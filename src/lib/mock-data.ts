@@ -79,3 +79,17 @@ export const mockRecommendations: PersonalizedRecommendationsOutput = {
         }
       ]
 };
+
+export type RegisteredEvent = {
+  id: string;
+  title: string;
+  date: Date;
+  location: string;
+  type: 'Webinar' | 'Workshop' | 'Conference';
+};
+
+export const registeredEvents: RegisteredEvent[] = [
+    { id: '1', title: 'AI in Modern Applications', date: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), location: 'Online', type: 'Webinar' },
+    { id: '2', title: 'Advanced React Patterns', date: new Date(new Date().getTime() + 12 * 24 * 60 * 60 * 1000), location: 'Tech Hub Auditorium', type: 'Workshop' },
+    { id: '3', title: 'Future of Tech Summit', date: new Date(new Date().getTime() + 20 * 24 * 60 * 60 * 1000), location: 'Convention Center', type: 'Conference' },
+];
