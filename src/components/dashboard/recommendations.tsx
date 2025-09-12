@@ -7,11 +7,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Handshake, Lightbulb, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import Link from "next/link";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 type RecommendationsProps = {
   recommendationsPromise: Promise<PersonalizedRecommendationsOutput>;
+  className?: string;
 };
 
 const recommendationDetails: { [key: string]: { name: string, description: string } } = {
@@ -29,7 +30,7 @@ const recommendationIcons: Record<string, React.ElementType> = {
   project: Lightbulb,
 };
 
-export async function Recommendations({ recommendationsPromise }: RecommendationsProps) {
+export async function Recommendations({ recommendationsPromise, className }: RecommendationsProps) {
   const { recommendations } = await recommendationsPromise;
 
   const getDetails = (type: string, id: string) => {
@@ -37,21 +38,21 @@ export async function Recommendations({ recommendationsPromise }: Recommendation
   };
 
   return (
-    <Card>
+    <Card className={cn("flex flex-col", className)}>
       <CardHeader>
         <CardTitle>For You</CardTitle>
         <CardDescription>AI-powered recommendations based on your profile and activity.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {recommendations.map((rec) => (
-          <div key={rec.itemId} className="flex items-center justify-between gap-4 p-3 rounded-lg transition-colors hover:bg-muted/50">
+      <CardContent className="space-y-4 flex-1">
+        {recommendations.slice(0, 3).map((rec) => ( // Limit to 3 for a cleaner look
+          <div key={rec.itemId} className="flex items-center justify-between gap-4 p-2.5 rounded-lg transition-colors hover:bg-muted/50">
             <div className="flex items-center gap-4">
               <div className="bg-muted p-2 rounded-full">
                 {React.createElement(recommendationIcons[rec.type] || Info, { className: "w-5 h-5 text-muted-foreground" })}
               </div>
-              <div>
-                <p className="font-semibold">{getDetails(rec.type, rec.itemId).name}</p>
-                <p className="text-sm text-muted-foreground">{getDetails(rec.type, rec.itemId).description}</p>
+              <div className="truncate">
+                <p className="font-semibold text-sm truncate">{getDetails(rec.type, rec.itemId).name}</p>
+                <p className="text-xs text-muted-foreground truncate">{getDetails(rec.type, rec.itemId).description}</p>
               </div>
             </div>
             <Popover>
