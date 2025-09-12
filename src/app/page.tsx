@@ -11,6 +11,7 @@ import { Suspense } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Networking } from "@/components/dashboard/networking";
+import { SkillsGrowth } from "@/components/dashboard/skills-growth";
 
 function LoadingSkeleton({ className }: { className?: string }) {
   return (
@@ -45,6 +46,10 @@ export default async function Home() {
           
           <Suspense fallback={<LoadingSkeleton />}>
             <Recommendations recommendationsPromise={recommendationsPromise} />
+          </Suspense>
+
+          <Suspense fallback={<LoadingSkeleton className="lg:col-span-4"/>}>
+            <SkillsGrowth />
           </Suspense>
           
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
