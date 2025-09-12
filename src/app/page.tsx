@@ -15,6 +15,7 @@ import { UpcomingSessions } from "@/components/dashboard/upcoming-sessions";
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Networking } from "@/components/dashboard/networking";
 
 function LoadingSkeleton({ className }: { className?: string }) {
   return (
@@ -57,23 +58,26 @@ export default async function Home() {
             <Recommendations recommendationsPromise={recommendationsPromise} />
           </Suspense>
           
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
-            <div className="lg:col-span-3 space-y-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               <Suspense fallback={<LoadingSkeleton />}>
                 <Mentorship />
               </Suspense>
               <Suspense fallback={<LoadingSkeleton />}>
-                <JobTracking />
-              </Suspense>
-            </div>
-            <div className="lg:col-span-2 space-y-8">
-              <Suspense fallback={<LoadingSkeleton />}>
-                <Quests questPromise={questPromise} />
-              </Suspense>
-              <Suspense fallback={<LoadingSkeleton />}>
                 <UpcomingSessions />
               </Suspense>
-            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              <Suspense fallback={<LoadingSkeleton />}>
+                <JobTracking />
+              </Suspense>
+               <Suspense fallback={<LoadingSkeleton />}>
+                <Quests questPromise={questPromise} />
+              </Suspense>
+          </div>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+             <Suspense fallback={<LoadingSkeleton />}>
+                <Networking />
+              </Suspense>
           </div>
         </main>
       </div>
