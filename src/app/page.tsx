@@ -49,14 +49,12 @@ export default async function Home() {
               />
             </Suspense>
           </div>
+          
+          <Suspense fallback={<LoadingSkeleton className="lg:col-span-4"/>}>
+            <SkillsGrowth />
+          </Suspense>
 
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
-            <Suspense fallback={<LoadingSkeleton />}>
-              <WellnessNook />
-            </Suspense>
-            <Suspense fallback={<LoadingSkeleton />}>
-              <Quests questPromise={questPromise} />
-            </Suspense>
             <div className="space-y-8">
               <Suspense fallback={<LoadingSkeleton />}>
                 <Mentorship />
@@ -65,11 +63,13 @@ export default async function Home() {
                 <UpcomingSessions />
               </Suspense>
             </div>
+            <Suspense fallback={<LoadingSkeleton />}>
+              <Quests questPromise={questPromise} />
+            </Suspense>
+            <Suspense fallback={<LoadingSkeleton />}>
+              <WellnessNook />
+            </Suspense>
           </div>
-          
-          <Suspense fallback={<LoadingSkeleton className="lg:col-span-4"/>}>
-            <SkillsGrowth />
-          </Suspense>
           
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-2">
             <Suspense fallback={<LoadingSkeleton />}>
