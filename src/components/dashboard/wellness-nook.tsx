@@ -26,7 +26,7 @@ export function WellnessNook() {
     const wellnessImage = PlaceHolderImages.find((img) => img.id === "wellness-bg");
 
     return (
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden flex flex-col">
             {wellnessImage && (
                  <Image
                     src={wellnessImage.imageUrl}
