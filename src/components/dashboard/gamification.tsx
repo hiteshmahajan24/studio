@@ -63,7 +63,7 @@ export function Gamification({ className }: { className?: string }) {
               </TooltipProvider>
             </div>
              <div className="border-t border-border pt-6">
-                <h3 className="text-base font-semibold mb-2">Next Badge: {nextBadge.name}</h3>
+                <h3 className="text-base font-semibold mb-2">Suggested Next Badge: {nextBadge.name}</h3>
                 <Progress value={nextBadge.progress} className="h-2 mb-2" />
                 <p className="text-xs text-muted-foreground">{nextBadge.description}</p>
              </div>
