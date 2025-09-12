@@ -1,4 +1,7 @@
 import { Award, Star, Trophy, type LucideIcon } from 'lucide-react';
+import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
+import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
+
 
 export type JobApplication = {
   id: string;
@@ -43,4 +46,35 @@ export const user = {
     name: 'Alex Martinez',
     knowledgeCoins: 1250,
     leaderboardRank: 12,
+};
+
+export const mockAIQuest: AIQuestOutput = {
+    questTitle: 'Engage with the Community',
+    questDescription: 'Post a helpful article on a topic you are passionate about and receive feedback from 3 peers.',
+    knowledgeCoinsReward: 50,
+};
+
+export const mockRecommendations: PersonalizedRecommendationsOutput = {
+    "recommendations": [
+        {
+          "type": "mentor",
+          "itemId": "mentor123",
+          "reason": "This mentor has expertise in your area of interest, especially in AI and machine learning."
+        },
+        {
+          "type": "job",
+          "itemId": "job456",
+          "reason": "This frontend developer role at a fast-growing startup matches your skills in React and interest in innovative projects."
+        },
+        {
+            "type": "article",
+            "itemId": "article789",
+            "reason": "Given your interest in web development, this article on the future of web components will be a great read."
+        },
+        {
+            "type": "project",
+            "itemId": "projectABC",
+            "reason": "Contribute to this open-source project to apply your web development skills and collaborate with others."
+        }
+      ]
 };

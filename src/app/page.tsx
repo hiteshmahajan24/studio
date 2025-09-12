@@ -1,12 +1,7 @@
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { user } from "@/lib/mock-data";
+import { user, mockRecommendations, mockAIQuest } from "@/lib/mock-data";
 import { Recommendations } from "@/components/dashboard/recommendations";
-import {
-  getPersonalizedRecommendations,
-  PersonalizedRecommendationsInput,
-} from "@/ai/flows/personalized-recommendations";
-import { generateAIQuest, AIQuestInput } from "@/ai/flows/ai-quest-generator";
 import { Gamification } from "@/components/dashboard/gamification";
 import { Quests } from "@/components/dashboard/quests";
 import { JobTracking } from "@/components/dashboard/job-tracking";
@@ -32,18 +27,8 @@ function LoadingSkeleton({ className }: { className?: string }) {
 }
 
 export default async function Home() {
-  const studentProfile: PersonalizedRecommendationsInput = {
-    studentProfile: "A 3rd-year computer science student interested in web development, machine learning, and entrepreneurship. Actively contributes to open-source projects on GitHub.",
-    studentActivity: "Viewed 5 articles on React, applied for 2 front-end developer jobs, and followed 3 mentors with expertise in AI.",
-  };
-
-  const questInput: AIQuestInput = {
-    studentProfile: studentProfile.studentProfile,
-    platformFeatures: ["articles", "projects", "jobs", "mentorship", "groups", "events"],
-  };
-
-  const recommendationsPromise = getPersonalizedRecommendations(studentProfile);
-  const questPromise = generateAIQuest(questInput);
+  const recommendationsPromise = Promise.resolve(mockRecommendations);
+  const questPromise = Promise.resolve(mockAIQuest);
 
   return (
     <div className="flex min-h-screen w-full">
