@@ -38,22 +38,21 @@ export default async function Home() {
       <div className="flex flex-1 flex-col sm:pl-16">
         <DashboardHeader studentName={user.name} />
         <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
-          
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             <Suspense fallback={<LoadingSkeleton className="lg:col-span-4" />}>
               <Gamification className="md:col-span-2 lg:col-span-4" />
             </Suspense>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <Suspense fallback={<LoadingSkeleton />}>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+             <Suspense fallback={<LoadingSkeleton className="lg:col-span-2"/>}>
               <Recommendations recommendationsPromise={recommendationsPromise} />
             </Suspense>
             <div className="space-y-8">
-               <Suspense fallback={<LoadingSkeleton />}>
+              <Suspense fallback={<LoadingSkeleton />}>
                 <Quests questPromise={questPromise} />
               </Suspense>
-              <Suspense fallback={<LoadingSkeleton />}>
+               <Suspense fallback={<LoadingSkeleton />}>
                 <WellnessNook />
               </Suspense>
             </div>
@@ -63,7 +62,7 @@ export default async function Home() {
             <SkillsGrowth />
           </Suspense>
           
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               <Suspense fallback={<LoadingSkeleton />}>
                 <Mentorship />
               </Suspense>
