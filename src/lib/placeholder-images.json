@@ -23,6 +23,12 @@
       "description": "Avatar for mentor Sarah Jones",
       "imageUrl": "https://picsum.photos/seed/mentor3/100/100",
       "imageHint": "woman portrait"
+    },
+    {
+      "id": "wellness-bg",
+      "description": "Calm background for the wellness nook",
+      "imageUrl": "https://picsum.photos/seed/wellness/600/400",
+      "imageHint": "calm nature"
     }
   ]
 }

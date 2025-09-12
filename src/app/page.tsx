@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Networking } from "@/components/dashboard/networking";
 import { SkillsGrowth } from "@/components/dashboard/skills-growth";
+import { WellnessNook } from "@/components/dashboard/wellness-nook";
 
 function LoadingSkeleton({ className }: { className?: string }) {
   return (
@@ -43,11 +44,21 @@ export default async function Home() {
               <Gamification className="md:col-span-2 lg:col-span-4" />
             </Suspense>
           </div>
-          
-          <Suspense fallback={<LoadingSkeleton />}>
-            <Recommendations recommendationsPromise={recommendationsPromise} />
-          </Suspense>
 
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <Suspense fallback={<LoadingSkeleton />}>
+              <Recommendations recommendationsPromise={recommendationsPromise} />
+            </Suspense>
+            <div className="space-y-8">
+               <Suspense fallback={<LoadingSkeleton />}>
+                <Quests questPromise={questPromise} />
+              </Suspense>
+              <Suspense fallback={<LoadingSkeleton />}>
+                <WellnessNook />
+              </Suspense>
+            </div>
+          </div>
+          
           <Suspense fallback={<LoadingSkeleton className="lg:col-span-4"/>}>
             <SkillsGrowth />
           </Suspense>
@@ -63,12 +74,10 @@ export default async function Home() {
                 <Networking />
               </Suspense>
           </div>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          
+          <div className="grid grid-cols-1 gap-8">
               <Suspense fallback={<LoadingSkeleton />}>
                 <JobTracking />
-              </Suspense>
-               <Suspense fallback={<LoadingSkeleton className="lg:col-span-2" />}>
-                <Quests questPromise={questPromise} />
               </Suspense>
           </div>
         </main>

@@ -32,7 +32,7 @@ export async function Quests({ questPromise }: QuestsProps) {
                 <Coins className="w-5 h-5 text-amber-400" />
                 <span className="font-semibold text-base">{quest.knowledgeCoinsReward} Coins</span>
             </Badge>
-            <Button size="lg" variant="secondary">Start Quest</Button>
+            <Button size="lg">Start Quest</Button>
         </div>
       </CardContent>
     </Card>
