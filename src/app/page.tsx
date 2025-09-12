@@ -37,31 +37,33 @@ export default async function Home() {
         <DashboardHeader studentName={user.name} />
         <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
           
-          <Gamification />
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <Suspense fallback={<LoadingSkeleton className="lg:col-span-4" />}>
+              <Gamification className="md:col-span-2 lg:col-span-4" />
+            </Suspense>
+          </div>
           
           <Suspense fallback={<LoadingSkeleton />}>
             <Recommendations recommendationsPromise={recommendationsPromise} />
           </Suspense>
           
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               <Suspense fallback={<LoadingSkeleton />}>
                 <Mentorship />
               </Suspense>
               <Suspense fallback={<LoadingSkeleton />}>
                 <UpcomingSessions />
               </Suspense>
+               <Suspense fallback={<LoadingSkeleton />}>
+                <Networking />
+              </Suspense>
           </div>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               <Suspense fallback={<LoadingSkeleton />}>
                 <JobTracking />
               </Suspense>
-               <Suspense fallback={<LoadingSkeleton />}>
+               <Suspense fallback={<LoadingSkeleton className="lg:col-span-2" />}>
                 <Quests questPromise={questPromise} />
-              </Suspense>
-          </div>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-             <Suspense fallback={<LoadingSkeleton />}>
-                <Networking />
               </Suspense>
           </div>
         </main>

@@ -33,18 +33,19 @@ export const upcomingSessions: MentorshipSession[] = [
 export type Badge = {
   id: string;
   name: string;
+  description: string;
   Icon: LucideIcon;
 };
 
 export const earnedBadges: Badge[] = [
-    { id: '1', name: 'First Article', Icon: Star },
-    { id: '2', name: 'Hackathon Hero', Icon: Trophy },
-    { id: '3', name: 'Top Contributor', Icon: Award },
+    { id: '1', name: 'First Article', description: 'Published your first article.', Icon: Star },
+    { id: '2', name: 'Hackathon Hero', description: 'Participated in a hackathon.', Icon: Trophy },
+    { id: '3', name: 'Top Contributor', description: 'Became a top content creator.', Icon: Award },
 ];
 
 export const user = {
     name: 'Alex Martinez',
-    knowledgeCoins: 1250,
+    knowledgeCoins: 1500,
     leaderboardRank: 12,
 };
 
