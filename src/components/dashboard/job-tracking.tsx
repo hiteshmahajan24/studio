@@ -8,7 +8,7 @@ const statusVariantMap: Record<JobApplication['status'], 'secondary' | 'default'
     'Applied': 'outline',
     'Under Review': 'secondary',
     'Interview': 'default',
-    'Offered': 'default', 
+    'Offered': 'outline', 
     'Rejected': 'destructive',
 };
 
@@ -16,7 +16,7 @@ const statusColorMap: Record<JobApplication['status'], string> = {
     'Applied': 'border-primary/50 text-primary',
     'Under Review': '',
     'Interview': 'bg-primary/90 text-primary-foreground',
-    'Offered': 'bg-green-500/20 text-green-500 border-green-500/50', // Custom color for 'Offered'
+    'Offered': 'border-green-500/50 bg-green-500/10 text-green-500', // Custom color for 'Offered'
     'Rejected': ''
 };
 
