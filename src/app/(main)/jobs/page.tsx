@@ -4,7 +4,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { jobApplications, type JobApplication } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-import { PlusCircle, Download } from "lucide-react";
+import { PlusCircle, Download, Zap } from "lucide-react";
+import { AddApplicationForm } from "@/components/jobs/add-application-form";
+import { QuickApplyDialog } from "@/components/jobs/quick-apply-dialog";
 
 const statusVariantMap: Record<JobApplication['status'], 'secondary' | 'default' | 'outline' | 'destructive'> = {
     'Applied': 'outline',
@@ -32,7 +34,12 @@ export default function JobsPage() {
         </div>
         <div className="flex gap-2">
             <Button variant="outline"><Download className="mr-2" /> Export</Button>
-            <Button><PlusCircle className="mr-2" /> Add Application</Button>
+            <QuickApplyDialog>
+              <Button variant="outline"><Zap className="mr-2" /> Quick Apply</Button>
+            </QuickApplyDialog>
+            <AddApplicationForm>
+              <Button><PlusCircle className="mr-2" /> Add Application</Button>
+            </AddApplicationForm>
         </div>
       </div>
       
