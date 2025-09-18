@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Coins, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { mockAIQuest } from "@/lib/mock-data";
+import { cn } from "@/lib/utils";
 
-export async function Quests() {
+export async function Quests({ className }: { className?: string }) {
   const quest = await Promise.resolve(mockAIQuest);
 
   return (
-    <Card className="flex flex-col">
+    <Card className={cn("flex flex-col", className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>AI Daily Quest</CardTitle>

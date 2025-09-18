@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Wand2, Edit } from "lucide-react"
 import { mockSuggestedSkills } from "@/lib/mock-data"
 import { SkillsChart } from "./skills-chart"
+import { cn } from "@/lib/utils"
 
 const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
 
@@ -22,19 +23,19 @@ const skillsData = [
   { subject: "Teamwork", A: 95, fullMark: 100 },
 ]
 
-export async function SkillsGrowth() {
+export async function SkillsGrowth({ className }: { className?: string }) {
   const { suggestedSkills } = await Promise.resolve(mockSuggestedSkills);
 
   return (
-    <Card>
+    <Card className={cn("flex flex-col", className)}>
       <CardHeader>
         <CardTitle>Your Skills & Growth</CardTitle>
         <CardDescription>
           Visualize your progress and discover new skills to learn.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-8 lg:grid-cols-5">
-        <div className="lg:col-span-2">
+      <CardContent className="flex flex-col flex-1 justify-between">
+        <div>
           <h3 className="font-semibold mb-4">Current Tech Stack</h3>
           <div className="flex flex-wrap gap-2 mb-4">
             {currentTechStack.map((tech) => (
@@ -47,27 +48,22 @@ export async function SkillsGrowth() {
             <Edit className="mr-2 h-4 w-4" />
             Edit Stack
           </Button>
+        </div>
 
-          <div className="mt-8">
+        <div className="mt-8">
             <h3 className="font-semibold flex items-center gap-2 mb-4">
               <Wand2 className="text-primary" />
               AI-Suggested Future Stack
             </h3>
             <div className="space-y-3">
-              {suggestedSkills.map((item) => (
+              {suggestedSkills.slice(0, 2).map((item) => (
                 <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.reason}</p>
+                  <p className="font-semibold text-sm">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">{item.reason}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        <div className="lg:col-span-3">
-           <h3 className="font-semibold mb-4 text-center">Skills Snapshot</h3>
-           <SkillsChart skillsData={skillsData} />
-        </div>
       </CardContent>
     </Card>
   )

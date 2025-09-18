@@ -19,9 +19,9 @@ export default function DashboardPage() {
       </div>
       
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <SkillsGrowth />
-        <WellnessNook />
-        <Quests />
+        <SkillsGrowth className="lg:col-span-1" />
+        <WellnessNook className="aspect-square" />
+        <Quests className="aspect-square" />
       </div>
 
       <div className="grid grid-cols-1 gap-8">

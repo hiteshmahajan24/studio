@@ -19,14 +19,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { cn } from "@/lib/utils";
 import { BrainCircuit, Users } from "lucide-react";
 import Image from "next/image";
 
-export function WellnessNook() {
+export function WellnessNook({ className }: { className?: string }) {
     const wellnessImage = PlaceHolderImages.find((img) => img.id === "wellness-bg");
 
     return (
-        <Card className="relative overflow-hidden flex flex-col">
+        <Card className={cn("relative overflow-hidden flex flex-col", className)}>
             {wellnessImage && (
                  <Image
                     src={wellnessImage.imageUrl}
