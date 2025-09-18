@@ -27,13 +27,18 @@ type QuickApplyDialogProps = {
     children: React.ReactNode;
 }
 
-const mockAiSummary = `To Whom It May Concern,
+const mockAiSummary = `To the Hiring Manager at Innovate Inc.,
 
-It is with great interest that Alex Martinez is put forward for the Frontend Developer position at Innovate Inc., as advertised. With over three years of dedicated experience in web development, specializing in modern frontend technologies such as React and Next.js, Alex has cultivated a robust skill set that aligns perfectly with the requirements of this role.
+I am writing to express my enthusiastic interest in the Frontend Developer position, which I discovered through the NexusConnect platform. With a solid background of over three years in web development and a deep specialization in modern frontend technologies like React and Next.js, I am confident that my skills and experience align perfectly with the requirements of this role.
 
-Alex's professional background includes significant contributions to several open-source projects, where he has demonstrated a keen eye for detail, a passion for collaborative development, and a commitment to building high-quality, scalable user interfaces. His proficiency with TypeScript and the Google Cloud Platform (GCP) further strengthens his candidacy.
+Throughout my career, I have been passionate about building high-quality, scalable, and intuitive user interfaces. My experience includes significant contributions to several open-source projects where I honed my abilities in collaborative development and detail-oriented work. I am proficient in TypeScript and have hands-on experience with cloud platforms like GCP, which I believe would be a valuable asset to your team.
 
-Attached are his resume, which provides a comprehensive overview of his project history and technical abilities, and his Advanced React Certification, which validates his expertise in the core technology for this role. Alex is confident that his technical acumen and proactive approach would make him a valuable asset to your team.`;
+I am particularly drawn to Innovate Inc.'s reputation for creativity and cutting-edge solutions, and I am eager to contribute my expertise to your projects.
+
+Attached, you will find my resume, which provides a comprehensive overview of my project history and technical abilities, along with my Advanced React Certification. Thank you for your time and consideration. I look forward to the possibility of discussing this opportunity further.
+
+Sincerely,
+Alex Martinez`;
 
 const mockSelectedDocuments = [user.profile.resumes[0], user.profile.certificates[0]];
 
@@ -117,8 +122,8 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
             {step === 2 && selectedJob && (
                 <div className="py-4 space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="ai-summary" className="flex items-center gap-2"><Wand2 className="text-primary"/> AI-Generated Summary</Label>
-                        <Textarea id="ai-summary" defaultValue={mockAiSummary} rows={10} />
+                        <Label htmlFor="ai-summary" className="flex items-center gap-2"><Wand2 className="text-primary"/> AI-Generated Cover Letter</Label>
+                        <Textarea id="ai-summary" defaultValue={mockAiSummary} rows={14} />
                     </div>
                      <div className="space-y-3">
                         <Label className="flex items-center gap-2">Suggested Documents</Label>
