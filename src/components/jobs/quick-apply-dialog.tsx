@@ -22,31 +22,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { openOpportunities, user } from "@/lib/mock-data";
 import { File, Loader2, Wand2 } from "lucide-react";
+import { quickApply, type QuickApplyOutput } from "@/ai/flows/quick-apply";
 
 type QuickApplyDialogProps = {
     children: React.ReactNode;
 }
-
-const mockAiSummary = `To the Hiring Manager at Innovate Inc.,
-
-I am writing to express my enthusiastic interest in the Frontend Developer position, which I discovered through the NexusConnect platform. With a solid background of over three years in web development and a deep specialization in modern frontend technologies like React and Next.js, I am confident that my skills and experience align perfectly with the requirements of this role.
-
-Throughout my career, I have been passionate about building high-quality, scalable, and intuitive user interfaces. My experience includes significant contributions to several open-source projects where I honed my abilities in collaborative development and detail-oriented work. I am proficient in TypeScript and have hands-on experience with cloud platforms like GCP, which I believe would be a valuable asset to your team.
-
-I am particularly drawn to Innovate Inc.'s reputation for creativity and cutting-edge solutions, and I am eager to contribute my expertise to your projects.
-
-Attached, you will find my resume, which provides a comprehensive overview of my project history and technical abilities, along with my Advanced React Certification. Thank you for your time and consideration. I look forward to the possibility of discussing this opportunity further.
-
-Sincerely,
-Alex Martinez`;
-
-const mockSelectedDocuments = [user.profile.resumes[0], user.profile.certificates[0]];
 
 export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
     const [isOpen, setIsOpen] = React.useState(false);
     const [step, setStep] = React.useState(1);
     const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
     const [isGenerating, setIsGenerating] = React.useState(false);
+    const [aiResponse, setAiResponse] = React.useState<QuickApplyOutput | null>(null);
 
     const selectedJob = openOpportunities.find(job => job.id === selectedJobId);
 
@@ -54,14 +41,22 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
         setSelectedJobId(jobId);
     }
 
-    const handleNext = () => {
-        if (step === 1 && selectedJobId) {
+    const handleNext = async () => {
+        if (step === 1 && selectedJob) {
             setIsGenerating(true);
-            // Simulate AI generation
-            setTimeout(() => {
+            try {
+                const response = await quickApply({
+                    studentProfile: user.profile,
+                    jobDetails: selectedJob,
+                });
+                setAiResponse(response);
                 setStep(2);
+            } catch (error) {
+                console.error("Error generating application:", error);
+                // Optionally, show an error toast to the user
+            } finally {
                 setIsGenerating(false);
-            }, 1500);
+            }
         }
     }
 
@@ -69,6 +64,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
         if (step === 2) {
             setStep(1);
             setSelectedJobId(null);
+            setAiResponse(null);
         }
     }
   
@@ -81,6 +77,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
                     setStep(1);
                     setSelectedJobId(null);
                     setIsGenerating(false);
+                    setAiResponse(null);
                 }, 300);
             }
         }}>
@@ -119,19 +116,22 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
                 </div>
             )}
 
-            {step === 2 && selectedJob && (
-                <div className="py-4 space-y-6">
+            {step === 2 && selectedJob && aiResponse && (
+                <div className="py-4 space-y-6 max-h-[60vh] overflow-y-auto pr-4">
                     <div className="space-y-2">
                         <Label htmlFor="ai-summary" className="flex items-center gap-2"><Wand2 className="text-primary"/> AI-Generated Cover Letter</Label>
-                        <Textarea id="ai-summary" defaultValue={mockAiSummary} rows={14} />
+                        <Textarea id="ai-summary" defaultValue={aiResponse.coverLetter} rows={14} />
                     </div>
                      <div className="space-y-3">
                         <Label className="flex items-center gap-2">Suggested Documents</Label>
                         <div className="space-y-2">
-                        {mockSelectedDocuments.map(doc => (
-                            <div key={doc.id} className="flex items-center gap-3 p-2 bg-muted/50 rounded-lg text-sm">
-                               <File className="w-4 h-4 text-muted-foreground" /> 
-                               <span>{doc.name}</span>
+                        {aiResponse.suggestedDocuments.map(doc => (
+                            <div key={doc.id} className="flex flex-col gap-1 p-3 bg-muted/50 rounded-lg text-sm">
+                               <div className="flex items-center gap-3 font-semibold">
+                                 <File className="w-4 h-4 text-muted-foreground" /> 
+                                 <span>{doc.name}</span>
+                               </div>
+                               <p className="text-xs text-muted-foreground pl-7">{doc.reason}</p>
                             </div>
                         ))}
                         </div>

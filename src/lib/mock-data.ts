@@ -24,13 +24,13 @@ export const openOpportunities = [
       id: 'job1',
       title: 'Frontend Developer',
       company: 'Innovate Inc.',
-      description: 'Seeking a creative Frontend Developer to build beautiful and responsive user interfaces using React and Tailwind CSS.',
+      description: 'Seeking a creative Frontend Developer to build beautiful and responsive user interfaces using React and Tailwind CSS. The ideal candidate has experience with Next.js and a passion for clean code.',
     },
     {
       id: 'job2',
       title: 'AI/ML Engineer',
       company: 'Data Driven Co.',
-      description: 'Join our AI team to build next-generation machine learning models. Experience with Python, TensorFlow, and cloud platforms is a must.',
+      description: 'Join our AI team to build next-generation machine learning models. Experience with Python, TensorFlow, and cloud platforms like GCP is a must.',
     },
     {
         id: 'job3',
@@ -71,11 +71,12 @@ export const user = {
     knowledgeCoins: 1500,
     leaderboardRank: 12,
     profile: {
-        skills: ['React', 'TypeScript', 'Next.js', 'Node.js', 'Python', 'GCP'],
-        experience: '3+ years in web development, focusing on frontend technologies. Contributed to several open-source projects.',
+        name: 'Alex Martinez',
+        skills: ['React', 'TypeScript', 'Next.js', 'Node.js', 'Python', 'GCP', 'Tailwind CSS'],
+        experience: '3+ years in web development, focusing on frontend technologies. Contributed to several open-source projects, including a popular UI component library. Passionate about building scalable and intuitive user interfaces.',
         resumes: [
-            { id: 'resume-general', name: 'General Web Dev Resume.pdf', content: '...' },
-            { id: 'resume-ai', name: 'AI/ML Focused Resume.pdf', content: '...' },
+            { id: 'resume-general', name: 'General Web Dev Resume.pdf', content: 'Detailed resume focusing on full-stack web development skills and project history.' },
+            { id: 'resume-ai', name: 'AI/ML Focused Resume.pdf', content: 'Specialized resume highlighting projects and skills in Machine Learning and AI.' },
         ],
         certificates: [
             { id: 'cert-react', name: 'Advanced React Certification', tech: ['React', 'Next.js'] },
