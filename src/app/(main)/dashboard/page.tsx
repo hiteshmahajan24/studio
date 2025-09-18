@@ -50,11 +50,11 @@ export default async function DashboardPage() {
       </Suspense>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-         <Suspense fallback={<LoadingSkeleton />}>
-          <Quests questPromise={questPromise} />
-        </Suspense>
         <Suspense fallback={<LoadingSkeleton />}>
           <WellnessNook />
+        </Suspense>
+        <Suspense fallback={<LoadingSkeleton />}>
+          <Quests questPromise={questPromise} />
         </Suspense>
         <Suspense fallback={<LoadingSkeleton />}>
           <JobTracking />
@@ -67,12 +67,12 @@ export default async function DashboardPage() {
             <Mentorship />
           </Suspense>
            <Suspense fallback={<LoadingSkeleton />}>
-            <UpcomingSessions />
+            <Networking />
           </Suspense>
         </div>
         <div className="grid grid-cols-1 gap-8">
            <Suspense fallback={<LoadingSkeleton />}>
-            <Networking />
+            <UpcomingSessions />
           </Suspense>
           <Suspense fallback={<LoadingSkeleton />}>
             <TrackEvents />

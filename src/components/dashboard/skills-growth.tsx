@@ -77,7 +77,7 @@ export function SkillsGrowth() {
         </div>
 
         <div className="lg:col-span-3">
-           <h3 className="font-semibold mb-4 text-center">Skills Growth</h3>
+           <h3 className="font-semibold mb-4 text-center">Skills Snapshot</h3>
           <ResponsiveContainer width="100%" height={350}>
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={skillsData}>
               <defs>
