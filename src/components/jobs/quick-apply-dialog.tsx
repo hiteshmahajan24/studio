@@ -27,7 +27,14 @@ type QuickApplyDialogProps = {
     children: React.ReactNode;
 }
 
-const mockAiSummary = "Based on Alex's 3+ years of frontend experience and expertise in React and Next.js, he is a strong candidate for this role. His contributions to open-source projects demonstrate his passion for web development and collaboration. The attached resume and React certification further validate his qualifications."
+const mockAiSummary = `To Whom It May Concern,
+
+It is with great interest that Alex Martinez is put forward for the Frontend Developer position at Innovate Inc., as advertised. With over three years of dedicated experience in web development, specializing in modern frontend technologies such as React and Next.js, Alex has cultivated a robust skill set that aligns perfectly with the requirements of this role.
+
+Alex's professional background includes significant contributions to several open-source projects, where he has demonstrated a keen eye for detail, a passion for collaborative development, and a commitment to building high-quality, scalable user interfaces. His proficiency with TypeScript and the Google Cloud Platform (GCP) further strengthens his candidacy.
+
+Attached are his resume, which provides a comprehensive overview of his project history and technical abilities, and his Advanced React Certification, which validates his expertise in the core technology for this role. Alex is confident that his technical acumen and proactive approach would make him a valuable asset to your team.`;
+
 const mockSelectedDocuments = [user.profile.resumes[0], user.profile.certificates[0]];
 
 export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
@@ -111,7 +118,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
                 <div className="py-4 space-y-6">
                     <div className="space-y-2">
                         <Label htmlFor="ai-summary" className="flex items-center gap-2"><Wand2 className="text-primary"/> AI-Generated Summary</Label>
-                        <Textarea id="ai-summary" defaultValue={mockAiSummary} rows={5} />
+                        <Textarea id="ai-summary" defaultValue={mockAiSummary} rows={10} />
                     </div>
                      <div className="space-y-3">
                         <Label className="flex items-center gap-2">Suggested Documents</Label>

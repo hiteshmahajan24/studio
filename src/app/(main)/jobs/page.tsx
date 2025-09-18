@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -25,6 +27,34 @@ const statusColorMap: Record<JobApplication['status'], string> = {
 };
 
 export default function JobsPage() {
+  const handleExport = () => {
+    const headers = ["Company", "Role", "Status", "Date Applied"];
+    const csvRows = [
+      headers.join(','),
+      ...jobApplications.map(app => 
+        [
+          `"${app.company.replace(/"/g, '""')}"`,
+          `"${app.title.replace(/"/g, '""')}"`,
+          app.status,
+          new Date().toLocaleDateString() // Using current date as mock date is random
+        ].join(',')
+      )
+    ];
+    
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.href) {
+      URL.revokeObjectURL(link.href);
+    }
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', 'job_applications.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -33,7 +63,7 @@ export default function JobsPage() {
             <p className="text-muted-foreground">Manage and monitor all your job applications in one place.</p>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline"><Download className="mr-2" /> Export</Button>
+            <Button variant="outline" onClick={handleExport}><Download className="mr-2" /> Export</Button>
             <QuickApplyDialog>
               <Button variant="outline"><Zap className="mr-2" /> Quick Apply</Button>
             </QuickApplyDialog>
