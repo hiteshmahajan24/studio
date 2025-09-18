@@ -18,10 +18,10 @@ export default function DashboardPage() {
         <Recommendations className="lg:col-span-2" />
       </div>
       
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <SkillsGrowth className="lg:col-span-1" />
-        <WellnessNook className="aspect-square" />
-        <Quests className="aspect-square" />
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
+        <SkillsGrowth className="lg:col-span-3" />
+        <WellnessNook className="lg:col-span-1 aspect-square" />
+        <Quests className="lg:col-span-1 aspect-square" />
       </div>
 
       <div className="grid grid-cols-1 gap-8">

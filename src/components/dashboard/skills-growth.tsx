@@ -34,36 +34,42 @@ export async function SkillsGrowth({ className }: { className?: string }) {
           Visualize your progress and discover new skills to learn.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col flex-1 justify-between">
-        <div>
-          <h3 className="font-semibold mb-4">Current Tech Stack</h3>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {currentTechStack.map((tech) => (
-              <Badge key={tech} variant="secondary">
-                {tech}
-              </Badge>
-            ))}
-          </div>
-          <Button variant="outline" size="sm">
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Stack
-          </Button>
+      <CardContent className="grid flex-1 gap-6 md:grid-cols-2">
+        <div className="flex flex-col justify-between">
+            <div>
+            <h3 className="font-semibold mb-4">Current Tech Stack</h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+                {currentTechStack.map((tech) => (
+                <Badge key={tech} variant="secondary">
+                    {tech}
+                </Badge>
+                ))}
+            </div>
+            <Button variant="outline" size="sm">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Stack
+            </Button>
+            </div>
+
+            <div className="mt-8">
+                <h3 className="font-semibold flex items-center gap-2 mb-4">
+                <Wand2 className="text-primary" />
+                AI-Suggested Future Stack
+                </h3>
+                <div className="space-y-3">
+                {suggestedSkills.slice(0, 2).map((item) => (
+                    <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
+                    <p className="font-semibold text-sm">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">{item.reason}</p>
+                    </div>
+                ))}
+                </div>
+            </div>
         </div>
 
-        <div className="mt-8">
-            <h3 className="font-semibold flex items-center gap-2 mb-4">
-              <Wand2 className="text-primary" />
-              AI-Suggested Future Stack
-            </h3>
-            <div className="space-y-3">
-              {suggestedSkills.slice(0, 2).map((item) => (
-                <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
-                  <p className="font-semibold text-sm">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">{item.reason}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="h-full min-h-[300px]">
+          <SkillsChart skillsData={skillsData} />
+        </div>
       </CardContent>
     </Card>
   )
