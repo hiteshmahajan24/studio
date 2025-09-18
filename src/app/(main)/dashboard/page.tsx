@@ -22,6 +22,9 @@ export default function DashboardPage() {
         <SkillsGrowth />
         <WellnessNook />
         <Quests />
+      </div>
+
+      <div className="grid grid-cols-1 gap-8">
         <JobTracking />
       </div>
 
