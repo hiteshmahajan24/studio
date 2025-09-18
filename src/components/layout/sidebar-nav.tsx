@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Briefcase,
   FileText,
@@ -17,21 +20,23 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '#', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '#', icon: Handshake, label: 'Mentorship' },
-  { href: '#', icon: Briefcase, label: 'Jobs' },
-  { href: '#', icon: Network, label: 'Networking' },
-  { href: '#', icon: Shield, label: 'Quests' },
-  { href: '#', icon: FileText, label: 'Articles' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/mentorship', icon: Handshake, label: 'Mentorship' },
+  { href: '/jobs', icon: Briefcase, label: 'Jobs' },
+  { href: '/networking', icon: Network, label: 'Networking' },
+  { href: '/quests', icon: Shield, label: 'Quests' },
+  { href: '/articles', icon: FileText, label: 'Articles' },
 ];
 
 export function SidebarNav() {
+  const pathname = usePathname();
+
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
        <TooltipProvider delayDuration={100}>
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          href="#"
+          href="/dashboard"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <svg
@@ -50,14 +55,14 @@ export function SidebarNav() {
           </svg>
           <span className="sr-only">NexusConnect</span>
         </Link>
-          {navItems.map((item, index) => (
+          {navItems.map((item) => (
             <Tooltip key={item.label}>
               <TooltipTrigger asChild>
                 <Link
                   href={item.href}
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
-                    index === 0 && "bg-accent text-accent-foreground"
+                    pathname.startsWith(item.href) && "bg-accent text-accent-foreground"
                     )}
                 >
                   <item.icon className="h-5 w-5" />
