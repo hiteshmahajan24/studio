@@ -1,4 +1,4 @@
-"use client"
+"use server"
 
 import {
   Card,
@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Wand2, Edit } from "lucide-react"
+import { skillPath } from "@/ai/flows/skill-path"
 
 const skillsData = [
   { subject: "React", A: 85, fullMark: 100 },
@@ -30,13 +31,12 @@ const skillsData = [
 
 const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
 
-const aiSuggestedStack = [
-  { name: "Rust", reason: "High performance, a good complement to Node.js for backend services." },
-  { name: "Kubernetes", reason: "Essential for modern DevOps and scaling applications." },
-  { name: "AI/ML", reason: "Growing field with high demand, complements your data skills." },
-]
+export async function SkillsGrowth() {
+  const { suggestedSkills } = await skillPath({
+    currentSkills: currentTechStack,
+    learningGoals: 'Become a senior full-stack developer with expertise in scalable systems and AI integration.'
+  });
 
-export function SkillsGrowth() {
   return (
     <Card>
       <CardHeader>
@@ -66,7 +66,7 @@ export function SkillsGrowth() {
               AI-Suggested Future Stack
             </h3>
             <div className="space-y-3">
-              {aiSuggestedStack.map((item) => (
+              {suggestedSkills.map((item) => (
                 <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-muted-foreground">{item.reason}</p>
