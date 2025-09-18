@@ -1,17 +1,14 @@
 'use server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  type PersonalizedRecommendationsOutput
-} from "@/ai/flows/personalized-recommendations";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Handshake, Lightbulb, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { mockRecommendations } from "@/lib/mock-data";
 
 type RecommendationsProps = {
-  recommendationsPromise: Promise<PersonalizedRecommendationsOutput>;
   className?: string;
 };
 
@@ -30,8 +27,8 @@ const recommendationIcons: Record<string, React.ElementType> = {
   project: Lightbulb,
 };
 
-export async function Recommendations({ recommendationsPromise, className }: RecommendationsProps) {
-  const { recommendations } = await recommendationsPromise;
+export async function Recommendations({ className }: RecommendationsProps) {
+  const { recommendations } = await Promise.resolve(mockRecommendations);
 
   const getDetails = (type: string, id: string) => {
     return recommendationDetails[id] || { name: `${type.charAt(0).toUpperCase() + type.slice(1)}: ${id}`, description: "Click to learn more" };

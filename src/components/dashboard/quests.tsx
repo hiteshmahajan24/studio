@@ -1,17 +1,13 @@
 'use server';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type AIQuestOutput } from "@/ai/flows/ai-quest-generator";
 import { Button } from "@/components/ui/button";
 import { Coins, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { mockAIQuest } from "@/lib/mock-data";
 
-type QuestsProps = {
-  questPromise: Promise<AIQuestOutput>;
-};
-
-export async function Quests({ questPromise }: QuestsProps) {
-  const quest = await questPromise;
+export async function Quests() {
+  const quest = await Promise.resolve(mockAIQuest);
 
   return (
     <Card className="flex flex-col">
