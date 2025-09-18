@@ -9,13 +9,14 @@ export type JobApplication = {
   title: string;
   company: string;
   status: 'Applied' | 'Under Review' | 'Interview' | 'Offered' | 'Rejected';
+  dateApplied: string;
 };
 
 export const jobApplications: JobApplication[] = [
-  { id: '1', title: 'Frontend Developer', company: 'Innovate Inc.', status: 'Under Review' },
-  { id: '2', title: 'Full-Stack Engineer', company: 'Tech Solutions', status: 'Interview' },
-  { id: '3', title: 'Product Manager Intern', company: 'Creative Co.', status: 'Applied' },
-  { id: '4', title: 'Data Scientist', company: 'Data Insights', status: 'Rejected' },
+  { id: '1', title: 'Frontend Developer', company: 'Innovate Inc.', status: 'Under Review', dateApplied: '2024-07-15' },
+  { id: '2', title: 'Full-Stack Engineer', company: 'Tech Solutions', status: 'Interview', dateApplied: '2024-07-12' },
+  { id: '3', title: 'Product Manager Intern', company: 'Creative Co.', status: 'Applied', dateApplied: '2024-07-18' },
+  { id: '4', title: 'Data Scientist', company: 'Data Insights', status: 'Rejected', dateApplied: '2024-07-05' },
 ];
 
 export const openOpportunities = [

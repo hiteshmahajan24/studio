@@ -36,7 +36,7 @@ export default function JobsPage() {
           `"${app.company.replace(/"/g, '""')}"`,
           `"${app.title.replace(/"/g, '""')}"`,
           app.status,
-          new Date().toLocaleDateString() // Using current date as mock date is random
+          app.dateApplied
         ].join(',')
       )
     ];
@@ -99,7 +99,7 @@ export default function JobsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">
-                    {new Date(new Date().getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                    {app.dateApplied}
                   </TableCell>
                 </TableRow>
               ))}
