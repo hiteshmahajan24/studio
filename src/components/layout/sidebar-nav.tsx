@@ -10,6 +10,7 @@ import {
   Network,
   Settings,
   Shield,
+  GraduationCap,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -25,6 +26,7 @@ const navItems = [
   { href: '/jobs', icon: Briefcase, label: 'Jobs' },
   { href: '/networking', icon: Network, label: 'Networking' },
   { href: '/quests', icon: Shield, label: 'Quests' },
+  { href: '/academics', icon: GraduationCap, label: 'Academics' },
   { href: '/articles', icon: FileText, label: 'Articles' },
 ];
 

@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { jobApplications, type JobApplication } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-import { PlusCircle, Upload, Download } from "lucide-react";
+import { PlusCircle, Download } from "lucide-react";
 
 const statusVariantMap: Record<JobApplication['status'], 'secondary' | 'default' | 'outline' | 'destructive'> = {
     'Applied': 'outline',
@@ -62,8 +62,7 @@ export default function JobsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-muted-foreground">
-                    {/* Placeholder for date */}
-                    {new Date().toLocaleDateString()}
+                    {new Date(new Date().getTime() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
                   </TableCell>
                 </TableRow>
               ))}
