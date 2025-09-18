@@ -8,7 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Wand2, Edit } from "lucide-react"
-import { skillPath } from "@/ai/flows/skill-path"
+import { mockSuggestedSkills } from "@/lib/mock-data"
 import { SkillsChart } from "./skills-chart"
 
 const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
@@ -23,10 +23,7 @@ const skillsData = [
 ]
 
 export async function SkillsGrowth() {
-  const { suggestedSkills } = await skillPath({
-    currentSkills: currentTechStack,
-    learningGoals: 'Become a senior full-stack developer with expertise in scalable systems and AI integration.'
-  });
+  const { suggestedSkills } = await Promise.resolve(mockSuggestedSkills);
 
   return (
     <Card>

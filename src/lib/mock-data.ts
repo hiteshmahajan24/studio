@@ -1,6 +1,7 @@
 import { Award, Star, Trophy, type LucideIcon } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
+import { SkillPathOutput } from '@/ai/flows/skill-path';
 
 
 export type JobApplication = {
@@ -79,6 +80,24 @@ export const mockRecommendations: PersonalizedRecommendationsOutput = {
         }
       ]
 };
+
+export const mockSuggestedSkills: SkillPathOutput = {
+  suggestedSkills: [
+    {
+      name: 'Python',
+      reason: 'Its versatility and extensive libraries make it a must-have for AI and backend development.',
+    },
+    {
+      name: 'Kubernetes',
+      reason: 'Essential for deploying and managing scalable applications in a containerized environment.',
+    },
+    {
+      name: 'CI/CD Pipelines',
+      reason: 'Automating your build and deployment process is crucial for modern software engineering.',
+    },
+  ],
+};
+
 
 export type RegisteredEvent = {
   id: string;
