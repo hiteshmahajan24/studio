@@ -7,18 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-} from "recharts"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Wand2, Edit } from "lucide-react"
 import { skillPath } from "@/ai/flows/skill-path"
+import { SkillsChart } from "./skills-chart"
+
+const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
 
 const skillsData = [
   { subject: "React", A: 85, fullMark: 100 },
@@ -28,8 +23,6 @@ const skillsData = [
   { subject: "System Design", A: 60, fullMark: 100 },
   { subject: "Teamwork", A: 95, fullMark: 100 },
 ]
-
-const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
 
 export async function SkillsGrowth() {
   const { suggestedSkills } = await skillPath({
@@ -78,26 +71,7 @@ export async function SkillsGrowth() {
 
         <div className="lg:col-span-3">
            <h3 className="font-semibold mb-4 text-center">Skills Snapshot</h3>
-          <ResponsiveContainer width="100%" height={350}>
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={skillsData}>
-              <defs>
-                <linearGradient id="skillGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
-                </linearGradient>
-              </defs>
-              <PolarGrid stroke="hsl(var(--border))" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: "hsl(var(--foreground))" }} />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-              <Radar
-                name="Alex"
-                dataKey="A"
-                stroke="hsl(var(--primary))"
-                fill="url(#skillGradient)"
-                fillOpacity={0.6}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+           <SkillsChart skillsData={skillsData} />
         </div>
       </CardContent>
     </Card>

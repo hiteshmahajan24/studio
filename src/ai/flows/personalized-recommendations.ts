@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * @fileOverview AI-powered personalized recommendations for students.
  *

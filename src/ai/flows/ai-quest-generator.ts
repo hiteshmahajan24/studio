@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * @fileOverview This file defines the AI Quest Generator flow, which generates personalized quests for students to encourage platform engagement.
  *

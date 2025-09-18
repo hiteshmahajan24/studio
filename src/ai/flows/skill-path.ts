@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * @fileOverview A file that provides AI-powered skill path recommendations.
  *
