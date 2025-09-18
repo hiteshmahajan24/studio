@@ -1,3 +1,4 @@
+
 import { Recommendations } from "@/components/dashboard/recommendations";
 import { Gamification } from "@/components/dashboard/gamification";
 import { Quests } from "@/components/dashboard/quests";
@@ -45,11 +46,10 @@ export default async function DashboardPage() {
         </Suspense>
       </div>
       
-      <Suspense fallback={<LoadingSkeleton className="lg:col-span-4"/>}>
-        <SkillsGrowth />
-      </Suspense>
-
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <Suspense fallback={<LoadingSkeleton className="lg:col-span-3" />}>
+            <SkillsGrowth />
+        </Suspense>
         <Suspense fallback={<LoadingSkeleton />}>
           <WellnessNook />
         </Suspense>
