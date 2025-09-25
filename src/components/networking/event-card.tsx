@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Award, Badge, Calendar, Coins, Group, PersonStanding, Trophy, CheckCircle2 } from "lucide-react";
+import { Award, Badge, Calendar, Coins, Group, PersonStanding, Trophy, CheckCircle2, Users } from "lucide-react";
 import { Badge as UiBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
