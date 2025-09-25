@@ -47,6 +47,42 @@
       "description": "Calm background for the wellness nook",
       "imageUrl": "https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYWxtJTIwbmF0dXJlfGVufDB8fHx8MTc1ODcxNTc2OXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "calm nature"
+    },
+    {
+      "id": "event-ui-ux",
+      "description": "Image for UI/UX event",
+      "imageUrl": "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=2071&auto=format&fit=crop",
+      "imageHint": "design mockup"
+    },
+    {
+      "id": "event-ai",
+      "description": "Image for AI hackathon",
+      "imageUrl": "https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "abstract AI"
+    },
+    {
+      "id": "event-codefest",
+      "description": "Image for coding competition",
+      "imageUrl": "https://images.unsplash.com/photo-1550063873-ab792950096b?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "code screen"
+    },
+    {
+      "id": "event-pitch",
+      "description": "Image for startup pitch event",
+      "imageUrl": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1932&auto=format&fit=crop",
+      "imageHint": "business presentation"
+    },
+    {
+      "id": "event-cloud",
+      "description": "Image for cloud workshop",
+      "imageUrl": "https://images.unsplash.com/photo-1534972195531-d756b9bfa8f2?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "server code"
+    },
+    {
+      "id": "event-inter-dept",
+      "description": "Image for inter-departmental hackathon",
+      "imageUrl": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1974&auto=format&fit=crop",
+      "imageHint": "team collaboration"
     }
   ]
 }

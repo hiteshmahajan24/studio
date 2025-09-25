@@ -5,6 +5,9 @@ export type EventBase = {
     description: string;
     category: 'Competition' | 'Hackathon' | 'Workshop';
     participationType: 'individual' | 'team';
+    date: string;
+    imageId: string;
+    spotsLeft: number;
 }
 
 export type PlatformEvent = EventBase & {
@@ -26,6 +29,9 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'individual',
         hostType: 'platform',
         rewards: ['knowledge-coins', 'unique-badge', 'certificate'],
+        date: new Date(new Date().setDate(new Date().getDate() + 10)).toISOString(),
+        imageId: 'event-ui-ux',
+        spotsLeft: 25,
     },
     {
         id: 'plat-event-2',
@@ -35,6 +41,9 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'team',
         hostType: 'platform',
         rewards: ['knowledge-coins', 'unique-badge'],
+        date: new Date(new Date().setDate(new Date().getDate() + 25)).toISOString(),
+        imageId: 'event-ai',
+        spotsLeft: 12,
     },
     {
         id: 'coll-event-1',
@@ -44,6 +53,9 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'individual',
         hostType: 'college',
         rewards: ['prize-money', 'certificate'],
+        date: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString(),
+        imageId: 'event-codefest',
+        spotsLeft: 5,
     },
     {
         id: 'coll-event-2',
@@ -53,6 +65,9 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'team',
         hostType: 'college',
         rewards: ['prize-money', 'certificate'],
+        date: new Date(new Date().setDate(new Date().getDate() + 40)).toISOString(),
+        imageId: 'event-pitch',
+        spotsLeft: 18,
     },
     {
         id: 'plat-event-3',
@@ -62,6 +77,9 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'individual',
         hostType: 'platform',
         rewards: ['knowledge-coins', 'certificate'],
+        date: new Date(new Date().setDate(new Date().getDate() + 15)).toISOString(),
+        imageId: 'event-cloud',
+        spotsLeft: 40,
     },
      {
         id: 'coll-event-3',
@@ -71,5 +89,8 @@ export const allEvents: (PlatformEvent | CollegeEvent)[] = [
         participationType: 'team',
         hostType: 'college',
         rewards: ['prize-money', 'certificate'],
+        date: new Date(new Date().setDate(new Date().getDate() + 20)).toISOString(),
+        imageId: 'event-inter-dept',
+        spotsLeft: 8,
     },
 ];

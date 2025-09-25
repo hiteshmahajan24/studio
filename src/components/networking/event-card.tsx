@@ -1,12 +1,15 @@
 'use client';
 
-import { Award, Badge, Coins, Group, PersonStanding, Trophy } from "lucide-react";
+import { Award, Badge, Calendar, Coins, Group, PersonStanding, Trophy, Users } from "lucide-react";
 import { Badge as UiBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CollegeEvent, PlatformEvent } from "@/lib/events-data";
 import { EventRegistrationDialog } from "./event-registration-dialog";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { format } from "date-fns";
 
 
 type EventCardProps = {
@@ -29,24 +32,47 @@ const rewardIcons = {
 export function EventCard({ event }: EventCardProps) {
 
     const rewards = event.hostType === 'platform' ? event.rewards : event.rewards;
+    const eventImage = PlaceHolderImages.find(img => img.id === event.imageId);
 
     return (
-        <Card className="flex flex-col">
-            <CardHeader>
-                <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl leading-snug">{event.title}</CardTitle>
-                    <UiBadge variant="secondary" className="capitalize shrink-0">
-                        {categoryIcon[event.category.toLowerCase()] || <Trophy className="w-4 h-4" />}
-                        <span className="ml-1.5">{event.category}</span>
-                    </UiBadge>
+        <Card className="flex flex-col overflow-hidden">
+            <CardHeader className="p-0 relative h-40">
+                {eventImage && (
+                    <Image 
+                        src={eventImage.imageUrl}
+                        alt={event.title}
+                        data-ai-hint={eventImage.imageHint}
+                        fill
+                        className="object-cover"
+                    />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-0 left-0 p-4">
+                    <CardTitle className="text-xl leading-snug text-white">{event.title}</CardTitle>
                 </div>
-                <CardDescription>{event.description}</CardDescription>
+                <UiBadge variant="secondary" className="capitalize absolute top-3 right-3">
+                    {categoryIcon[event.category.toLowerCase()] || <Trophy className="w-4 h-4" />}
+                    <span className="ml-1.5">{event.category}</span>
+                </UiBadge>
             </CardHeader>
-            <CardContent className="flex-1 space-y-4">
-                <div className="flex items-center text-sm text-muted-foreground">
-                    {event.participationType === 'team' ? <Group className="mr-2"/> : <PersonStanding className="mr-2"/>}
-                    <span className="capitalize">{event.participationType} Event</span>
+            <CardContent className="flex-1 space-y-4 p-4">
+                <CardDescription>{event.description}</CardDescription>
+                
+                <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4" />
+                        <span>{format(new Date(event.date), 'MMM d, yyyy')}</span>
+                    </div>
+                     <div className="flex items-center gap-1.5">
+                        {event.participationType === 'team' ? <Group className="w-4 h-4"/> : <PersonStanding className="w-4 h-4"/>}
+                        <span className="capitalize">{event.participationType} Event</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        <span>{event.spotsLeft} spots left</span>
+                    </div>
                 </div>
+
                  <div className="space-y-2">
                     <h4 className="text-sm font-semibold">Rewards</h4>
                     <div className="flex flex-wrap gap-4">
@@ -54,7 +80,7 @@ export function EventCard({ event }: EventCardProps) {
                             const rewardInfo = rewardIcons[reward as keyof typeof rewardIcons];
                             if (!rewardInfo) return null;
                             return (
-                                <div key={reward} className="flex items-center gap-1.5 text-sm">
+                                <div key={reward} className="flex items-center gap-1.5 text-sm p-1.5 bg-muted/50 rounded-md">
                                     {rewardInfo.icon}
                                     <span className="font-medium">{rewardInfo.label}</span>
                                 </div>
@@ -66,7 +92,7 @@ export function EventCard({ event }: EventCardProps) {
             <Separator />
             <CardFooter className="p-4">
                 <EventRegistrationDialog event={event}>
-                    <Button className="w-full">Register</Button>
+                    <Button className="w-full">Register Now</Button>
                 </EventRegistrationDialog>
             </CardFooter>
         </Card>
