@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-type SkillsChartProps = {
+export type SkillsChartProps = {
   skillsData: { subject: string; A: number; fullMark: number }[]
 }
 

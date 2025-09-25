@@ -8,8 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Wand2, Edit } from "lucide-react"
-import { mockSuggestedSkills } from "@/lib/mock-data"
-import { SkillsChart } from "./skills-chart"
+import { skillPath } from "@/ai/flows/skill-path"
+import { SkillsChartClient } from "./skills-chart-client"
 import { cn } from "@/lib/utils"
 
 const currentTechStack = ["React", "TypeScript", "Next.js", "Tailwind CSS", "GraphQL"]
@@ -24,7 +24,10 @@ const skillsData = [
 ]
 
 export async function SkillsGrowth({ className }: { className?: string }) {
-  const { suggestedSkills } = await Promise.resolve(mockSuggestedSkills);
+  const { suggestedSkills } = await skillPath({
+    currentSkills: currentTechStack,
+    learningGoals: "Transition into a full-stack role with a focus on cloud-native technologies and AI integration.",
+  });
 
   return (
     <Card className={cn("flex flex-col", className)}>
@@ -57,7 +60,7 @@ export async function SkillsGrowth({ className }: { className?: string }) {
                 AI-Suggested Future Stack
                 </h3>
                 <div className="space-y-3">
-                {suggestedSkills.slice(0, 2).map((item) => (
+                {suggestedSkills.slice(0, 3).map((item) => (
                     <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
                     <p className="font-semibold text-sm">{item.name}</p>
                     <p className="text-xs text-muted-foreground">{item.reason}</p>
@@ -68,7 +71,7 @@ export async function SkillsGrowth({ className }: { className?: string }) {
         </div>
 
         <div className="h-full min-h-[300px]">
-          <SkillsChart skillsData={skillsData} />
+          <SkillsChartClient skillsData={skillsData} />
         </div>
       </CardContent>
     </Card>
