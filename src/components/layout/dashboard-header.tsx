@@ -10,20 +10,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ClientButton } from "./client-button";
+import { useAuth, useUser } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
-export function DashboardHeader({ studentName }: { studentName: string }) {
-  const studentAvatar = PlaceHolderImages.find(
-    (img) => img.id === "student-avatar"
-  );
+export function DashboardHeader() {
+  const { user } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
+
+  const studentName = user?.displayName || user?.email?.split('@')[0] || "User";
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold md:text-2xl">Welcome, {studentName.split(" ")[0]}!</h1>
+        <h1 className="text-xl font-semibold md:text-2xl">Welcome, {studentName}!</h1>
       </div>
       <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
         <div className="relative ml-auto flex-1 md:grow-0">
@@ -38,9 +47,7 @@ export function DashboardHeader({ studentName }: { studentName: string }) {
           <DropdownMenuTrigger asChild>
             <ClientButton variant="ghost" size="icon" className="rounded-full">
               <Avatar className="h-9 w-9">
-                {studentAvatar && (
-                  <AvatarImage src={studentAvatar.imageUrl} alt={studentAvatar.description} data-ai-hint={studentAvatar.imageHint} />
-                )}
+                {user?.photoURL && <AvatarImage src={user.photoURL} alt={studentName} />}
                 <AvatarFallback>{studentName.slice(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
             </ClientButton>
@@ -51,7 +58,10 @@ export function DashboardHeader({ studentName }: { studentName: string }) {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
