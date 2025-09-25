@@ -1,4 +1,4 @@
-import { Award, Star, Trophy, type LucideIcon } from 'lucide-react';
+import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2 } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
 import { SkillPathOutput } from '@/ai/flows/skill-path';
@@ -283,4 +283,44 @@ export const registeredEvents: RegisteredEvent[] = [
     { id: '1', title: 'AI in Modern Applications', date: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), location: 'Online', type: 'Webinar' },
     { id: '2', title: 'Advanced React Patterns', date: new Date(new Date().getTime() + 12 * 24 * 60 * 60 * 1000), location: 'Tech Hub Auditorium', type: 'Workshop' },
     { id: '3', title: 'Future of Tech Summit', date: new Date(new Date().getTime() + 20 * 24 * 60 * 60 * 1000), location: 'Convention Center', type: 'Conference' },
+];
+
+export type Community = {
+  id: string;
+  name: string;
+  description: string;
+  memberCount: number;
+  topContributors: string[];
+  joinCost: number;
+  icon: React.ComponentType<any>;
+};
+
+export const communities: Community[] = [
+    {
+        id: 'comm-1',
+        name: 'Web Wizards',
+        description: 'For all things web development. Discuss frameworks, share projects, and get feedback.',
+        memberCount: 128,
+        topContributors: ['Sarah J.', 'Mike L.'],
+        joinCost: 200,
+        icon: Code,
+    },
+    {
+        id: 'comm-2',
+        name: 'AI Innovators',
+        description: 'Explore the latest in AI, from large language models to computer vision. For enthusiasts and experts alike.',
+        memberCount: 85,
+        topContributors: ['Dr. Reed', 'Alex M.'],
+        joinCost: 250,
+        icon: Bot,
+    },
+    {
+        id: 'comm-3',
+        name: 'Data Dynamos',
+        description: 'Dive deep into data analysis, visualization, and machine learning models. Share datasets and techniques.',
+        memberCount: 92,
+        topContributors: ['Jessica M.', 'David C.'],
+        joinCost: 200,
+        icon: BarChart2,
+    },
 ];

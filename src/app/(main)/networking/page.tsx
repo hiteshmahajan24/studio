@@ -6,6 +6,8 @@ import { allEvents, CollegeEvent, PlatformEvent } from '@/lib/events-data';
 import { EventCard } from '@/components/networking/event-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from '@/components/ui/button';
+import { CommunityCard } from '@/components/networking/community-card';
+import { communities } from '@/lib/mock-data';
 
 type EventCategory = 'All' | 'Competition' | 'Hackathon' | 'Workshop';
 
@@ -55,9 +57,10 @@ export default function NetworkingPage() {
       <Tabs defaultValue="events" className="w-full">
         <TabsList className="h-auto justify-start gap-4 border-b border-border bg-transparent p-0">
           <TabsTrigger value="events" className="data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2 text-base font-semibold text-muted-foreground data-[state=active]:text-foreground">Events</TabsTrigger>
-          <TabsTrigger value="communities" disabled className="px-0 pb-2">Communities</TabsTrigger>
+          <TabsTrigger value="communities" className="data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2 text-base font-semibold text-muted-foreground data-[state=active]:text-foreground">Communities</TabsTrigger>
           <TabsTrigger value="people" disabled className="px-0 pb-2">People</TabsTrigger>
         </TabsList>
+
         <TabsContent value="events" className="mt-6">
           <Tabs defaultValue="platform" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-muted/70">
@@ -109,6 +112,19 @@ export default function NetworkingPage() {
               </Card>
             </TabsContent>
           </Tabs>
+        </TabsContent>
+        <TabsContent value="communities" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Explore Communities</CardTitle>
+                    <CardDescription>Join groups of like-minded peers to learn, share, and grow together.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {communities.map((community) => (
+                        <CommunityCard key={community.id} community={community} />
+                    ))}
+                </CardContent>
+            </Card>
         </TabsContent>
       </Tabs>
     </div>
