@@ -53,14 +53,14 @@ export default function NetworkingPage() {
       </div>
 
       <Tabs defaultValue="events" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="events">Events</TabsTrigger>
-          <TabsTrigger value="communities" disabled>Communities</TabsTrigger>
-          <TabsTrigger value="people" disabled>People</TabsTrigger>
+        <TabsList className="h-auto justify-start gap-4 border-b border-border bg-transparent p-0">
+          <TabsTrigger value="events" className="data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2 text-base font-semibold text-muted-foreground data-[state=active]:text-foreground">Events</TabsTrigger>
+          <TabsTrigger value="communities" disabled className="px-0 pb-2">Communities</TabsTrigger>
+          <TabsTrigger value="people" disabled className="px-0 pb-2">People</TabsTrigger>
         </TabsList>
         <TabsContent value="events" className="mt-6">
           <Tabs defaultValue="platform" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 bg-muted/70">
               <TabsTrigger value="platform">Platform Events</TabsTrigger>
               <TabsTrigger value="college">College Events</TabsTrigger>
             </TabsList>
