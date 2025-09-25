@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInAnonymously, updateProfile } from 'firebase/auth';
 import { useAuth } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,6 +27,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -38,6 +39,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isGuestLoading, setIsGuestLoading] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,6 +63,30 @@ export default function LoginPage() {
       });
     } finally {
         setIsLoading(false);
+    }
+  }
+
+  async function handleGuestLogin() {
+    setIsGuestLoading(true);
+    try {
+        const userCredential = await signInAnonymously(auth);
+        await updateProfile(userCredential.user, {
+            displayName: "Guest User"
+        });
+        toast({
+            title: 'Welcome, Guest!',
+            description: 'You are now browsing as a guest.',
+        });
+        router.push('/dashboard');
+    } catch (error: any) {
+        console.error('Guest Login Error:', error);
+        toast({
+            variant: 'destructive',
+            title: 'Guest Login Failed',
+            description: error.message || 'Could not sign in as guest. Please try again.',
+        });
+    } finally {
+        setIsGuestLoading(false);
     }
   }
 
@@ -101,12 +127,25 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading || isGuestLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
           </form>
         </Form>
+        
+        <div className="relative my-4">
+          <Separator />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 bg-card text-sm text-muted-foreground">
+            OR
+          </div>
+        </div>
+        
+        <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
+            {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Continue as Guest
+        </Button>
+
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{' '}
           <Link href="/signup" className="underline">
