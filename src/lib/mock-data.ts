@@ -95,6 +95,7 @@ export type Mentor = {
   industry: string;
   bio: string;
   topics: string[];
+  community: 'Alumni' | 'Faculty' | 'Industry';
 }
 
 export const allMentors: Mentor[] = [
@@ -107,6 +108,7 @@ export const allMentors: Mentor[] = [
     industry: 'Tech',
     bio: 'Leading researcher in natural language processing with a passion for mentoring the next generation of AI innovators.',
     topics: ['Career Advice in AI', 'Understanding Research Papers', 'AI Project Brainstorming'],
+    community: 'Faculty',
   },
   { 
     id: 'mentor-2',
@@ -117,6 +119,7 @@ export const allMentors: Mentor[] = [
     industry: 'Software',
     bio: 'Architecting large-scale, resilient systems for over a decade. I can help you think about scale and reliability.',
     topics: ['System Design Interviews', 'Cloud Career Paths', 'Mock Technical Interview'],
+    community: 'Alumni',
   },
   { 
     id: 'mentor-3',
@@ -127,6 +130,7 @@ export const allMentors: Mentor[] = [
     industry: 'Design',
     bio: 'Crafting user-centric experiences that are both beautiful and intuitive. Happy to guide you on design principles and career paths.',
     topics: ['Portfolio Review', 'Switching to UX Design', 'User Interview Techniques'],
+    community: 'Alumni',
   },
   { 
     id: 'mentor-4',
@@ -137,6 +141,7 @@ export const allMentors: Mentor[] = [
     industry: 'Cybersecurity',
     bio: 'Specializing in threat detection and ethical hacking. Let\'s talk about how to keep systems secure.',
     topics: ['Cybersecurity Careers', 'Ethical Hacking Basics', 'Security Certifications Guide'],
+    community: 'Industry',
   },
   { 
     id: 'mentor-5',
@@ -147,6 +152,7 @@ export const allMentors: Mentor[] = [
     industry: 'FinTech',
     bio: 'From idea to launch, I guide products to success. I can help with roadmap planning, user stories, and breaking into product.',
     topics: ['Breaking into Product Management', 'Agile Methodologies', 'Market Research'],
+    community: 'Alumni',
   },
   { 
     id: 'mentor-6',
@@ -157,6 +163,7 @@ export const allMentors: Mentor[] = [
     industry: 'Mobile',
     bio: 'Building world-class mobile applications for millions of users. Can mentor on native development, cross-platform solutions, and performance.',
     topics: ['Mobile Development Careers', 'Native vs. Cross-Platform', 'App Store Optimization'],
+    community: 'Industry',
   },
 ];
 
