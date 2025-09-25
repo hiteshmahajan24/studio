@@ -10,6 +10,7 @@ import { allUsers } from '@/lib/mock-data';
 import { Badge } from '../ui/badge';
 import { ThumbsUp, MessageSquare, Bookmark } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 type ArticleCardProps = {
   article: MockArticle;
@@ -19,6 +20,14 @@ export function ArticleCard({ article }: ArticleCardProps) {
   const image = PlaceHolderImages.find((img) => img.id === article.imageId) as ImagePlaceholder;
   const author = allUsers.find(user => user.id === article.authorId);
   const authorAvatar = PlaceHolderImages.find(img => img.id === author?.avatarId);
+  const { toast } = useToast();
+
+  const handleBookmark = () => {
+    toast({
+      title: 'Article Bookmarked!',
+      description: `"${article.title}" has been saved to your list.`,
+    });
+  };
 
   return (
     <Card className="overflow-hidden flex flex-col h-full group">
@@ -54,7 +63,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
                     </div>
                 </div>
             )}
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={handleBookmark}>
                 <Bookmark className="w-5 h-5" />
             </Button>
         </div>
