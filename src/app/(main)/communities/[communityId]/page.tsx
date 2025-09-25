@@ -8,10 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { communities, communityPosts, allUsers } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { PlusCircle, Rss, Users, Calendar } from 'lucide-react';
+import { PlusCircle, Rss, Users, Calendar, Crown } from 'lucide-react';
 import Image from 'next/image';
 import { PostCard } from '@/components/communities/post-card';
 import { CreatePostDialog } from '@/components/communities/create-post-dialog';
+import { cn } from '@/lib/utils';
 
 export default function CommunityPage() {
   const params = useParams();
@@ -24,7 +25,9 @@ export default function CommunityPage() {
 
   const communityImage = PlaceHolderImages.find((img) => img.id === community.imageId);
 
-  const members = allUsers.filter(user => user.community === community.name || (community.name === 'AI Innovators' && user.expertise.includes('AI/ML'))).slice(0, 8);
+  const members = allUsers
+    .filter(user => user.community === community.name || (community.name === 'AI Innovators' && user.expertise.includes('AI/ML')))
+    .sort((a, b) => a.leaderboardRank - b.leaderboardRank);
 
   return (
     <div className="space-y-8">
@@ -80,10 +83,14 @@ export default function CommunityPage() {
         </TabsContent>
         <TabsContent value="members" className="mt-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {members.map(member => {
+                {members.map((member, index) => {
                     const avatar = PlaceHolderImages.find((img) => img.id === member.avatarId);
+                    const isTopThree = index < 3;
                     return (
-                        <Card key={member.id} className="flex flex-col items-center p-4 text-center">
+                        <Card key={member.id} className={cn("flex flex-col items-center p-4 text-center transition-all", isTopThree && "bg-amber-100/20 dark:bg-amber-900/20 border-amber-500/30")}>
+                            <div className='w-full flex justify-end mb-2'>
+                                {isTopThree && <Crown className="w-5 h-5 text-amber-400" />}
+                            </div>
                             <Avatar className="h-20 w-20 mb-4">
                                 {avatar && <AvatarImage src={avatar.imageUrl} alt={member.name} data-ai-hint={avatar.imageHint} />}
                                 <AvatarFallback>{member.name.slice(0, 2)}</AvatarFallback>

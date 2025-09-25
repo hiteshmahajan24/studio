@@ -110,6 +110,7 @@ export type UserProfile = {
   community: 'Alumni' | 'Faculty' | 'Student' | 'Industry';
   experience: Experience[];
   education: Education;
+  leaderboardRank: number;
 }
 
 export type Mentor = Omit<UserProfile, 'experience' | 'education'> & {
@@ -128,6 +129,7 @@ export const allMentors: Mentor[] = [
     bio: 'Leading researcher in natural language processing with a passion for mentoring the next generation of AI innovators.',
     topics: ['Career Advice in AI', 'Understanding Research Papers', 'AI Project Brainstorming'],
     community: 'Faculty',
+    leaderboardRank: 4,
   },
   { 
     id: 'mentor-2',
@@ -139,6 +141,7 @@ export const allMentors: Mentor[] = [
     bio: 'Architecting large-scale, resilient systems for over a decade. I can help you think about scale and reliability.',
     topics: ['System Design Interviews', 'Cloud Career Paths', 'Mock Technical Interview'],
     community: 'Alumni',
+    leaderboardRank: 1,
   },
   { 
     id: 'mentor-3',
@@ -150,6 +153,7 @@ export const allMentors: Mentor[] = [
     bio: 'Crafting user-centric experiences that are both beautiful and intuitive. Happy to guide you on design principles and career paths.',
     topics: ['Portfolio Review', 'Switching to UX Design', 'User Interview Techniques'],
     community: 'Alumni',
+    leaderboardRank: 7,
   },
   { 
     id: 'mentor-4',
@@ -161,6 +165,7 @@ export const allMentors: Mentor[] = [
     bio: 'Specializing in threat detection and ethical hacking. Let\'s talk about how to keep systems secure.',
     topics: ['Cybersecurity Careers', 'Ethical Hacking Basics', 'Security Certifications Guide'],
     community: 'Industry',
+    leaderboardRank: 15,
   },
   { 
     id: 'mentor-5',
@@ -172,6 +177,7 @@ export const allMentors: Mentor[] = [
     bio: 'From idea to launch, I guide products to success. I can help with roadmap planning, user stories, and breaking into product.',
     topics: ['Breaking into Product Management', 'Agile Methodologies', 'Market Research'],
     community: 'Alumni',
+    leaderboardRank: 3,
   },
   { 
     id: 'mentor-6',
@@ -183,6 +189,7 @@ export const allMentors: Mentor[] = [
     bio: 'Building world-class mobile applications for millions of users. Can mentor on native development, cross-platform solutions, and performance.',
     topics: ['Mobile Development Careers', 'Native vs. Cross-Platform', 'App Store Optimization'],
     community: 'Industry',
+    leaderboardRank: 11,
   },
 ];
 
@@ -205,7 +212,8 @@ export const allUsers: UserProfile[] = [
     bio: 'A passionate student focusing on modern web technologies. Eager to learn and contribute to open-source projects.',
     community: 'Student',
     experience: [],
-    education: { degree: 'B.S. in Computer Science', university: 'State University', year: '2025 (Expected)'}
+    education: { degree: 'B.S. in Computer Science', university: 'State University', year: '2025 (Expected)'},
+    leaderboardRank: 12,
   },
     {
     id: 'user-2',
@@ -217,7 +225,8 @@ export const allUsers: UserProfile[] = [
     bio: 'Fascinated by data and the stories it can tell. Currently working on a project for sentiment analysis.',
     community: 'Student',
     experience: [],
-    education: { degree: 'B.S. in Statistics', university: 'State University', year: '2025 (Expected)'}
+    education: { degree: 'B.S. in Statistics', university: 'State University', year: '2025 (Expected)'},
+    leaderboardRank: 2,
   }
 ];
 
