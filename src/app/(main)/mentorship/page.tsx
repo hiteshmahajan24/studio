@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Handshake, Search } from 'lucide-react';
+import { Crown, Handshake, Search, Star } from 'lucide-react';
 import { allMentors } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Input } from '@/components/ui/input';
@@ -16,18 +16,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { RequestSessionDialog } from '@/components/mentorship/request-session-dialog';
 
-function MentorCard({ mentor }: { mentor: typeof allMentors[0] }) {
+function MentorCard({ mentor, featured = false }: { mentor: typeof allMentors[0]; featured?: boolean }) {
   const avatar = PlaceHolderImages.find((img) => img.id === mentor.avatarId);
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
+    <Card className={featured ? 'border-primary border-2' : ''}>
+      <CardHeader className="flex flex-row items-start gap-4">
         <Avatar className="h-16 w-16">
           {avatar && <AvatarImage src={avatar.imageUrl} alt={mentor.name} data-ai-hint={avatar.imageHint} />}
           <AvatarFallback>{mentor.name.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <div>
-          <CardTitle className="text-xl">{mentor.name}</CardTitle>
+        <div className="flex-1">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-xl">{mentor.name}</CardTitle>
+            {featured && <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20"><Star className="mr-1.5" /> Featured</Badge>}
+          </div>
           <CardDescription>{mentor.title}</CardDescription>
         </div>
       </CardHeader>
@@ -39,10 +43,12 @@ function MentorCard({ mentor }: { mentor: typeof allMentors[0] }) {
             </Badge>
           ))}
         </div>
-        <p className="text-sm text-muted-foreground">{mentor.bio}</p>
-        <Button className="w-full">
-          <Handshake className="mr-2" /> Connect
-        </Button>
+        <p className="text-sm text-muted-foreground line-clamp-3">{mentor.bio}</p>
+        <RequestSessionDialog mentor={mentor}>
+            <Button className="w-full">
+                <Handshake className="mr-2" /> Request a Session
+            </Button>
+        </RequestSessionDialog>
       </CardContent>
     </Card>
   );
@@ -62,9 +68,12 @@ export default function MentorshipPage() {
     const allIndustries = allMentors.map((mentor) => mentor.industry);
     return ['all', ...Array.from(new Set(allIndustries))];
   }, []);
-
+  
+  const featuredMentor = allMentors.find(m => m.id === 'mentor-2');
+  
   const filteredMentors = allMentors.filter((mentor) => {
     return (
+      mentor.id !== featuredMentor?.id &&
       (mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         mentor.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (expertiseFilter === 'all' || mentor.expertise.includes(expertiseFilter)) &&
@@ -80,6 +89,13 @@ export default function MentorshipPage() {
           Connect with experienced professionals for guidance and support.
         </p>
       </div>
+
+      {featuredMentor && (
+        <div className="space-y-4">
+            <h2 className="text-2xl font-semibold flex items-center gap-2"><Crown className="text-amber-400"/> Mentor of the Week</h2>
+            <MentorCard mentor={featuredMentor} featured />
+        </div>
+      )}
 
       <Card>
         <CardHeader>

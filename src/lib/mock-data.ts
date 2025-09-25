@@ -86,7 +86,18 @@ export const user = {
     }
 };
 
-export const allMentors = [
+export type Mentor = {
+  id: string;
+  name: string;
+  title: string;
+  avatarId: string;
+  expertise: string[];
+  industry: string;
+  bio: string;
+  topics: string[];
+}
+
+export const allMentors: Mentor[] = [
   { 
     id: 'mentor-1',
     name: 'Dr. Evelyn Reed', 
@@ -94,7 +105,8 @@ export const allMentors = [
     avatarId: 'mentor-1', 
     expertise: ['AI/ML', 'Python', 'Research'],
     industry: 'Tech',
-    bio: 'Leading researcher in natural language processing with a passion for mentoring the next generation of AI innovators.'
+    bio: 'Leading researcher in natural language processing with a passion for mentoring the next generation of AI innovators.',
+    topics: ['Career Advice in AI', 'Understanding Research Papers', 'AI Project Brainstorming'],
   },
   { 
     id: 'mentor-2',
@@ -103,7 +115,8 @@ export const allMentors = [
     avatarId: 'mentor-2', 
     expertise: ['System Design', 'Cloud Architecture', 'DevOps'],
     industry: 'Software',
-    bio: 'Architecting large-scale, resilient systems for over a decade. I can help you think about scale and reliability.'
+    bio: 'Architecting large-scale, resilient systems for over a decade. I can help you think about scale and reliability.',
+    topics: ['System Design Interviews', 'Cloud Career Paths', 'Mock Technical Interview'],
   },
   { 
     id: 'mentor-3',
@@ -112,7 +125,8 @@ export const allMentors = [
     avatarId: 'mentor-3', 
     expertise: ['UX/UI', 'Figma', 'User Research'],
     industry: 'Design',
-    bio: 'Crafting user-centric experiences that are both beautiful and intuitive. Happy to guide you on design principles and career paths.'
+    bio: 'Crafting user-centric experiences that are both beautiful and intuitive. Happy to guide you on design principles and career paths.',
+    topics: ['Portfolio Review', 'Switching to UX Design', 'User Interview Techniques'],
   },
   { 
     id: 'mentor-4',
@@ -121,7 +135,8 @@ export const allMentors = [
     avatarId: 'mentor-4', 
     expertise: ['Security', 'Networking', 'Penetration Testing'],
     industry: 'Cybersecurity',
-    bio: 'Specializing in threat detection and ethical hacking. Let\'s talk about how to keep systems secure.'
+    bio: 'Specializing in threat detection and ethical hacking. Let\'s talk about how to keep systems secure.',
+    topics: ['Cybersecurity Careers', 'Ethical Hacking Basics', 'Security Certifications Guide'],
   },
   { 
     id: 'mentor-5',
@@ -130,7 +145,8 @@ export const allMentors = [
     avatarId: 'mentor-5', 
     expertise: ['Product Management', 'Agile', 'Market Analysis'],
     industry: 'FinTech',
-    bio: 'From idea to launch, I guide products to success. I can help with roadmap planning, user stories, and breaking into product.'
+    bio: 'From idea to launch, I guide products to success. I can help with roadmap planning, user stories, and breaking into product.',
+    topics: ['Breaking into Product Management', 'Agile Methodologies', 'Market Research'],
   },
   { 
     id: 'mentor-6',
@@ -139,7 +155,8 @@ export const allMentors = [
     avatarId: 'mentor-6', 
     expertise: ['iOS', 'Android', 'React Native'],
     industry: 'Mobile',
-    bio: 'Building world-class mobile applications for millions of users. Can mentor on native development, cross-platform solutions, and performance.'
+    bio: 'Building world-class mobile applications for millions of users. Can mentor on native development, cross-platform solutions, and performance.',
+    topics: ['Mobile Development Careers', 'Native vs. Cross-Platform', 'App Store Optimization'],
   },
 ];
 
