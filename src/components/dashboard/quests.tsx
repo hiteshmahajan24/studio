@@ -10,11 +10,13 @@ import { cn } from "@/lib/utils";
 import { generateAIQuest, type AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import { user } from '@/lib/mock-data';
 import { Skeleton } from '../ui/skeleton';
+import { useUserState } from '@/context/user-state-context';
 
 export function Quests({ className }: { className?: string }) {
   const [quest, setQuest] = React.useState<AIQuestOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const { setKnowledgeCoins } = useUserState();
 
   const fetchQuest = React.useCallback(async () => {
     setIsLoading(true);
@@ -35,6 +37,14 @@ export function Quests({ className }: { className?: string }) {
   React.useEffect(() => {
     fetchQuest();
   }, [fetchQuest]);
+
+  const handleCompleteQuest = () => {
+    if (quest) {
+        setKnowledgeCoins(prev => prev + quest.knowledgeCoinsReward);
+        // Fetch a new quest after completing the current one
+        fetchQuest();
+    }
+  }
 
   return (
     <Card className={cn("flex flex-col", className)}>
@@ -79,7 +89,7 @@ export function Quests({ className }: { className?: string }) {
                     <span className="font-semibold text-base">{quest?.knowledgeCoinsReward} Coins</span>
                 )}
             </Badge>
-            <Button size="lg" disabled={isLoading || !!error}>Start Quest</Button>
+            <Button size="lg" disabled={isLoading || !!error} onClick={handleCompleteQuest}>Complete Quest</Button>
         </div>
       </CardContent>
     </Card>
