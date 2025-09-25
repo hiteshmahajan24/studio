@@ -2,6 +2,7 @@
 import { CourseOverview } from '@/components/academics/course-overview';
 import { GpaCalculator } from '@/components/academics/gpa-calculator';
 import { UpcomingAssignments } from '@/components/academics/upcoming-assignments';
+import { ClientOnly } from '@/components/layout/client-only';
 
 export default function AcademicsPage() {
   return (
@@ -16,12 +17,16 @@ export default function AcademicsPage() {
             <CourseOverview />
         </div>
         <div className="lg:col-span-1">
+          <ClientOnly>
             <UpcomingAssignments />
+          </ClientOnly>
         </div>
       </div>
       
       <div>
-        <GpaCalculator />
+        <ClientOnly>
+          <GpaCalculator />
+        </ClientOnly>
       </div>
 
     </div>
