@@ -86,7 +86,20 @@ export const user = {
     }
 };
 
-export type Mentor = {
+type Experience = {
+  role: string;
+  company: string;
+  period: string;
+  description: string;
+};
+
+type Education = {
+  degree: string;
+  university: string;
+  year: string;
+};
+
+export type UserProfile = {
   id: string;
   name: string;
   title: string;
@@ -94,9 +107,15 @@ export type Mentor = {
   expertise: string[];
   industry: string;
   bio: string;
-  topics: string[];
-  community: 'Alumni' | 'Faculty' | 'Industry';
+  community: 'Alumni' | 'Faculty' | 'Student';
+  experience: Experience[];
+  education: Education;
 }
+
+export type Mentor = Omit<UserProfile, 'experience' | 'education'> & {
+  topics: string[];
+}
+
 
 export const allMentors: Mentor[] = [
   { 
@@ -165,6 +184,41 @@ export const allMentors: Mentor[] = [
     topics: ['Mobile Development Careers', 'Native vs. Cross-Platform', 'App Store Optimization'],
     community: 'Industry',
   },
+];
+
+export const allUsers: UserProfile[] = [
+  ...allMentors.map(m => ({
+    ...m,
+    experience: [
+      { role: m.title, company: m.industry === 'Tech' ? 'Innovate Inc.' : 'Creative Co.', period: '2020 - Present', description: 'My current role focuses on my primary expertise.'},
+      { role: 'Senior Developer', company: 'Legacy Systems', period: '2017 - 2020', description: 'Worked on maintaining and upgrading legacy codebases.'}
+    ],
+    education: { degree: 'M.S. in Computer Science', university: 'State University', year: '2017'}
+  })),
+  {
+    id: 'user-1',
+    name: 'Alex Martinez',
+    title: 'Software Engineering Student',
+    avatarId: 'student-avatar',
+    expertise: ['React', 'TypeScript', 'Next.js'],
+    industry: 'Software',
+    bio: 'A passionate student focusing on modern web technologies. Eager to learn and contribute to open-source projects.',
+    community: 'Student',
+    experience: [],
+    education: { degree: 'B.S. in Computer Science', university: 'State University', year: '2025 (Expected)'}
+  },
+    {
+    id: 'user-2',
+    name: 'Jessica Miller',
+    title: 'Data Science Student',
+    avatarId: 'mentor-5', // Reusing for mock
+    expertise: ['Python', 'Pandas', 'Scikit-learn'],
+    industry: 'Data Science',
+    bio: 'Fascinated by data and the stories it can tell. Currently working on a project for sentiment analysis.',
+    community: 'Student',
+    experience: [],
+    education: { degree: 'B.S. in Statistics', university: 'State University', year: '2025 (Expected)'}
+  }
 ];
 
 
