@@ -1,3 +1,4 @@
+
 import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2, Newspaper } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
@@ -70,6 +71,7 @@ export const user = {
     name: 'Alex Martinez',
     knowledgeCoins: 1500,
     leaderboardRank: 12,
+    questPoints: 2480,
     profile: {
         name: 'Alex Martinez',
         skills: ['React', 'TypeScript', 'Next.js', 'Node.js', 'Python', 'GCP', 'Tailwind CSS'],
@@ -379,4 +381,77 @@ export const communityPosts: CommunityPost[] = [
         likes: 23,
         comments: 9,
     }
-]
+];
+
+export type MockArticle = {
+  id: string;
+  title: string;
+  authorId: string;
+  imageId: string;
+  tags: string[];
+  readTime: number; // in minutes
+  likes: number;
+  comments: number;
+};
+
+export const mockArticles: MockArticle[] = [
+  { id: 'article-1', title: 'A Deep Dive into React Server Components', authorId: 'mentor-2', imageId: 'article-react', tags: ['React', 'Next.js', 'Web Dev'], readTime: 8, likes: 128, comments: 12 },
+  { id: 'article-2', title: 'The Rise of Vector Databases in AI', authorId: 'mentor-1', imageId: 'article-ai', tags: ['AI/ML', 'Databases'], readTime: 12, likes: 256, comments: 25 },
+  { id: 'article-3', title: 'Creating a Design System with Figma and Storybook', authorId: 'mentor-3', imageId: 'article-design', tags: ['UX/UI', 'Design Systems'], readTime: 15, likes: 340, comments: 32 },
+  { id: 'article-4', title: 'My Journey into Cybersecurity', authorId: 'mentor-4', imageId: 'article-security', tags: ['Cybersecurity', 'Career'], readTime: 7, likes: 98, comments: 8 },
+  { id: 'article-5', title: 'Product Management 101: A Beginner\'s Guide', authorId: 'mentor-5', imageId: 'article-product', tags: ['Product', 'Beginner'], readTime: 10, likes: 175, comments: 18 },
+  { id: 'article-6', title: 'Optimizing Mobile App Performance on iOS', authorId: 'mentor-6', imageId: 'article-mobile', tags: ['iOS', 'Mobile Dev'], readTime: 9, likes: 112, comments: 11 },
+  { id: 'article-7', title: 'Is GraphQL Still Relevant in 2024?', authorId: 'user-1', imageId: 'article-graphql', tags: ['Web Dev', 'API'], readTime: 6, likes: 88, comments: 21 },
+  { id: 'article-8', title: 'Getting Started with Pandas for Data Analysis', authorId: 'user-2', imageId: 'article-pandas', tags: ['Data Science', 'Python'], readTime: 11, likes: 210, comments: 15 },
+  { id: 'article-9', title: 'Understanding CI/CD Pipelines', authorId: 'mentor-2', imageId: 'event-cloud', tags: ['DevOps', 'CI/CD'], readTime: 10, likes: 150, comments: 14 },
+];
+
+export type AcademicCourse = {
+    id: string;
+    name: string;
+    progress: number;
+    grade: number;
+    letterGrade: string;
+};
+
+export const academicCourses: AcademicCourse[] = [
+    { id: 'cs50', name: 'CS50: Introduction to Computer Science', progress: 75, grade: 92, letterGrade: 'A-' },
+    { id: 'math201', name: 'MATH201: Linear Algebra', progress: 90, grade: 95, letterGrade: 'A' },
+    { id: 'ds300', name: 'DS300: Data Structures & Algorithms', progress: 60, grade: 88, letterGrade: 'B+' },
+    { id: 'hum101', name: 'HUM101: Ethics in Technology', progress: 85, grade: 91, letterGrade: 'A-' },
+];
+
+export type UpcomingAssignment = {
+    id: string;
+    title: string;
+    course: string;
+    dueDate: string;
+    priority: 'High' | 'Medium' | 'Low';
+};
+
+export const upcomingAssignments: UpcomingAssignment[] = [
+    { id: '1', title: 'Problem Set 5', course: 'CS50', dueDate: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString(), priority: 'High' },
+    { id: '2', title: 'Mid-term Exam', course: 'MATH201', dueDate: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString(), priority: 'High' },
+    { id: '3', title: 'Lab 4: Linked Lists', course: 'DS300', dueDate: new Date(new Date().setDate(new Date().getDate() + 5)).toISOString(), priority: 'Medium' },
+    { id: '4', title: 'Reading Response 3', course: 'HUM101', dueDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(), priority: 'Low' },
+];
+
+export type Quest = {
+    id: string;
+    title: string;
+    description: string;
+    category: 'Weekly' | 'Community' | 'Special Event';
+    rewardPoints: number;
+    status: 'active' | 'completed';
+    progress: number;
+    cta: string;
+}
+
+export const allQuests: Quest[] = [
+    { id: 'q1', title: 'Community Connector', description: 'Join a new community and introduce yourself.', category: 'Community', rewardPoints: 100, status: 'active', progress: 0, cta: 'Explore Communities' },
+    { id: 'q2', title: 'Knowledge Sharer', description: 'Ask a thoughtful question in a community discussion.', category: 'Community', rewardPoints: 150, status: 'active', progress: 50, cta: 'Go to Feed' },
+    { id: 'q3', title: 'Weekly Wisdom', description: 'Read 3 articles from your recommended feed.', category: 'Weekly', rewardPoints: 75, status: 'active', progress: 33, cta: 'Read Articles' },
+    { id: 'q4', title: 'Mentor Meetup', description: 'Schedule your first session with a mentor.', category: 'Weekly', rewardPoints: 200, status: 'completed', progress: 100, cta: '' },
+    { id: 'q5', title: 'Career Kickstarter', description: 'Apply for a job using the AI Quick Apply feature.', category: 'Weekly', rewardPoints: 100, status: 'completed', progress: 100, cta: '' },
+    { id: 'q6', title: 'Hackathon Participant', description: 'Register for the upcoming "AI for Good" hackathon.', category: 'Special Event', rewardPoints: 500, status: 'active', progress: 0, cta: 'Register Now' },
+];

@@ -89,6 +89,54 @@
       "description": "Image for Web Wizards community",
       "imageUrl": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=2070&auto=format&fit=crop",
       "imageHint": "code"
+    },
+    {
+      "id": "article-react",
+      "description": "Abstract image for React article",
+      "imageUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "React logo"
+    },
+    {
+      "id": "article-ai",
+      "description": "Abstract image for AI article",
+      "imageUrl": "https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "abstract tech"
+    },
+    {
+      "id": "article-design",
+      "description": "Abstract image for Design article",
+      "imageUrl": "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1964&auto=format&fit=crop",
+      "imageHint": "design software"
+    },
+    {
+      "id": "article-security",
+      "description": "Abstract image for Security article",
+      "imageUrl": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "code lock"
+    },
+    {
+      "id": "article-product",
+      "description": "Abstract image for Product Management article",
+      "imageUrl": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "planning board"
+    },
+    {
+      "id": "article-mobile",
+      "description": "Abstract image for Mobile Dev article",
+      "imageUrl": "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?q=80&w=1974&auto=format&fit=crop",
+      "imageHint": "mobile development"
+    },
+    {
+      "id": "article-graphql",
+      "description": "Abstract image for GraphQL article",
+      "imageUrl": "https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=1974&auto=format&fit=crop",
+      "imageHint": "code"
+    },
+    {
+      "id": "article-pandas",
+      "description": "Abstract image for Pandas article",
+      "imageUrl": "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "python code"
     }
   ]
 }
