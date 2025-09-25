@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -11,6 +12,7 @@ import {
   Settings,
   Shield,
   GraduationCap,
+  Newspaper,
 } from 'lucide-react';
 import {
   Tooltip,

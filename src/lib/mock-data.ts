@@ -1,4 +1,5 @@
-import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2 } from 'lucide-react';
+
+import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2, Newspaper } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
 import { SkillPathOutput } from '@/ai/flows/skill-path';
@@ -323,3 +324,39 @@ export const communities: Community[] = [
         icon: BarChart2,
     },
 ];
+
+export type CommunityPost = {
+    id: string;
+    authorId: string;
+    content: string;
+    timestamp: string;
+    likes: number;
+    comments: number;
+}
+
+export const communityPosts: CommunityPost[] = [
+    {
+        id: 'post-1',
+        authorId: 'mentor-3', // Sarah Jones
+        content: 'Just found this awesome collection of open-source UI animations. Perfect for anyone looking to spice up their web projects! Check it out: ui-animations.dev',
+        timestamp: '2h ago',
+        likes: 15,
+        comments: 4,
+    },
+    {
+        id: 'post-2',
+        authorId: 'user-1', // Alex Martinez
+        content: 'I\'m working on a side project with Next.js 14 and Server Actions. Has anyone found a good way to handle complex form validation state across multiple components? The official docs are a bit light on this specific use case.',
+        timestamp: '1d ago',
+        likes: 8,
+        comments: 6,
+    },
+    {
+        id: 'post-3',
+        authorId: 'mentor-2', // David Chen
+        content: 'Quick tip for everyone preparing for system design interviews: Don\'t just focus on the components (load balancers, databases, etc.). Spend equal time on the "non-functionals" - scalability, latency, availability, and consistency. Explaining your trade-offs is key.',
+        timestamp: '3d ago',
+        likes: 42,
+        comments: 12,
+    },
+]
