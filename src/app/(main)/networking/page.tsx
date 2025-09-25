@@ -49,6 +49,14 @@ export default function NetworkingPage() {
   const [communityFilter, setCommunityFilter] = React.useState('all');
   const [industryFilter, setIndustryFilter] = React.useState('all');
 
+  const [platformEvents, setPlatformEvents] = React.useState<(PlatformEvent | CollegeEvent)[]>([]);
+  const [collegeEvents, setCollegeEvents] = React.useState<(PlatformEvent | CollegeEvent)[]>([]);
+
+  React.useEffect(() => {
+    setPlatformEvents(allEvents.filter(e => e.hostType === 'platform'));
+    setCollegeEvents(allEvents.filter(e => e.hostType === 'college'));
+  }, []);
+
   const industries = React.useMemo(() => {
     const allIndustries = allUsers.map((user) => user.industry);
     return ['all', ...Array.from(new Set(allIndustries))];
@@ -70,9 +78,6 @@ export default function NetworkingPage() {
     );
   });
 
-  const platformEvents = allEvents.filter(e => e.hostType === 'platform');
-  const collegeEvents = allEvents.filter(e => e.hostType === 'college');
-  
   const categories: EventCategory[] = ['All', 'Competition', 'Hackathon', 'Workshop'];
 
   return (
@@ -85,7 +90,7 @@ export default function NetworkingPage() {
       </div>
 
       <Tabs defaultValue="events" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-muted/70">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="events">Events</TabsTrigger>
           <TabsTrigger value="communities">Communities</TabsTrigger>
           <TabsTrigger value="people">People</TabsTrigger>
@@ -93,7 +98,7 @@ export default function NetworkingPage() {
 
         <TabsContent value="events" className="mt-6">
           <Tabs defaultValue="platform" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-muted/70">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="platform">Platform Events</TabsTrigger>
               <TabsTrigger value="college">College Events</TabsTrigger>
             </TabsList>
