@@ -16,7 +16,7 @@ const statusColorMap: Record<JobApplication['status'], string> = {
     'Applied': 'border-primary/50 text-primary',
     'Under Review': '',
     'Interview': 'bg-primary/90 text-primary-foreground',
-    'Offered': 'border-green-500/50 bg-green-500/10 text-green-500', // Custom color for 'Offered'
+    'Offered': 'border-green-500/50 bg-green-500/10 text-green-500',
     'Rejected': ''
 };
 
