@@ -1,7 +1,7 @@
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Bell, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { ClientButton } from "./client-button";
 
 export function DashboardHeader({ studentName }: { studentName: string }) {
   const studentAvatar = PlaceHolderImages.find(
@@ -29,20 +30,20 @@ export function DashboardHeader({ studentName }: { studentName: string }) {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-muted pl-8 md:w-[200px] lg:w-[320px]" />
         </div>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <ClientButton variant="ghost" size="icon" className="rounded-full">
           <Bell className="h-5 w-5" />
           <span className="sr-only">Toggle notifications</span>
-        </Button>
+        </ClientButton>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <ClientButton variant="ghost" size="icon" className="rounded-full">
               <Avatar className="h-9 w-9">
                 {studentAvatar && (
                   <AvatarImage src={studentAvatar.imageUrl} alt={studentAvatar.description} data-ai-hint={studentAvatar.imageHint} />
                 )}
                 <AvatarFallback>{studentName.slice(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
-            </Button>
+            </ClientButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
