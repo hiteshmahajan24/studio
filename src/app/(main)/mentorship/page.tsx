@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { RequestSessionDialog } from '@/components/mentorship/request-session-dialog';
+import { ClientButton } from '@/components/layout/client-button';
 
 function MentorCard({ mentor, featured = false }: { mentor: typeof allMentors[0]; featured?: boolean }) {
   const avatar = PlaceHolderImages.find((img) => img.id === mentor.avatarId);
@@ -47,16 +48,16 @@ function MentorCard({ mentor, featured = false }: { mentor: typeof allMentors[0]
         </div>
         <p className="text-sm text-muted-foreground line-clamp-3">{mentor.bio}</p>
         <RequestSessionDialog mentor={mentor}>
-            <Button className="w-full">
+            <ClientButton className="w-full">
                 <Handshake className="mr-2" /> Request a Session
-            </Button>
+            </ClientButton>
         </RequestSessionDialog>
       </CardContent>
     </Card>
   );
 }
 
-export default function MentorshipPage() {
+function MentorshipPageContent() {
   const searchParams = useSearchParams();
   const queryFromWellnessNook = searchParams.get('q');
 
@@ -184,4 +185,19 @@ export default function MentorshipPage() {
       </Card>
     </div>
   );
+}
+
+
+export default function MentorshipPage() {
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null; // Or a loading spinner
+  }
+
+  return <MentorshipPageContent />;
 }
