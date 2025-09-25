@@ -11,6 +11,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { PlusCircle, Rss, Users, Calendar } from 'lucide-react';
 import Image from 'next/image';
 import { PostCard } from '@/components/communities/post-card';
+import { CreatePostDialog } from '@/components/communities/create-post-dialog';
 
 export default function CommunityPage() {
   const params = useParams();
@@ -56,10 +57,12 @@ export default function CommunityPage() {
       </Card>
 
         <div className="flex justify-end">
-            <Button>
-                <PlusCircle className="mr-2" />
-                Create Post
-            </Button>
+            <CreatePostDialog>
+              <Button>
+                  <PlusCircle className="mr-2" />
+                  Create Post
+              </Button>
+            </CreatePostDialog>
         </div>
 
       <Tabs defaultValue="feed">
