@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserCard } from '@/components/networking/user-card';
+import { cn } from '@/lib/utils';
 
 type EventCategory = 'All' | 'Competition' | 'Hackathon' | 'Workshop';
 

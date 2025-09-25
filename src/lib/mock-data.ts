@@ -293,6 +293,7 @@ export type Community = {
   topContributors: string[];
   joinCost: number;
   icon: React.ComponentType<any>;
+  imageId: string;
 };
 
 export const communities: Community[] = [
@@ -304,6 +305,7 @@ export const communities: Community[] = [
         topContributors: ['Sarah J.', 'Mike L.'],
         joinCost: 200,
         icon: Code,
+        imageId: 'community-web',
     },
     {
         id: 'comm-2',
@@ -313,6 +315,7 @@ export const communities: Community[] = [
         topContributors: ['Dr. Reed', 'Alex M.'],
         joinCost: 250,
         icon: Bot,
+        imageId: 'event-ai',
     },
     {
         id: 'comm-3',
@@ -322,6 +325,7 @@ export const communities: Community[] = [
         topContributors: ['Jessica M.', 'David C.'],
         joinCost: 200,
         icon: BarChart2,
+        imageId: 'event-inter-dept',
     },
 ];
 

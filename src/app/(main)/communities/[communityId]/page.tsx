@@ -3,7 +3,6 @@
 
 import { useParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,7 +21,7 @@ export default function CommunityPage() {
     return <div className="text-center py-10">Community not found.</div>;
   }
 
-  const communityImage = PlaceHolderImages.find((img) => img.id === community.id.replace('comm-', 'event-'));
+  const communityImage = PlaceHolderImages.find((img) => img.id === community.imageId);
 
   const members = allUsers.filter(user => user.community === community.name || (community.name === 'AI Innovators' && user.expertise.includes('AI/ML'))).slice(0, 8);
 

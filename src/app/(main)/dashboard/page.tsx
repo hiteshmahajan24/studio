@@ -9,6 +9,7 @@ import { Networking } from "@/components/dashboard/networking";
 import { SkillsGrowth } from "@/components/dashboard/skills-growth";
 import { WellnessNook } from "@/components/dashboard/wellness-nook";
 import { TrackEvents } from "@/components/dashboard/track-events";
+import { JoinedCommunities } from "@/components/dashboard/joined-communities";
 
 export default function DashboardPage() {
   return (
@@ -22,9 +23,10 @@ export default function DashboardPage() {
         <SkillsGrowth />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <WellnessNook className="h-[350px]" />
-        <Quests className="h-[350px]" />
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <WellnessNook className="md:col-span-1 h-[350px]" />
+        <Quests className="md:col-span-1 h-[350px]" />
+        <JoinedCommunities className="md:col-span-1 h-[350px]" />
       </div>
 
       <div className="grid grid-cols-1 gap-8">
