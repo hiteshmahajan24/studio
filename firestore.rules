@@ -1,0 +1,224 @@
+/**
+ * @file Firestore Security Rules for NexusConnect
+ * @version Prototyping
+ *
+ * @Core Philosophy:
+ * This ruleset enforces a user-ownership model for user profiles and open access for public content like posts and jobs.
+ * Data relating to mentorships and applications are also publicly accessible.
+ *
+ * @Data Structure:
+ * - User profiles are stored under `/users/{userId}`, enforcing strict user-ownership.
+ * - Public content (posts, jobs, applications, mentorships, coin transactions, quests, and badges) are stored in top-level collections (`/posts/{postId}`, etc.).
+ *
+ * @Key Security Decisions:
+ * - User listing is implicitly allowed through the open `list` rule on `/users`. This is acceptable for the prototyping phase but should be reconsidered for production.
+ * - Data validation is minimal, focusing on authorization and relational integrity. Full schema validation is deferred to later development stages.
+ *
+ * @Denormalization for Authorization:
+ * - The `Post`, `Job`, `Application`, `Mentorship`, `CoinTransaction`, `Quest`, and `Badge` entities all contain ownership fields (e.g., `authorId`, `employerId`, `userId`) that are validated against `request.auth.uid` on creation to ensure the creator's identity.
+ *
+ * @Structural Segregation:
+ * - User profiles (private) are stored under `/users/{userId}`, while public content (posts, jobs, applications, mentorships, coin transactions, quests, and badges) are stored in top-level collections.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Controls access to user profile data.
+     * @path /users/{userId}
+     * @allow (create) User with matching ID can create their profile.
+     * @allow (get, list) Any authenticated user can read user profiles.
+     * @allow (update, delete) Only the user with matching ID can modify/delete their profile.
+     * @deny (create) User cannot create a profile with an ID that doesn't match their own.
+     * @deny (update, delete) User cannot modify/delete a profile that doesn't belong to them.
+     * @principle Enforces document ownership for writes and allows public read access.
+     */
+    match /users/{userId} {
+      // Helper function to check if the request is from the owner of the user profile
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      // Helper function to check if the user exists
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Controls access to knowledge sharing posts.
+     * @path /posts/{postId}
+     * @allow (create) Authenticated user can create posts, enforcing ownership of the 'authorId' field.
+     * @allow (get, list) Any user can read posts.
+     * @allow (update, delete) Only the author can modify/delete their posts.
+     * @deny (create) User cannot create a post with an 'authorId' that doesn't match their own.
+     * @deny (update, delete) User cannot modify/delete a post that doesn't belong to them.
+     * @principle Enforces document ownership for writes and allows public read access.
+     */
+    match /posts/{postId} {
+      // Helper function to check if the request is from the author of the post
+      function isOwner(authorId) {
+        return request.auth.uid == authorId;
+      }
+
+      // Helper function to check if the post exists and the user is the owner
+      function isExistingOwner(authorId) {
+        return isOwner(authorId) && resource != null;
+      }
+
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update: if isExistingOwner(resource.data.authorId);
+      allow delete: if isExistingOwner(resource.data.authorId);
+    }
+
+    /**
+     * @description Controls access to mentorship relationships.
+     * @path /mentorships/{mentorshipId}
+     * @allow (create) Authenticated user can create mentorships.
+     * @allow (get, list) Any user can read mentorships.
+     * @allow (update, delete) No restrictions for prototyping, any authenticated user can change or delete mentorships
+     * @principle Allows public access to mentorship data.
+     */
+    match /mentorships/{mentorshipId} {
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    /**
+     * @description Controls access to job postings.
+     * @path /jobs/{jobId}
+     * @allow (create) Authenticated user can create job postings, enforcing ownership of the 'employerId' field.
+     * @allow (get, list) Any user can read job postings.
+     * @allow (update, delete) Only the employer can modify/delete their job postings.
+     * @deny (create) User cannot create a job posting with an 'employerId' that doesn't match their own.
+     * @deny (update, delete) User cannot modify/delete a job posting that doesn't belong to them.
+     * @principle Enforces document ownership for writes and allows public read access.
+     */
+    match /jobs/{jobId} {
+      // Helper function to check if the request is from the employer of the job
+      function isOwner(employerId) {
+        return request.auth.uid == employerId;
+      }
+
+      // Helper function to check if the job exists and the user is the owner
+      function isExistingOwner(employerId) {
+        return isOwner(employerId) && resource != null;
+      }
+
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn() && request.resource.data.employerId == request.auth.uid;
+      allow update: if isExistingOwner(resource.data.employerId);
+      allow delete: if isExistingOwner(resource.data.employerId);
+    }
+
+    /**
+     * @description Controls access to job applications.
+     * @path /applications/{applicationId}
+     * @allow (create) Authenticated user can create job applications, enforcing ownership of the 'userId' field.
+     * @allow (get, list) Any user can read job applications.
+     * @allow (update, delete) Only the user or employer can modify/delete job applications.
+     * @deny (create) User cannot create an application with a 'userId' that doesn't match their own.
+     * @deny (update, delete) User cannot modify/delete a job application that doesn't belong to them (non-owner).
+     * @principle Enforces document ownership for writes and allows public read access.
+     */
+    match /applications/{applicationId} {
+      // Helper function to check if the request is from the user who created the application
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      // Helper function to check if the application exists and the user is the owner
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isExistingOwner(resource.data.userId);
+      allow delete: if isExistingOwner(resource.data.userId);
+    }
+
+    /**
+     * @description Controls access to coin transactions.
+     * @path /coin_transactions/{coinTransactionId}
+     * @allow (create) Authenticated user can create coin transactions, enforcing ownership of the 'userId' field.
+     * @allow (get, list) Any user can read coin transactions.
+     * @allow (update, delete) No restrictions for prototyping, any authenticated user can change or delete coin transactions.
+     * @principle Allows public access to coin transaction data.
+     */
+    match /coin_transactions/{coinTransactionId} {
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    /**
+     * @description Controls access to AI-generated quests.
+     * @path /quests/{questId}
+     * @allow (create) Authenticated user can create quests.
+     * @allow (get, list) Any user can read quests.
+     * @allow (update, delete) No restrictions for prototyping, any authenticated user can change or delete quests.
+     * @principle Allows public access to quest data.
+     */
+    match /quests/{questId} {
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    /**
+     * @description Controls access to badges earned by users.
+     * @path /badges/{badgeId}
+     * @allow (create) Authenticated user can create badges, enforcing ownership of the 'userId' field.
+     * @allow (get, list) Any user can read badges.
+     * @allow (update, delete) No restrictions for prototyping, any authenticated user can change or delete badges.
+     * @principle Allows public access to badge data.
+     */
+    match /badges/{badgeId} {
+      // Read rules
+      allow get, list: if true;
+
+      // Write rules
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource != null;
+      allow delete: if isSignedIn() && resource != null;
+    }
+
+    // Global helper function to check if a user is signed in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+  }
+}

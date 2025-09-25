@@ -1,0 +1,568 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user within the NexusConnect platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user."
+        },
+        "userType": {
+          "type": "string",
+          "description": "Type of user such as 'Student', 'Alumni', 'Faculty', 'Employer', or 'Admin'."
+        },
+        "oauthProvider": {
+          "type": "string",
+          "description": "The authentication provider used (e.g., Google, LinkedIn, Email)."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the user."
+        },
+        "graduationYear": {
+          "type": "number",
+          "description": "Graduation year of the user."
+        },
+        "batch": {
+          "type": "string",
+          "description": "Batch information of the user."
+        },
+        "degree": {
+          "type": "string",
+          "description": "Degree obtained by the user."
+        },
+        "skills": {
+          "type": "array",
+          "description": "List of skills possessed by the user.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the user."
+        },
+        "company": {
+          "type": "string",
+          "description": "Company the user is affiliated with."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the user within the company."
+        },
+        "bio": {
+          "type": "string",
+          "description": "Biography of the user."
+        },
+        "availabilityToMentor": {
+          "type": "boolean",
+          "description": "Indicates whether the user is available to mentor."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags associated with the user.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "githubUrl": {
+          "type": "string",
+          "description": "URL to the user's GitHub profile.",
+          "format": "uri"
+        },
+        "linkedinUrl": {
+          "type": "string",
+          "description": "URL to the user's LinkedIn profile.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "userType",
+        "email",
+        "name"
+      ]
+    },
+    "Post": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Post",
+      "type": "object",
+      "description": "Represents a knowledge sharing post.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the post."
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Reference to the User who created the post. (Relationship: User 1:N Post)"
+        },
+        "postType": {
+          "type": "string",
+          "description": "Type of post (e.g., Article, Success Story, Project Idea, Tutorial, Q&A)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the post."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the post (rich text)."
+        },
+        "attachments": {
+          "type": "array",
+          "description": "List of attachments associated with the post.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "description": "List of tags associated with the post.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "description": "List of categories the post belongs to.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publishStatus": {
+          "type": "string",
+          "description": "Status of the post (e.g., draft, published)."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the post."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the post was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "authorId",
+        "postType",
+        "title",
+        "content"
+      ]
+    },
+    "Mentorship": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Mentorship",
+      "type": "object",
+      "description": "Represents a mentorship relationship between two users.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the mentorship relationship."
+        },
+        "mentorId": {
+          "type": "string",
+          "description": "Reference to the User acting as the mentor. (Relationship: User 1:N Mentorship as Mentor)"
+        },
+        "menteeId": {
+          "type": "string",
+          "description": "Reference to the User acting as the mentee. (Relationship: User 1:N Mentorship as Mentee)"
+        },
+        "requestDate": {
+          "type": "string",
+          "description": "Date when the mentorship was requested.",
+          "format": "date-time"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "Date when the mentorship started.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "Date when the mentorship ended.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the mentorship (e.g., requested, active, completed)."
+        },
+        "sessionNotes": {
+          "type": "string",
+          "description": "Notes from mentorship sessions."
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating given to the mentorship by the mentee."
+        }
+      },
+      "required": [
+        "id",
+        "mentorId",
+        "menteeId",
+        "requestDate"
+      ]
+    },
+    "Job": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Job",
+      "type": "object",
+      "description": "Represents a job or internship posting.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the job posting."
+        },
+        "employerId": {
+          "type": "string",
+          "description": "Reference to the User who posted the job. (Relationship: User 1:N Job)"
+        },
+        "role": {
+          "type": "string",
+          "description": "Job title or role."
+        },
+        "skills": {
+          "type": "array",
+          "description": "List of required skills for the job.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stipend": {
+          "type": "number",
+          "description": "Stipend or salary offered for the job."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the job."
+        },
+        "remoteOnsite": {
+          "type": "string",
+          "description": "Indicates whether the job is remote or onsite."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Application deadline for the job.",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the job."
+        }
+      },
+      "required": [
+        "id",
+        "employerId",
+        "role"
+      ]
+    },
+    "Application": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Application",
+      "type": "object",
+      "description": "Represents a job application submitted by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the application."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who submitted the application. (Relationship: User 1:N Application)"
+        },
+        "jobId": {
+          "type": "string",
+          "description": "Reference to the Job being applied for. (Relationship: Job 1:N Application)"
+        },
+        "applicationDate": {
+          "type": "string",
+          "description": "Date when the application was submitted.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the application (e.g., pending, reviewed, accepted, rejected)."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any notes or comments on the application."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "jobId",
+        "applicationDate"
+      ]
+    },
+    "CoinTransaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CoinTransaction",
+      "type": "object",
+      "description": "Represents a transaction of Knowledge Coins.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the transaction."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User involved in the transaction. (Relationship: User 1:N CoinTransaction)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of coins transacted."
+        },
+        "transactionType": {
+          "type": "string",
+          "description": "Type of transaction (e.g., earned, redeemed)."
+        },
+        "transactionDate": {
+          "type": "string",
+          "description": "Date of the transaction.",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the transaction."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "amount",
+        "transactionType",
+        "transactionDate"
+      ]
+    },
+    "Quest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Quest",
+      "type": "object",
+      "description": "Represents an AI-generated quest for user engagement.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the quest."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the quest."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the quest."
+        },
+        "rewardCoins": {
+          "type": "number",
+          "description": "Number of Knowledge Coins awarded for completing the quest."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Due date for completing the quest.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the quest (e.g., active, completed, failed)."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "rewardCoins",
+        "dueDate"
+      ]
+    },
+    "Badge": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Badge",
+      "type": "object",
+      "description": "Represents a badge earned by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the badge."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who earned the badge. (Relationship: User 1:N Badge)"
+        },
+        "badgeName": {
+          "type": "string",
+          "description": "Name of the badge."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the badge."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL to the badge image.",
+          "format": "uri"
+        },
+        "awardedDate": {
+          "type": "string",
+          "description": "Date when the badge was awarded.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "badgeName",
+        "description"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Path-based ownership enables straightforward security rules. The 'id' field maps to the 'userId' path parameter.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/posts/{postId}",
+        "definition": {
+          "entityName": "Post",
+          "schema": {
+            "$ref": "#/backend/entities/Post"
+          },
+          "description": "Stores all posts. Accessible to public or based on roles.",
+          "params": [
+            {
+              "name": "postId",
+              "description": "The unique identifier of the post."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/mentorships/{mentorshipId}",
+        "definition": {
+          "entityName": "Mentorship",
+          "schema": {
+            "$ref": "#/backend/entities/Mentorship"
+          },
+          "description": "Stores mentorship relationships.",
+          "params": [
+            {
+              "name": "mentorshipId",
+              "description": "The unique identifier of the mentorship relationship."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/jobs/{jobId}",
+        "definition": {
+          "entityName": "Job",
+          "schema": {
+            "$ref": "#/backend/entities/Job"
+          },
+          "description": "Stores job postings.",
+          "params": [
+            {
+              "name": "jobId",
+              "description": "The unique identifier of the job."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/applications/{applicationId}",
+        "definition": {
+          "entityName": "Application",
+          "schema": {
+            "$ref": "#/backend/entities/Application"
+          },
+          "description": "Stores job applications.",
+          "params": [
+            {
+              "name": "applicationId",
+              "description": "The unique identifier of the application."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/coin_transactions/{coinTransactionId}",
+        "definition": {
+          "entityName": "CoinTransaction",
+          "schema": {
+            "$ref": "#/backend/entities/CoinTransaction"
+          },
+          "description": "Stores coin transactions.  Uses a flat collection for simplicity and scalability.",
+          "params": [
+            {
+              "name": "coinTransactionId",
+              "description": "The unique identifier for the coin transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/quests/{questId}",
+        "definition": {
+          "entityName": "Quest",
+          "schema": {
+            "$ref": "#/backend/entities/Quest"
+          },
+          "description": "Stores AI-generated quests.",
+          "params": [
+            {
+              "name": "questId",
+              "description": "The unique identifier for the quest."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/badges/{badgeId}",
+        "definition": {
+          "entityName": "Badge",
+          "schema": {
+            "$ref": "#/backend/entities/Badge"
+          },
+          "description": "Stores badges earned by users. Uses a flat collection for easy querying and management.",
+          "params": [
+            {
+              "name": "badgeId",
+              "description": "The unique identifier for the badge."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support NexusConnect's knowledge sharing hub and its gamified mentorship features, adhering to the principles of Authorization Independence, Structural Segregation, Access Modeling, and Data Clarity.  User data is stored under `/users/{userId}` ensuring private data is path-based. Knowledge Sharing Posts are stored under `/posts/{postId}` to ensure they can be public. Mentorship relationships are stored under `/mentorships/{mentorshipId}`, ensuring access can be managed and queried effectively. Jobs and applications follow similar pattern, under `/jobs/{jobId}` and `/applications/{applicationId}` respectively, ensuring the independence of the entities.\n\n**Authorization Independence:**  Authorization is achieved primarily via path-based ownership (`/users/{userId}/...`) for private data. Collaborative access, where needed, is managed through the use of explicit `members` maps (though not explicitly present in these data entities, this design anticipates and supports that pattern if collaborative entities are introduced later).  For example, if 'Projects' were collaborative, each project document would contain a `members` map to list authorized users and their roles, eliminating the need for `get()` calls in security rules and enabling atomic operations. The userType is stored in the user document. If other documents need to check the userType for authorization, userType will need to be denormalized into those documents.\n\n**Structural Segregation:** Data with different security postures are stored in separate collections. User profiles are stored under `/users/{userId}`, while public posts are stored under `/posts/{postId}`. Jobs are stored under `/jobs/{jobId}`. This segregation simplifies security rules and prevents unintended data exposure.\n\n**Access Modeling:** The design employs path-based ownership for user-specific data (e.g., `/users/{userId}/...`).  This pattern clearly establishes ownership and simplifies security rules related to user data. Collaborative data patterns (if introduced) will leverage membership maps within the documents.\n\n**QAPs (Rules are not Filters):** The structure supports secure list operations (QAPs) through structural segregation. Listing posts in `/posts` will only return public posts, as intended.  Path-based ownership ensures that listing operations within `/users/{userId}` are limited to the data owned by that user."
+  }
+}
