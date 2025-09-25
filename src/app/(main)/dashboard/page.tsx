@@ -23,10 +23,13 @@ export default function DashboardPage() {
         <SkillsGrowth />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <WellnessNook className="md:col-span-1 h-[350px]" />
-        <Quests className="md:col-span-1 h-[350px]" />
-        <JoinedCommunities className="md:col-span-1 h-[350px]" />
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <WellnessNook className="h-[350px]" />
+        <Quests className="h-[350px]" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-8">
+        <JoinedCommunities />
       </div>
 
       <div className="grid grid-cols-1 gap-8">
