@@ -90,7 +90,6 @@ type Experience = {
   role: string;
   company: string;
   period: string;
-  description: string;
 };
 
 type Education = {
@@ -107,7 +106,7 @@ export type UserProfile = {
   expertise: string[];
   industry: string;
   bio: string;
-  community: 'Alumni' | 'Faculty' | 'Student';
+  community: 'Alumni' | 'Faculty' | 'Student' | 'Industry';
   experience: Experience[];
   education: Education;
 }
@@ -190,8 +189,8 @@ export const allUsers: UserProfile[] = [
   ...allMentors.map(m => ({
     ...m,
     experience: [
-      { role: m.title, company: m.industry === 'Tech' ? 'Innovate Inc.' : 'Creative Co.', period: '2020 - Present', description: 'My current role focuses on my primary expertise.'},
-      { role: 'Senior Developer', company: 'Legacy Systems', period: '2017 - 2020', description: 'Worked on maintaining and upgrading legacy codebases.'}
+      { role: m.title, company: m.industry === 'Tech' ? 'Innovate Inc.' : 'Creative Co.', period: '2020 - Present'},
+      { role: 'Senior Developer', company: 'Legacy Systems', period: '2017 - 2020'}
     ],
     education: { degree: 'M.S. in Computer Science', university: 'State University', year: '2017'}
   })),
