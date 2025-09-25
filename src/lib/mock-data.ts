@@ -86,6 +86,64 @@ export const user = {
     }
 };
 
+export const allMentors = [
+  { 
+    id: 'mentor-1',
+    name: 'Dr. Evelyn Reed', 
+    title: 'AI Research Scientist', 
+    avatarId: 'mentor-1', 
+    expertise: ['AI/ML', 'Python', 'Research'],
+    industry: 'Tech',
+    bio: 'Leading researcher in natural language processing with a passion for mentoring the next generation of AI innovators.'
+  },
+  { 
+    id: 'mentor-2',
+    name: 'David Chen', 
+    title: 'Principal Engineer @ Tech Solutions', 
+    avatarId: 'mentor-2', 
+    expertise: ['System Design', 'Cloud Architecture', 'DevOps'],
+    industry: 'Software',
+    bio: 'Architecting large-scale, resilient systems for over a decade. I can help you think about scale and reliability.'
+  },
+  { 
+    id: 'mentor-3',
+    name: 'Sarah Jones', 
+    title: 'UX Design Lead', 
+    avatarId: 'mentor-3', 
+    expertise: ['UX/UI', 'Figma', 'User Research'],
+    industry: 'Design',
+    bio: 'Crafting user-centric experiences that are both beautiful and intuitive. Happy to guide you on design principles and career paths.'
+  },
+  { 
+    id: 'mentor-4',
+    name: 'Marcus Holloway', 
+    title: 'Cybersecurity Analyst', 
+    avatarId: 'mentor-4', 
+    expertise: ['Security', 'Networking', 'Penetration Testing'],
+    industry: 'Cybersecurity',
+    bio: 'Specializing in threat detection and ethical hacking. Let\'s talk about how to keep systems secure.'
+  },
+  { 
+    id: 'mentor-5',
+    name: 'Priya Sharma', 
+    title: 'Product Manager @ FinTech Corp', 
+    avatarId: 'mentor-5', 
+    expertise: ['Product Management', 'Agile', 'Market Analysis'],
+    industry: 'FinTech',
+    bio: 'From idea to launch, I guide products to success. I can help with roadmap planning, user stories, and breaking into product.'
+  },
+  { 
+    id: 'mentor-6',
+    name: 'James Carter', 
+    title: 'Mobile Engineering Lead', 
+    avatarId: 'mentor-6', 
+    expertise: ['iOS', 'Android', 'React Native'],
+    industry: 'Mobile',
+    bio: 'Building world-class mobile applications for millions of users. Can mentor on native development, cross-platform solutions, and performance.'
+  },
+];
+
+
 export const mockAIQuest: AIQuestOutput = {
     questTitle: 'Engage with the Community',
     questDescription: 'Post a helpful article on a topic you are passionate about and receive feedback from 3 peers.',

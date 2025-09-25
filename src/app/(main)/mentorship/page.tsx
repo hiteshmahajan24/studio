@@ -1,8 +1,143 @@
-export default function MentorshipPage() {
+'use client';
+
+import * as React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Handshake, Search } from 'lucide-react';
+import { allMentors } from '@/lib/mock-data';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+
+function MentorCard({ mentor }: { mentor: typeof allMentors[0] }) {
+  const avatar = PlaceHolderImages.find((img) => img.id === mentor.avatarId);
   return (
-    <div>
-      <h1 className="text-3xl font-bold">Mentorship</h1>
-      <p className="text-muted-foreground">Find mentors and grow your career.</p>
+    <Card>
+      <CardHeader className="flex flex-row items-center gap-4">
+        <Avatar className="h-16 w-16">
+          {avatar && <AvatarImage src={avatar.imageUrl} alt={mentor.name} data-ai-hint={avatar.imageHint} />}
+          <AvatarFallback>{mentor.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div>
+          <CardTitle className="text-xl">{mentor.name}</CardTitle>
+          <CardDescription>{mentor.title}</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex flex-wrap gap-2">
+          {mentor.expertise.map((skill) => (
+            <Badge key={skill} variant="secondary">
+              {skill}
+            </Badge>
+          ))}
+        </div>
+        <p className="text-sm text-muted-foreground">{mentor.bio}</p>
+        <Button className="w-full">
+          <Handshake className="mr-2" /> Connect
+        </Button>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function MentorshipPage() {
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [expertiseFilter, setExpertiseFilter] = React.useState('all');
+  const [industryFilter, setIndustryFilter] = React.useState('all');
+
+  const expertiseAreas = React.useMemo(() => {
+    const allExpertise = allMentors.flatMap((mentor) => mentor.expertise);
+    return ['all', ...Array.from(new Set(allExpertise))];
+  }, []);
+
+  const industries = React.useMemo(() => {
+    const allIndustries = allMentors.map((mentor) => mentor.industry);
+    return ['all', ...Array.from(new Set(allIndustries))];
+  }, []);
+
+  const filteredMentors = allMentors.filter((mentor) => {
+    return (
+      (mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        mentor.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (expertiseFilter === 'all' || mentor.expertise.includes(expertiseFilter)) &&
+      (industryFilter === 'all' || mentor.industry === industryFilter)
+    );
+  });
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Find a Mentor</h1>
+        <p className="text-muted-foreground">
+          Connect with experienced professionals for guidance and support.
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name or title..."
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-1 gap-4 md:flex-initial">
+              <Select value={expertiseFilter} onValueChange={setExpertiseFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="Filter by expertise" />
+                </SelectTrigger>
+                <SelectContent>
+                  {expertiseAreas.map((area) => (
+                    <SelectItem key={area} value={area} className="capitalize">
+                      {area === 'all' ? 'All Expertise' : area}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={industryFilter} onValueChange={setIndustryFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="Filter by industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  {industries.map((industry) => (
+                    <SelectItem key={industry} value={industry} className="capitalize">
+                      {industry === 'all' ? 'All Industries' : industry}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {filteredMentors.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredMentors.map((mentor) => (
+                <MentorCard key={mentor.id} mentor={mentor} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-16 text-center">
+              <h3 className="text-lg font-semibold">No Mentors Found</h3>
+              <p className="text-sm text-muted-foreground">
+                Try adjusting your search or filter criteria.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
