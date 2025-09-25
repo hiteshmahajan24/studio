@@ -5,8 +5,6 @@
  * and suggests relevant documents for a job application.
  *
  * @exports quickApply - A function to generate a cover letter and suggest documents.
- * @exports QuickApplyInput - The input type for the quickApply function.
- * @exports QuickApplyOutput - The output type for the quickApply function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -26,7 +24,7 @@ const CertificateSchema = z.object({
 });
 
 // Input schema for the Quick Apply flow
-export const QuickApplyInputSchema = z.object({
+const QuickApplyInputSchema = z.object({
   studentProfile: z.object({
     name: z.string(),
     skills: z.array(z.string()),
@@ -43,7 +41,7 @@ export const QuickApplyInputSchema = z.object({
 export type QuickApplyInput = z.infer<typeof QuickApplyInputSchema>;
 
 // Output schema for the Quick Apply flow
-export const QuickApplyOutputSchema = z.object({
+const QuickApplyOutputSchema = z.object({
   coverLetter: z.string().describe('The AI-generated cover letter, written in the first person.'),
   suggestedDocuments: z
     .array(

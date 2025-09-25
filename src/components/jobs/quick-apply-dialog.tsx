@@ -22,7 +22,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { openOpportunities, user } from "@/lib/mock-data";
 import { File, Loader2, Wand2 } from "lucide-react";
-import { quickApply, type QuickApplyOutput } from "@/ai/flows/quick-apply";
+import { quickApply } from "@/ai/flows/quick-apply";
+import type { QuickApplyOutput, QuickApplyInput } from "@/ai/flows/quick-apply";
 
 type QuickApplyDialogProps = {
     children: React.ReactNode;
@@ -48,7 +49,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
                 const response = await quickApply({
                     studentProfile: user.profile,
                     jobDetails: selectedJob,
-                });
+                } as QuickApplyInput);
                 setAiResponse(response);
                 setStep(2);
             } catch (error) {
