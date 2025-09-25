@@ -1,4 +1,3 @@
-
 import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2, Newspaper } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
