@@ -1,3 +1,4 @@
+
 import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2, Newspaper } from 'lucide-react';
 import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
@@ -219,7 +220,7 @@ export const allUsers: UserProfile[] = [
     name: 'Jessica Miller',
     title: 'Data Science Student',
     avatarId: 'mentor-5', // Reusing for mock
-    expertise: ['Python', 'Pandas', 'Scikit-learn'],
+    expertise: ['Python', 'Pandas', 'Scikit-learn', 'AI/ML'],
     industry: 'Data Science',
     bio: 'Fascinated by data and the stories it can tell. Currently working on a project for sentiment analysis.',
     community: 'Student',
@@ -371,4 +372,12 @@ export const communityPosts: CommunityPost[] = [
         likes: 42,
         comments: 12,
     },
+    {
+        id: 'post-4',
+        authorId: 'user-2', // Jessica Miller
+        content: 'Has anyone worked with the new D3.js v7 library? I\'m trying to create a custom force-directed graph for a network visualization project and running into some issues with node positioning. Any pointers would be appreciated!',
+        timestamp: '5d ago',
+        likes: 23,
+        comments: 9,
+    }
 ]

@@ -53,7 +53,7 @@ export default function CommunityPage() {
             <div className="flex items-center gap-4 text-sm mt-2">
                 <div className="flex items-center gap-1.5">
                     <Users className="w-4 h-4" />
-                    <span>{community.memberCount} Members</span>
+                    <span>{community.memberCount + members.length} Members</span>
                 </div>
             </div>
         </CardHeader>
