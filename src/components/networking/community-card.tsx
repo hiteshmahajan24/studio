@@ -22,7 +22,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
   const isJoined = joinedCommunityIds.includes(community.id);
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden">
+    <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg">
        <CardHeader className="p-0 relative h-32">
          {communityImage && (
             <Image
@@ -48,9 +48,9 @@ export function CommunityCard({ community }: CommunityCardProps) {
             <span>{community.memberCount} Members</span>
         </div>
       </CardContent>
-      <CardFooter className="p-4 border-t">
+      <CardFooter className="p-4 border-t bg-muted/20">
         {isJoined ? (
-             <Button asChild className="w-full" variant="outline">
+             <Button asChild className="w-full" variant="secondary">
                 <Link href={`/communities/${community.id}`}>
                     View Community <ArrowRight className="ml-2" />
                 </Link>

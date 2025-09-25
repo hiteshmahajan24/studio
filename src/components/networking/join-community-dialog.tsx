@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Community, user } from '@/lib/mock-data';
+import { Community } from '@/lib/mock-data';
 import { Coins, PartyPopper } from 'lucide-react';
 import { useUserState } from '@/context/user-state-context';
 
@@ -80,7 +80,7 @@ export function JoinCommunityDialog({ children, community }: JoinCommunityDialog
               Cancel
             </Button>
           </DialogClose>
-          <Button type="button" onClick={handleJoin}>
+          <Button type="button" onClick={handleJoin} disabled={knowledgeCoins < community.joinCost}>
             Confirm and Join
           </Button>
         </DialogFooter>

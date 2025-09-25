@@ -6,7 +6,7 @@ import { user as initialUser } from '@/lib/mock-data';
 
 type UserState = {
   knowledgeCoins: number;
-  setKnowledgeCoins: (coins: number) => void;
+  setKnowledgeCoins: React.Dispatch<React.SetStateAction<number>>;
   joinedCommunityIds: string[];
   joinCommunity: (communityId: string) => void;
   registeredEventIds: string[];
@@ -17,8 +17,8 @@ const UserStateContext = createContext<UserState | undefined>(undefined);
 
 export function UserStateProvider({ children }: { children: ReactNode }) {
   const [knowledgeCoins, setKnowledgeCoins] = useState(initialUser.knowledgeCoins);
-  const [joinedCommunityIds, setJoinedCommunityIds] = useState<string[]>([]);
-  const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
+  const [joinedCommunityIds, setJoinedCommunityIds] = useState<string[]>(['comm-1']); // Start with one joined community
+  const [registeredEventIds, setRegisteredEventIds] = useState<string[]>(['plat-event-1']); // Start with one registered event
 
   const joinCommunity = (communityId: string) => {
     setJoinedCommunityIds((prev) => [...new Set([...prev, communityId])]);

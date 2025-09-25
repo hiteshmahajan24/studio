@@ -39,7 +39,7 @@ export function EventCard({ event }: EventCardProps) {
     const isRegistered = registeredEventIds.includes(event.id);
 
     return (
-        <Card className="flex flex-col overflow-hidden">
+        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
             <CardHeader className="p-0 relative h-40">
                 {eventImage && (
                     <Image 
@@ -94,7 +94,7 @@ export function EventCard({ event }: EventCardProps) {
                  </div>
             </CardContent>
             <Separator />
-            <CardFooter className="p-4">
+            <CardFooter className="p-4 bg-muted/20">
                 {isRegistered ? (
                     <Button className="w-full" disabled variant="outline">
                         <CheckCircle2 className="mr-2 text-green-500" />
