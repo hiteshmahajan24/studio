@@ -20,6 +20,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { RequestSessionDialog } from '@/components/mentorship/request-session-dialog';
 import { ClientButton } from '@/components/layout/client-button';
+import Link from 'next/link';
 
 function MentorCard({ mentor, featured = false }: { mentor: typeof allMentors[0]; featured?: boolean }) {
   const avatar = PlaceHolderImages.find((img) => img.id === mentor.avatarId);
@@ -189,15 +190,9 @@ function MentorshipPageContent() {
 
 
 export default function MentorshipPage() {
-  const [isMounted, setIsMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null; // Or a loading spinner
-  }
-
-  return <MentorshipPageContent />;
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <MentorshipPageContent />
+    </React.Suspense>
+  )
 }

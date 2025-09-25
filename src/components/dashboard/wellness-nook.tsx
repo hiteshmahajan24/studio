@@ -38,6 +38,8 @@ export function WellnessNook({ className }: { className?: string }) {
         if (problemDescription) {
             const params = new URLSearchParams({ q: problemDescription });
             router.push(`/mentorship?${params.toString()}`);
+        } else {
+            router.push('/mentorship');
         }
         setIsOpen(false);
     }
@@ -73,34 +75,34 @@ export function WellnessNook({ className }: { className?: string }) {
                         <DialogHeader>
                         <DialogTitle>Connect with a Mentor</DialogTitle>
                         <DialogDescription>
-                            Tell us how you&apos;re feeling and what&apos;s on your mind. We&apos;ll suggest the best mentor for you.
+                            Tell us what's on your mind. We'll suggest the best mentor for you.
                         </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="emotion" className="text-right">
-                                Emotion
+                                I'm feeling
                                 </Label>
                                 <Select>
                                     <SelectTrigger className="col-span-3">
-                                        <SelectValue placeholder="How are you feeling?" />
+                                        <SelectValue placeholder="Select an emotion..." />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="stressed">Stressed</SelectItem>
-                                        <SelectItem value="depressed">Depressed</SelectItem>
+                                        <SelectItem value="stuck">Stuck</SelectItem>
                                         <SelectItem value="anxious">Anxious</SelectItem>
-                                        <SelectItem value="happy">Happy</SelectItem>
-                                        <SelectItem value="motivated">Motivated</SelectItem>
+                                        <SelectItem value="unmotivated">Unmotivated</SelectItem>
+                                        <SelectItem value="curious">Curious</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="problem" className="text-right">
-                                Problem
+                                About
                                 </Label>
                                 <Textarea
                                 id="problem"
-                                placeholder="Describe your problem, e.g., 'feeling stuck with my career in Java'"
+                                placeholder="e.g., 'my career in Java', 'switching to product management'"
                                 className="col-span-3"
                                 value={problemDescription}
                                 onChange={(e) => setProblemDescription(e.target.value)}

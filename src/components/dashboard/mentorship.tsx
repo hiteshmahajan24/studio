@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Handshake } from "lucide-react";
+import Link from "next/link";
 
 const suggestedMentors = [
-  { name: "Dr. Evelyn Reed", title: "AI Research Scientist", avatarId: "mentor-1" },
-  { name: "David Chen", title: "Principal Engineer @ Tech Solutions", avatarId: "mentor-2" },
-  { name: "Sarah Jones", title: "UX Design Lead", avatarId: "mentor-3" },
+  { id: "mentor-1", name: "Dr. Evelyn Reed", title: "AI Research Scientist", avatarId: "mentor-1" },
+  { id: "mentor-2", name: "David Chen", title: "Principal Engineer @ Tech Solutions", avatarId: "mentor-2" },
+  { id: "mentor-3", name: "Sarah Jones", title: "UX Design Lead", avatarId: "mentor-3" },
 ];
 
 export function Mentorship() {
@@ -32,14 +33,18 @@ export function Mentorship() {
                   <p className="text-sm text-muted-foreground truncate">{mentor.title}</p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0">
-                <Handshake className="mr-2 h-4 w-4" />
-                Connect
+               <Button variant="outline" size="sm" className="shrink-0" asChild>
+                <Link href={`/mentorship`}>
+                  <Handshake className="mr-2 h-4 w-4" />
+                  Connect
+                </Link>
               </Button>
             </div>
           );
         })}
-         <Button variant="ghost" className="w-full">View More Mentors</Button>
+         <Button variant="ghost" className="w-full" asChild>
+            <Link href="/mentorship">View More Mentors</Link>
+         </Button>
       </CardContent>
     </Card>
   );
