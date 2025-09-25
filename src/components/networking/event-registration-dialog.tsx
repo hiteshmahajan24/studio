@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { CollegeEvent, PlatformEvent } from '@/lib/events-data';
 import { PartyPopper } from 'lucide-react';
+import { useUserState } from '@/context/user-state-context';
 
 
 type EventRegistrationDialogProps = {
@@ -25,9 +27,10 @@ type EventRegistrationDialogProps = {
 export function EventRegistrationDialog({ children, event }: EventRegistrationDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { toast } = useToast();
+  const { registerForEvent } = useUserState();
 
   const handleRegister = () => {
-    console.log(`Registering for event: ${event.id}`);
+    registerForEvent(event.id);
     
     toast({
         title: "Registration Successful!",

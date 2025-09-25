@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useUserState } from "@/context/user-state-context";
 
 export function JoinedCommunities({ className }: { className?: string }) {
-  // For now, we'll assume the user has joined the first two communities.
-  // This would be dynamic in a real app.
-  const joined = communities.slice(0, 2);
+  const { joinedCommunityIds } = useUserState();
+  
+  const joined = communities.filter(c => joinedCommunityIds.includes(c.id));
 
   return (
     <Card className={cn("flex flex-col", className)}>
@@ -42,6 +43,7 @@ export function JoinedCommunities({ className }: { className?: string }) {
         ) : (
           <div className="text-center text-sm text-muted-foreground flex-1 flex flex-col items-center justify-center">
             <p>You haven't joined any communities yet.</p>
+            <p className="text-xs">Explore communities in the Networking Hub!</p>
           </div>
         )}
          <Button variant="outline" asChild>

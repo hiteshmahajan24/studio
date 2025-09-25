@@ -4,11 +4,13 @@
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Community } from '@/lib/mock-data';
-import { Users, Coins } from 'lucide-react';
+import { Users, Coins, ArrowRight } from 'lucide-react';
 import { JoinCommunityDialog } from './join-community-dialog';
 import { Button } from '../ui/button';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useUserState } from '@/context/user-state-context';
+import Link from 'next/link';
 
 type CommunityCardProps = {
   community: Community;
@@ -16,6 +18,8 @@ type CommunityCardProps = {
 
 export function CommunityCard({ community }: CommunityCardProps) {
   const communityImage = PlaceHolderImages.find((img) => img.id === community.imageId);
+  const { joinedCommunityIds } = useUserState();
+  const isJoined = joinedCommunityIds.includes(community.id);
 
   return (
     <Card className="flex flex-col h-full overflow-hidden">
@@ -45,12 +49,20 @@ export function CommunityCard({ community }: CommunityCardProps) {
         </div>
       </CardContent>
       <CardFooter className="p-4 border-t">
-        <JoinCommunityDialog community={community}>
-            <Button className="w-full">
-                <Coins className="mr-2 text-amber-400"/>
-                Join for {community.joinCost} Coins
+        {isJoined ? (
+             <Button asChild className="w-full" variant="outline">
+                <Link href={`/communities/${community.id}`}>
+                    View Community <ArrowRight className="ml-2" />
+                </Link>
             </Button>
-        </JoinCommunityDialog>
+        ) : (
+            <JoinCommunityDialog community={community}>
+                <Button className="w-full">
+                    <Coins className="mr-2 text-amber-400"/>
+                    Join for {community.joinCost} Coins
+                </Button>
+            </JoinCommunityDialog>
+        )}
       </CardFooter>
     </Card>
   );

@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Community, user } from '@/lib/mock-data';
 import { Coins, PartyPopper } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useUserState } from '@/context/user-state-context';
 
 type JoinCommunityDialogProps = {
   children: React.ReactNode;
@@ -26,10 +26,10 @@ type JoinCommunityDialogProps = {
 export function JoinCommunityDialog({ children, community }: JoinCommunityDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const { toast } = useToast();
-  const router = useRouter();
+  const { knowledgeCoins, setKnowledgeCoins, joinCommunity } = useUserState();
 
   const handleJoin = () => {
-    if (user.knowledgeCoins < community.joinCost) {
+    if (knowledgeCoins < community.joinCost) {
       toast({
         variant: 'destructive',
         title: 'Not Enough Coins!',
@@ -38,8 +38,8 @@ export function JoinCommunityDialog({ children, community }: JoinCommunityDialog
       return;
     }
 
-    // In a real app, you would update the user's coin balance on the server.
-    user.knowledgeCoins -= community.joinCost;
+    setKnowledgeCoins(knowledgeCoins - community.joinCost);
+    joinCommunity(community.id);
 
     toast({
       title: 'Welcome to the Community!',
@@ -47,8 +47,6 @@ export function JoinCommunityDialog({ children, community }: JoinCommunityDialog
     });
 
     setIsOpen(false);
-    // Navigate to the community page after joining
-    router.push(`/communities/${community.id}`);
   };
 
   return (
@@ -73,7 +71,7 @@ export function JoinCommunityDialog({ children, community }: JoinCommunityDialog
             to ensure all members are engaged.
           </p>
           <p className="mt-4 text-muted-foreground">
-            Your current balance is {user.knowledgeCoins} coins.
+            Your current balance is {knowledgeCoins} coins.
           </p>
         </div>
         <DialogFooter className="sm:justify-between">

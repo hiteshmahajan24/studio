@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Award, Badge, Calendar, Coins, Group, PersonStanding, Trophy, Users } from "lucide-react";
+import { Award, Badge, Calendar, Coins, Group, PersonStanding, Trophy, CheckCircle2 } from "lucide-react";
 import { Badge as UiBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { EventRegistrationDialog } from "./event-registration-dialog";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { format } from "date-fns";
+import { useUserState } from "@/context/user-state-context";
 
 
 type EventCardProps = {
@@ -33,6 +35,8 @@ export function EventCard({ event }: EventCardProps) {
 
     const rewards = event.hostType === 'platform' ? event.rewards : event.rewards;
     const eventImage = PlaceHolderImages.find(img => img.id === event.imageId);
+    const { registeredEventIds } = useUserState();
+    const isRegistered = registeredEventIds.includes(event.id);
 
     return (
         <Card className="flex flex-col overflow-hidden">
@@ -91,9 +95,16 @@ export function EventCard({ event }: EventCardProps) {
             </CardContent>
             <Separator />
             <CardFooter className="p-4">
-                <EventRegistrationDialog event={event}>
-                    <Button className="w-full">Register Now</Button>
-                </EventRegistrationDialog>
+                {isRegistered ? (
+                    <Button className="w-full" disabled variant="outline">
+                        <CheckCircle2 className="mr-2 text-green-500" />
+                        Registered
+                    </Button>
+                ) : (
+                    <EventRegistrationDialog event={event}>
+                        <Button className="w-full">Register Now</Button>
+                    </EventRegistrationDialog>
+                )}
             </CardFooter>
         </Card>
     )
