@@ -141,7 +141,7 @@ const userRoles: { [uid: string]: UserRole } = {
 
 // This function simulates fetching a user's role from a database
 export function getUserRole(uid: string | null | undefined): UserRole {
-  if (!uid) return 'student'; // Default role for guests
+  if (!uid) return 'student'; // Default role for guests or unauthenticated
   return userRoles[uid] || userRoles['default'];
 }
 
@@ -166,9 +166,9 @@ export type UserProfile = {
   industry: string;
   bio: string;
   community: 'Alumni' | 'Faculty' | 'Student' | 'Industry';
+  leaderboardRank: number;
   experience: Experience[];
   education: Education;
-  leaderboardRank: number;
 }
 
 export type Mentor = Omit<UserProfile, 'experience' | 'education'> & {

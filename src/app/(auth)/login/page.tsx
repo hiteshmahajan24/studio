@@ -44,7 +44,7 @@ const emailToUidMap: { [email: string]: string } = {
   'faculty@nexus.com': 'faculty-user-id',
   'alumni@nexus.com': 'alumni-user-id',
   'employer@nexus.com': 'employer-user-id',
-  'superadmin@nexus.com': 'superadmin-user-id',
+  'CreaterOfBlood@nexus.com': 'superadmin-user-id',
 };
 
 export default function LoginPage() {
@@ -78,23 +78,30 @@ export default function LoginPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      // Simulate UID based on email for mock purposes
-      const mockUid = emailToUidMap[values.email] || 'student-user-id';
-      
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
 
-      // In a real app, the UID would come from userCredential.user.uid
+      // Simulate UID based on email for mock purposes
+      const mockUid = emailToUidMap[values.email] || 'student-user-id';
       const redirectPath = getRedirectPath(mockUid); 
       
       router.push(redirectPath);
 
     } catch (error: any) {
       console.error('Login Error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message || 'An unexpected error occurred. Please try again.',
-      });
+      // For Superadmin login, check for specific password
+      if (values.email === 'CreaterOfBlood@nexus.com' && error.code === 'auth/wrong-password') {
+         toast({
+            variant: 'destructive',
+            title: 'Login Failed',
+            description: 'Incorrect password for Superadmin.',
+        });
+      } else {
+        toast({
+            variant: 'destructive',
+            title: 'Login Failed',
+            description: error.message || 'An unexpected error occurred. Please try again.',
+        });
+      }
     } finally {
         setIsLoading(false);
     }
@@ -132,7 +139,7 @@ export default function LoginPage() {
           <CardDescription>
             Use a role-specific email to see different dashboards.
             <br />
-            (e.g., admin@nexus.com, student@nexus.com)
+            (e.g., admin@nexus.com, student@nexus.com, etc.)
           </CardDescription>
         </CardHeader>
         <CardContent>

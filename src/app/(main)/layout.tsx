@@ -28,6 +28,7 @@ export default function MainLayout({
     }
 
     // Get user role and determine the correct dashboard path
+    // For mock purposes, we'll use a hardcoded map on login, but the layout relies on the UID.
     const role = getUserRole(user.uid);
     const dashboardPaths: { [key: string]: string } = {
       student: '/dashboard',
@@ -39,25 +40,17 @@ export default function MainLayout({
     };
     const expectedPath = dashboardPaths[role] || '/dashboard';
     
-    // Allow access to sub-paths but redirect from root if role doesn't match
-    const allowedBasePaths = ['/mentorship', '/jobs', '/networking', '/quests', '/academics', '/articles', '/communities'];
-    const isAllowedSubPath = allowedBasePaths.some(p => pathname.startsWith(p));
+    const allowedSubPaths = ['/mentorship', '/jobs', '/networking', '/quests', '/academics', '/articles', '/communities'];
+    const isAllowedSubPath = allowedSubPaths.some(p => pathname.startsWith(p));
 
-    if (pathname === '/dashboard' && role !== 'student') {
-        router.replace(expectedPath);
-    } else if (pathname === '/admin' && role !== 'admin') {
-        router.replace(expectedPath);
-    } else if (pathname === '/faculty' && role !== 'faculty') {
-        router.replace(expectedPath);
-    } else if (pathname === '/alumni' && role !== 'alumni') {
-        router.replace(expectedPath);
-    } else if (pathname === '/employer' && role !== 'employer') {
-        router.replace(expectedPath);
-    } else if (pathname === '/superadmin' && role !== 'superadmin') {
-        router.replace(expectedPath);
-    } else if (pathname === '/' || (!isAllowedSubPath && pathname !== expectedPath)) {
-        // If at root or a dashboard path that isn't theirs, redirect.
-        router.replace(expectedPath);
+    // Redirect if user is on a dashboard that doesn't match their role
+    const isAtWrongDashboard = Object.values(dashboardPaths).includes(pathname) && pathname !== expectedPath;
+
+    if (isAtWrongDashboard) {
+      router.replace(expectedPath);
+    } else if (pathname === '/' && user) {
+      // If at root and logged in, redirect to their correct dashboard
+      router.replace(expectedPath);
     }
 
   }, [isUserLoading, user, router, pathname]);
@@ -79,7 +72,6 @@ export default function MainLayout({
             <Skeleton className="h-8 w-48" />
             <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
               <Skeleton className="h-8 w-[320px] rounded-lg" />
-              <Skeleton className="h-9 w-9 rounded-full" />
               <Skeleton className="h-9 w-9 rounded-full" />
             </div>
           </header>
