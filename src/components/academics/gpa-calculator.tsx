@@ -10,7 +10,14 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2 } from "lucide-react";
 
 const gradePoints: Record<string, number> = {
-  'A': 4.0, 'A-': 3.7, 'B+': 3.3, 'B': 3.0, 'B-': 2.7, 'C+': 2.3, 'C': 2.0, 'C-': 1.7, 'D+': 1.3, 'D': 1.0, 'F': 0.0,
+  'O': 10.0,
+  'A+': 9.0,
+  'A': 8.0,
+  'B+': 7.0,
+  'B': 6.0,
+  'C': 5.0,
+  'P': 4.0,
+  'F': 0.0,
 };
 
 type Course = {
@@ -22,9 +29,9 @@ type Course = {
 
 export function GpaCalculator() {
   const [courses, setCourses] = React.useState<Course[]>([
-    { id: 1, name: 'Advanced Algorithms', credits: 3, grade: 'A' },
-    { id: 2, name: 'Operating Systems', credits: 3, grade: 'B+' },
-    { id: 3, name: 'Linear Algebra', credits: 3, grade: 'A-' },
+    { id: 1, name: 'Advanced Algorithms', credits: 3, grade: 'A+' },
+    { id: 2, name: 'Operating Systems', credits: 3, grade: 'A' },
+    { id: 3, name: 'Linear Algebra', credits: 3, grade: 'O' },
   ]);
   const [gpa, setGpa] = React.useState(0);
 
@@ -54,7 +61,7 @@ export function GpaCalculator() {
   
   const addCourse = () => {
     const newId = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
-    setCourses([...courses, { id: newId, name: `Course ${courses.length + 1}`, credits: 3, grade: 'A' }]);
+    setCourses([...courses, { id: newId, name: `Course ${courses.length + 1}`, credits: 3, grade: 'O' }]);
   };
 
   const removeCourse = (id: number) => {
