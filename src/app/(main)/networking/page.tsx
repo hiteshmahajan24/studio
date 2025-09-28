@@ -190,7 +190,7 @@ export default function NetworkingPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Select value={industryFilter} onValueChange={setIndustryFilter}>
+                  <Select value={industryFilter} onValuechange={setIndustryFilter}>
                     <SelectTrigger className="w-full md:w-[180px]">
                       <SelectValue placeholder="Filter by industry" />
                     </SelectTrigger>
