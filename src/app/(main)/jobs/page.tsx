@@ -17,6 +17,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { JobCard } from '@/components/jobs/job-card';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const statusVariantMap: Record<JobApplication['status'], 'secondary' | 'default' | 'outline' | 'destructive'> = {
   Applied: 'outline',
@@ -36,6 +38,7 @@ const statusColorMap: Record<JobApplication['status'], string> = {
 
 function JobApplicationTracker({ applications, onAddApplication, handleExport }: { applications: JobApplication[], onAddApplication: (app: Omit<JobApplication, 'id' | 'jobId'> & {jobId: string | null}) => void, handleExport: () => void }) {
   const router = useRouter();
+  const bgImage = PlaceHolderImages.find(img => img.id === 'job-tracker-bg');
 
   const handleRowClick = (jobId: string | null) => {
     if (jobId) {
@@ -44,45 +47,57 @@ function JobApplicationTracker({ applications, onAddApplication, handleExport }:
   };
 
   return (
-    <Card>
-      <CardHeader className='flex-row items-center justify-between'>
-        <div>
-          <CardTitle>My Applications</CardTitle>
-          <CardDescription>A complete list of your job applications.</CardDescription>
-        </div>
-        <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport}><Download className="mr-2" /> Export</Button>
-            <AddApplicationForm onAddApplication={onAddApplication}>
-              <Button><PlusCircle className="mr-2" /> Add Application</Button>
-            </AddApplicationForm>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Company</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Date Applied</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {applications.map((app) => (
-              <TableRow key={app.id} onClick={() => handleRowClick(app.jobId)} className={cn(app.jobId && "cursor-pointer")}>
-                <TableCell className="font-medium">{app.company}</TableCell>
-                <TableCell>{app.title}</TableCell>
-                <TableCell>
-                  <Badge variant={statusVariantMap[app.status]} className={cn('capitalize', statusColorMap[app.status])}>
-                    {app.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right text-muted-foreground">{app.dateApplied}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
+    <Card className="relative overflow-hidden">
+        {bgImage && (
+            <Image
+                src={bgImage.imageUrl}
+                alt={bgImage.description}
+                data-ai-hint={bgImage.imageHint}
+                fill
+                className="object-cover"
+            />
+        )}
+        <div className="absolute inset-0 bg-background/90" />
+      <div className="relative">
+        <CardHeader className='flex-row items-center justify-between'>
+            <div>
+            <CardTitle>My Applications</CardTitle>
+            <CardDescription>A complete list of your job applications.</CardDescription>
+            </div>
+            <div className="flex gap-2">
+                <Button variant="outline" onClick={handleExport}><Download className="mr-2" /> Export</Button>
+                <AddApplicationForm onAddApplication={onAddApplication}>
+                <Button><PlusCircle className="mr-2" /> Add Application</Button>
+                </AddApplicationForm>
+            </div>
+        </CardHeader>
+        <CardContent>
+            <Table>
+            <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                <TableHead>Company</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Date Applied</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {applications.map((app) => (
+                <TableRow key={app.id} onClick={() => handleRowClick(app.jobId)} className={cn(app.jobId && "cursor-pointer", "hover:bg-foreground/5")}>
+                    <TableCell className="font-medium">{app.company}</TableCell>
+                    <TableCell>{app.title}</TableCell>
+                    <TableCell>
+                    <Badge variant={statusVariantMap[app.status]} className={cn('capitalize', statusColorMap[app.status])}>
+                        {app.status}
+                    </Badge>
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground">{app.dateApplied}</TableCell>
+                </TableRow>
+                ))}
+            </TableBody>
+            </Table>
+        </CardContent>
+      </div>
     </Card>
   );
 }
@@ -92,6 +107,7 @@ function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: 
     const [searchTerm, setSearchTerm] = React.useState('');
     const [typeFilter, setTypeFilter] = React.useState('all');
     const [locationFilter, setLocationFilter] = React.useState('all');
+    const bgImage = PlaceHolderImages.find(img => img.id === 'job-finder-bg');
 
     const jobTypes = ['all', ...Array.from(new Set(openOpportunities.map(job => job.type)))];
     const locations = ['all', ...Array.from(new Set(openOpportunities.map(job => job.location)))];
@@ -107,61 +123,73 @@ function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: 
 
     return (
         <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <div className="flex flex-col gap-4 md:flex-row">
-                        <div className="relative flex-1">
-                            <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Search by title, company, skill..."
-                                className="pl-8"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
-                            <Select value={typeFilter} onValueChange={setTypeFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Filter by type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {jobTypes.map((type) => (
-                                        <SelectItem key={type} value={type} className="capitalize">{type === 'all' ? 'All Job Types' : type}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Select value={locationFilter} onValueChange={setLocationFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
-                                    <SelectValue placeholder="Filter by location" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {locations.map((location) => (
-                                        <SelectItem key={location} value={location} className="capitalize">{location === 'all' ? 'All Locations' : location}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                     {filteredJobs.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {filteredJobs.map(job => (
-                                <JobCard 
-                                    key={job.id} 
-                                    job={job} 
-                                    onApplySuccess={onApplySuccess}
-                                    isApplied={appliedJobIds.has(job.id)}
+            <Card className="relative overflow-hidden">
+                {bgImage && (
+                    <Image
+                        src={bgImage.imageUrl}
+                        alt={bgImage.description}
+                        data-ai-hint={bgImage.imageHint}
+                        fill
+                        className="object-cover"
+                    />
+                )}
+                <div className="absolute inset-0 bg-background/90" />
+                <div className="relative">
+                    <CardHeader>
+                        <div className="flex flex-col gap-4 md:flex-row">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                    placeholder="Search by title, company, skill..."
+                                    className="pl-8"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                 />
-                            ))}
+                            </div>
+                            <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
+                                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                                    <SelectTrigger className="w-full md:w-[180px]">
+                                        <SelectValue placeholder="Filter by type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {jobTypes.map((type) => (
+                                            <SelectItem key={type} value={type} className="capitalize">{type === 'all' ? 'All Job Types' : type}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Select value={locationFilter} onValueChange={setLocationFilter}>
+                                    <SelectTrigger className="w-full md:w-[180px]">
+                                        <SelectValue placeholder="Filter by location" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {locations.map((location) => (
+                                            <SelectItem key={location} value={location} className="capitalize">{location === 'all' ? 'All Locations' : location}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
-                    ) : (
-                        <div className="py-16 text-center">
-                            <h3 className="text-lg font-semibold">No Jobs Found</h3>
-                            <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
-                        </div>
-                    )}
-                </CardContent>
+                    </CardHeader>
+                    <CardContent>
+                        {filteredJobs.length > 0 ? (
+                            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                {filteredJobs.map(job => (
+                                    <JobCard 
+                                        key={job.id} 
+                                        job={job} 
+                                        onApplySuccess={onApplySuccess}
+                                        isApplied={appliedJobIds.has(job.id)}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="py-16 text-center">
+                                <h3 className="text-lg font-semibold">No Jobs Found</h3>
+                                <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
+                            </div>
+                        )}
+                    </CardContent>
+                </div>
             </Card>
         </div>
     );
