@@ -51,7 +51,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
       <CardFooter className="p-4 border-t bg-muted/20">
         {isJoined ? (
              <Button asChild className="w-full" variant="secondary">
-                <Link href={`/communities/${community.id}`}>
+                <Link href={`/student/communities/${community.id}`}>
                     View Community <ArrowRight className="ml-2" />
                 </Link>
             </Button>

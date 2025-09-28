@@ -65,15 +65,15 @@ export default function LoginPage() {
   });
 
   const getRedirectPath = (role: UserRole) => {
-    const paths: { [key: string]: string } = {
-      student: '/dashboard',
-      admin: '/admin',
-      faculty: '/faculty',
-      alumni: '/alumni',
-      employer: '/employer',
-      superadmin: '/superadmin',
+    const paths: { [key in UserRole]: string } = {
+      student: '/student/dashboard',
+      admin: '/admin/dashboard',
+      faculty: '/faculty/dashboard',
+      alumni: '/alumni/dashboard',
+      employer: '/employer/dashboard',
+      superadmin: '/creator-view',
     };
-    return paths[role] || '/dashboard';
+    return paths[role] || '/student/dashboard';
   };
 
   const handleLoginSuccess = (userCredential: any, email: string) => {
@@ -135,7 +135,7 @@ export default function LoginPage() {
             title: 'Welcome, Guest!',
             description: 'You are now browsing as a guest.',
         });
-        router.push('/dashboard');
+        router.push('/student/dashboard');
     } catch (error: any) {
         console.error('Guest Login Error:', error);
         toast({

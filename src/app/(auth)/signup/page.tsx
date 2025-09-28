@@ -83,7 +83,7 @@ export default function SignupPage() {
         title: 'Account Created!',
         description: 'You have been successfully signed up as a student.',
       });
-      router.push('/dashboard'); // Redirect to student dashboard
+      router.push('/student/dashboard'); // Redirect to student dashboard
     } catch (error: any) {
       console.error('Signup Error:', error);
       toast({

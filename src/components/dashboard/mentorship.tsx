@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,7 +35,7 @@ export function Mentorship() {
                 </div>
               </div>
                <Button variant="outline" size="sm" className="shrink-0" asChild>
-                <Link href={`/mentorship`}>
+                <Link href={`/student/mentorship`}>
                   <Handshake className="mr-2 h-4 w-4" />
                   Connect
                 </Link>
@@ -43,7 +44,7 @@ export function Mentorship() {
           );
         })}
          <Button variant="ghost" className="w-full" asChild>
-            <Link href="/mentorship">View More Mentors</Link>
+            <Link href="/student/mentorship">View More Mentors</Link>
          </Button>
       </CardContent>
     </Card>

@@ -37,9 +37,9 @@ export function WellnessNook({ className }: { className?: string }) {
     const handleFindMentors = () => {
         if (problemDescription) {
             const params = new URLSearchParams({ q: problemDescription });
-            router.push(`/mentorship?${params.toString()}`);
+            router.push(`/student/mentorship?${params.toString()}`);
         } else {
-            router.push('/mentorship');
+            router.push('/student/mentorship');
         }
         setIsOpen(false);
     }

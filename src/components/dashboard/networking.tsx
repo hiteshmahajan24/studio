@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Search } from "lucide-react";
@@ -22,7 +23,7 @@ export function Networking() {
               </div>
             </div>
             <Button variant="outline" asChild>
-                <Link href="/networking">
+                <Link href="/student/networking">
                     <Search className="mr-2 h-4 w-4" />
                     Browse
                 </Link>

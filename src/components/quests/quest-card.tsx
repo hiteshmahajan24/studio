@@ -28,7 +28,9 @@ export function QuestCard({ quest }: QuestCardProps) {
 
     const handleAction = () => {
         if (quest.ctaLink) {
-            router.push(quest.ctaLink);
+            // Prepend /student to the path
+            const studentPath = `/student${quest.ctaLink.startsWith('/') ? '' : '/'}${quest.ctaLink}`;
+            router.push(studentPath);
         }
     }
 

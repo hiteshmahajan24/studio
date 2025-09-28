@@ -39,13 +39,13 @@ export function JobCard({ job, onApplySuccess, isApplied }: JobCardProps) {
                 {job.skills.slice(0, 3).map(skill => (
                     <Badge key={skill} variant="secondary">{skill}</Badge>
                 ))}
-                {job.skills.length > 3 && <Badge variant="outline">+{job.skills.length - 3} more</Badge>}
+                {job.skills.length > 3 && <Badge variant="outline">+{job.skills.length - 3}</Badge>}
             </div>
         </div>
       </CardContent>
       <CardFooter className="grid grid-cols-2 gap-2">
         <Button variant="outline" asChild>
-            <Link href={`/jobs/${job.id}`}>
+            <Link href={`/student/jobs/${job.id}`}>
                 <Eye className="mr-2" /> View Details
             </Link>
         </Button>

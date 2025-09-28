@@ -32,7 +32,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
   };
 
   return (
-    <Link href={`/articles/${article.id}`} passHref>
+    <Link href={`/student/articles/${article.id}`} passHref>
       <Card className="overflow-hidden flex flex-col h-full group cursor-pointer">
         <CardHeader className="p-0 relative h-48">
           <Image

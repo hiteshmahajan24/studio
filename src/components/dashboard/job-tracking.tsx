@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +61,7 @@ export function JobTracking() {
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full" asChild>
-            <Link href="/jobs">View All Applications <ArrowRight className="ml-2" /></Link>
+            <Link href="/student/jobs">View All Applications <ArrowRight className="ml-2" /></Link>
         </Button>
       </CardFooter>
     </Card>

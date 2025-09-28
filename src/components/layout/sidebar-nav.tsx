@@ -16,9 +16,6 @@ import {
   Database,
   UserPlus,
   BarChart3,
-  Building,
-  UserCog,
-  Eye,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -27,54 +24,43 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { UserRole } from '@/lib/mock-data';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ClientButton } from './client-button';
+import type { UserRole } from '@/lib/mock-data';
 
 const navItemsByRole = {
   student: [
-    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { href: '/mentorship', icon: Handshake, label: 'Mentorship' },
-    { href: '/jobs', icon: Briefcase, label: 'Jobs' },
-    { href: '/networking', icon: Users, label: 'Networking' },
-    { href: '/quests', icon: Shield, label: 'Quests' },
-    { href: '/academics', icon: GraduationCap, label: 'Academics' },
-    { href: '/articles', icon: FileText, label: 'Articles' },
+    { href: '/student/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { href: '/student/mentorship', icon: Handshake, label: 'Mentorship' },
+    { href: '/student/jobs', icon: Briefcase, label: 'Jobs' },
+    { href: '/student/networking', icon: Users, label: 'Networking' },
+    { href: '/student/quests', icon: Shield, label: 'Quests' },
+    { href: '/student/academics', icon: GraduationCap, label: 'Academics' },
+    { href: '/student/articles', icon: FileText, label: 'Articles' },
   ],
   admin: [
-    { href: '/admin', icon: LayoutDashboard, label: 'Admin Dashboard' },
+    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard' },
     { href: '/admin/manage-alumni', icon: Database, label: 'Manage Alumni' },
     { href: '/admin/manage-faculty', icon: UserPlus, label: 'Manage Faculty' },
     { href: '/admin/notifications', icon: Bell, label: 'Send Notifications' },
     { href: '/admin/events', icon: Briefcase, label: 'Manage Events' },
   ],
   faculty: [
-    { href: '/faculty', icon: LayoutDashboard, label: 'Faculty Dashboard' },
+    { href: '/faculty/dashboard', icon: LayoutDashboard, label: 'Faculty Dashboard' },
     { href: '/faculty/students', icon: Users, label: 'View Students' },
     { href: '/faculty/assignments', icon: FileText, label: 'Create Assignments' },
-    { href: '/mentorship', icon: Handshake, label: 'Provide Mentorship' },
+    { href: '/faculty/mentorship', icon: Handshake, label: 'Provide Mentorship' },
   ],
   alumni: [
-    { href: '/alumni', icon: LayoutDashboard, label: 'Alumni Dashboard' },
-    { href: '/mentorship', icon: Handshake, label: 'Provide Mentorship' },
-    { href: '/networking', icon: Users, label: 'Alumni Network' },
-    { href: '/articles', icon: FileText, label: 'Share Experience' },
+    { href: '/alumni/dashboard', icon: LayoutDashboard, label: 'Alumni Dashboard' },
+    { href: '/alumni/mentorship', icon: Handshake, label: 'Provide Mentorship' },
+    { href: '/alumni/networking', icon: Users, label: 'Alumni Network' },
+    { href: '/alumni/articles', icon: FileText, label: 'Share Experience' },
   ],
   employer: [
-    { href: '/employer', icon: LayoutDashboard, label: 'Employer Dashboard' },
+    { href: '/employer/dashboard', icon: LayoutDashboard, label: 'Employer Dashboard' },
     { href: '/employer/candidates', icon: Users, label: 'Find Candidates' },
     { href: '/employer/leaderboard', icon: BarChart3, label: 'Leaderboard' },
   ],
-  superadmin: [
-    { href: '/creator-view', icon: UserCog, label: 'Creator View' },
-  ],
+  superadmin: [], // Superadmin has a separate view
 };
 
 const LogoIcon = () => (
@@ -94,49 +80,16 @@ const LogoIcon = () => (
     </svg>
   );
 
-export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actualRole: UserRole | null }) {
+export function SidebarNav({ userRole }: { userRole: UserRole }) {
   const pathname = usePathname();
-  const navItems = navItemsByRole[userRole] || navItemsByRole.student;
+  const navItems = navItemsByRole[userRole] || [];
   
-  const logoHref = navItems[0]?.href || '/dashboard';
+  const logoHref = navItems[0]?.href || '/';
 
-  const isSuperAdminView = actualRole === 'superadmin';
-
-  const renderLogo = () => {
-    if (isSuperAdminView) {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <ClientButton
-              aria-label="Creator Menu"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-destructive text-lg font-semibold text-destructive-foreground md:h-8 md:w-8 md:text-base"
-            >
-              <LogoIcon />
-            </ClientButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" align="start">
-            <DropdownMenuLabel>Creator Tools</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/creator-view">Creator View</Link>
-            </DropdownMenuItem>
-             <DropdownMenuSeparator />
-            <DropdownMenuLabel>Impersonate</DropdownMenuLabel>
-             <DropdownMenuItem asChild>
-              <Link href="/dashboard?viewAs=student">View as Student</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin?viewAs=admin">View as Admin</Link>
-            </DropdownMenuItem>
-             <DropdownMenuItem asChild>
-              <Link href="/faculty?viewAs=faculty">View as Faculty</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-    
-    return (
+  return (
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
+       <TooltipProvider delayDuration={100}>
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
        <Link
           href={logoHref}
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
@@ -144,14 +97,6 @@ export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actua
           <LogoIcon />
           <span className="sr-only">NexusConnect</span>
         </Link>
-    )
-  }
-
-  return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
-       <TooltipProvider delayDuration={100}>
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        {renderLogo()}
         
           {navItems.map((item) => (
             <Tooltip key={item.label}>
