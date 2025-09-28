@@ -44,7 +44,7 @@ const emailToUidMap: { [email: string]: string } = {
   'faculty@nexus.com': 'faculty-user-id',
   'alumni@nexus.com': 'alumni-user-id',
   'employer@nexus.com': 'employer-user-id',
-  'CreaterOfBlood@nexus.com': 'superadmin-user-id',
+  'createrofblood@nexus.com': 'superadmin-user-id',
 };
 
 const roleEmails = Object.keys(emailToUidMap);
