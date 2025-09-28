@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { PostCard } from '@/components/communities/post-card';
 import { CreatePostDialog } from '@/components/communities/create-post-dialog';
 import { cn } from '@/lib/utils';
+import { UserProfileDialog } from '@/components/networking/user-profile-dialog';
 
 export default function CommunityPage() {
   const params = useParams();
@@ -87,7 +88,8 @@ export default function CommunityPage() {
                     const avatar = PlaceHolderImages.find((img) => img.id === member.avatarId);
                     const isTopThree = index < 3;
                     return (
-                        <Card key={member.id} className={cn("flex flex-col items-center p-4 text-center transition-all", isTopThree && "bg-amber-100/20 dark:bg-amber-900/20 border-amber-500/30")}>
+                      <UserProfileDialog key={member.id} user={member}>
+                        <Card className={cn("flex flex-col items-center p-4 text-center transition-all hover:bg-muted/50 cursor-pointer", isTopThree && "bg-amber-100/20 dark:bg-amber-900/20 border-amber-500/30")}>
                             <div className='w-full flex justify-end mb-2'>
                                 {isTopThree && <Crown className="w-5 h-5 text-amber-400" />}
                             </div>
@@ -99,6 +101,7 @@ export default function CommunityPage() {
                             <p className="text-sm text-muted-foreground">{member.title}</p>
                             <Button variant="outline" size="sm" className="mt-4">View Profile</Button>
                         </Card>
+                      </UserProfileDialog>
                     )
                 })}
             </div>

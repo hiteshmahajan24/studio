@@ -25,7 +25,7 @@ export function JoinedCommunities({ className }: { className?: string }) {
             <div className="space-y-3">
                 {joined.map((community) => (
                     <Link key={community.id} href={`/communities/${community.id}`} passHref>
-                        <div className="flex items-center justify-between gap-4 p-3 rounded-lg transition-colors bg-muted/50 hover:bg-muted">
+                        <div className="flex items-center justify-between gap-4 p-3 rounded-lg transition-colors bg-muted/50 hover:bg-muted cursor-pointer">
                         <div className="flex items-center gap-3">
                             <div className="p-1.5 bg-background rounded-md">
                                 <community.icon className="w-5 h-5 text-primary" />
