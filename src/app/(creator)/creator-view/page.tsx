@@ -1,11 +1,19 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateInstituteDialog } from "@/components/superadmin/create-institute-dialog";
-import { Building, Database, UserCog } from "lucide-react";
+import { Building, Database, UserCog, Eye, Users, GraduationCap, User, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function CreatorViewPage() {
+  const roleViews = [
+    { role: 'Student', href: '/dashboard?viewAs=student', icon: Users },
+    { role: 'Admin', href: '/admin?viewAs=admin', icon: UserCog },
+    { role: 'Faculty', href: '/faculty?viewAs=faculty', icon: GraduationCap },
+    { role: 'Alumni', href: '/alumni?viewAs=alumni', icon: User },
+    { role: 'Employer', href: '/employer?viewAs=employer', icon: Briefcase },
+  ];
+
   return (
     <div className="p-4 md:p-8">
        <div className="mb-8 flex items-center justify-between">
@@ -53,6 +61,24 @@ export default function CreatorViewPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Eye /> Platform Impersonation</CardTitle>
+          <CardDescription>View the platform from the perspective of different user roles. This is your "secret" role-switcher.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {roleViews.map(view => (
+                 <Button key={view.role} asChild variant="outline" className="h-20 flex-col gap-2">
+                    <Link href={view.href}>
+                        <view.icon className="h-6 w-6" />
+                        <span>View as {view.role}</span>
+                    </Link>
+                </Button>
+            ))}
+        </CardContent>
+      </Card>
+
     </div>
   );
 }

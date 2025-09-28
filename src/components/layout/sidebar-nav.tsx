@@ -26,17 +26,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/lib/mock-data';
-import { ClientButton } from './client-button';
 
 const navItemsByRole = {
   student: [
@@ -72,10 +63,8 @@ const navItemsByRole = {
     { href: '/employer/candidates', icon: Users, label: 'Find Candidates' },
     { href: '/employer/leaderboard', icon: BarChart3, label: 'Leaderboard' },
   ],
-  superadmin: [
+  superadmin: [ // The main nav for superadmin is now simple.
     { href: '/creator-view', icon: UserCog, label: 'Creator View' },
-    { href: '/dashboard', icon: LayoutDashboard, label: 'Student View' },
-    { href: '/admin', icon: Building, label: 'Admin View' },
   ]
 };
 
@@ -98,64 +87,25 @@ const LogoIcon = () => (
 
 export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actualRole: UserRole | null }) {
   const pathname = usePathname();
+  // If we are impersonating a role, show that role's nav items. Otherwise, show the actual role's items.
   const navItems = navItemsByRole[userRole] || navItemsByRole.student;
 
-  const renderLogo = () => {
-    if (actualRole === 'superadmin') {
-      return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <ClientButton
-                    variant="ghost"
-                    size="icon"
-                    className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base hover:bg-primary/90"
-                >
-                    <LogoIcon />
-                    <span className="sr-only">Switch View</span>
-                </ClientButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="right">
-                <DropdownMenuLabel>Switch View</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                    <Link href="/creator-view">Creator View</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/dashboard?viewAs=student">View as Student</Link>
-                </DropdownMenuItem>
-                 <DropdownMenuItem asChild>
-                    <Link href="/admin?viewAs=admin">View as Admin</Link>
-                </DropdownMenuItem>
-                 <DropdownMenuItem asChild>
-                    <Link href="/faculty?viewAs=faculty">View as Faculty</Link>
-                </DropdownMenuItem>
-                 <DropdownMenuItem asChild>
-                    <Link href="/alumni?viewAs=alumni">View as Alumni</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/employer?viewAs=employer">View as Employer</Link>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    }
-
-    return (
-        <Link
-          href="/dashboard"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-        >
-          <LogoIcon />
-          <span className="sr-only">NexusConnect</span>
-        </Link>
-    )
-  }
+  // The logo now always links to the primary dashboard for the current view.
+  const logoHref = actualRole === 'superadmin' && userRole === 'superadmin' 
+    ? '/creator-view' 
+    : navItemsByRole[userRole]?.[0]?.href || '/dashboard';
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
        <TooltipProvider delayDuration={100}>
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        {renderLogo()}
+        <Link
+          href={logoHref}
+          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+        >
+          <LogoIcon />
+          <span className="sr-only">NexusConnect</span>
+        </Link>
           {navItems.map((item) => (
             <Tooltip key={item.label}>
               <TooltipTrigger asChild>
