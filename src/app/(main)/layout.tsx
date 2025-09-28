@@ -50,22 +50,18 @@ export default function MainLayout({
       faculty: '/faculty',
       alumni: '/alumni',
       employer: '/employer',
-      superadmin: '/creator-view'
     };
-    const expectedPath = dashboardPaths[role];
-
-    // If superadmin is NOT impersonating, redirect to creator view if they land on a main page.
+    
+    // If superadmin lands in this layout without impersonating, redirect them.
     if (role === 'superadmin' && !viewAsRole) {
-        // Prevent redirect loop from /creator-view to /creator-view
-        if (pathname !== '/creator-view') {
-            router.replace('/creator-view');
-        }
-        return;
+      router.replace('/creator-view');
+      return;
     }
 
     // For other roles, if they land on a main dashboard that isn't theirs, redirect.
     if (role !== 'superadmin') {
-        const mainDashboardPaths = Object.values(dashboardPaths).filter(p => p !== '/creator-view');
+        const mainDashboardPaths = Object.values(dashboardPaths);
+        const expectedPath = dashboardPaths[role];
         if (mainDashboardPaths.includes(pathname) && pathname !== expectedPath) {
             router.replace(expectedPath);
         } else if (pathname === '/' && user) {
@@ -104,7 +100,7 @@ export default function MainLayout({
 
   // If a superadmin is trying to access a non-creator page without impersonating,
   // we show a loading screen until the redirect to /creator-view completes.
-  if (actualRole === 'superadmin' && !viewAsRole && !pathname.startsWith('/creator-view')) {
+  if (actualRole === 'superadmin' && !viewAsRole) {
     return (
         <div className="flex min-h-screen w-full items-center justify-center">
             <p>Redirecting to Creator View...</p>
