@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 import { useUserState } from "@/context/user-state-context";
 
 const statCards = [
-  { title: "Knowledge Coins", valueKey: 'knowledgeCoins', icon: Coins, goal: "2,000 to redeem a course", goalValue: 2000 },
-  { title: "Leaderboard Rank", valueKey: 'leaderboardRank', icon: TrendingUp, goal: "Top 10 to earn a badge", goalValue: 50, rank: true },
+  { title: "Knowledge Coins", valueKey: 'knowledgeCoins', icon: Coins, description: "Earn coins by completing quests and engaging.", goal: "2,000 to redeem a course", goalValue: 2000 },
+  { title: "Leaderboard Rank", valueKey: 'leaderboardRank', icon: TrendingUp, description: "Climb the ranks by earning points from activities.", goal: "Top 10 to earn a badge", goalValue: 50, rank: true },
 ];
 
 export function Gamification({ className }: { className?: string }) {
@@ -38,14 +38,15 @@ export function Gamification({ className }: { className?: string }) {
             const progress = card.rank ? (1 - (value - 1) / card.goalValue) * 100 : (value / card.goalValue) * 100;
             return (
                 <div key={card.title} className="bg-muted/50 p-4 rounded-lg flex flex-col justify-between">
-                <div>
+                <div className="flex-1">
                     <div className="flex flex-row items-center justify-between space-y-0 pb-1">
                     <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
                     <card.icon className="h-4 w-4 text-muted-foreground" />
                     </div>
                     <div className="text-2xl font-bold">{card.rank ? `#${value}` : value.toLocaleString()}</div>
+                    <p className="text-xs text-muted-foreground mt-1">{card.description}</p>
                 </div>
-                <div className="mt-2">
+                <div className="mt-4">
                     <Progress value={progress} className="h-1.5 bg-background" />
                     <p className="text-xs text-muted-foreground mt-1.5">{card.goal}</p>
                 </div>
@@ -57,7 +58,8 @@ export function Gamification({ className }: { className?: string }) {
         {/* Badges and Next Goal Section */}
         <div className="space-y-4 rounded-lg bg-muted/50 p-4">
             <div>
-              <h3 className="text-sm font-semibold mb-3">Earned Badges</h3>
+              <h3 className="text-sm font-semibold mb-2">Earned Badges</h3>
+              <p className="text-xs text-muted-foreground mb-3">Collect unique badges by reaching milestones and participating in events.</p>
               <TooltipProvider delayDuration={100}>
                   <div className="flex flex-wrap gap-3">
                   {earnedBadges.map((badge) => (
@@ -78,8 +80,8 @@ export function Gamification({ className }: { className?: string }) {
             </div>
              <div className="border-t border-border pt-4">
                 <h3 className="text-sm font-semibold mb-1.5">Suggested Next Badge: {nextBadge.name}</h3>
-                <Progress value={nextBadge.progress} className="h-1.5 mb-1.5" />
-                <p className="text-xs text-muted-foreground">{nextBadge.description}</p>
+                <p className="text-xs text-muted-foreground mb-1.5">{nextBadge.description}</p>
+                <Progress value={nextBadge.progress} className="h-1.5" />
              </div>
         </div>
       </CardContent>
