@@ -64,7 +64,7 @@ export default function NetworkingPage() {
   }, []);
 
   const communitiesList = React.useMemo(() => {
-    const allCommunities = allUsers.map((user) => user.community);
+    const allCommunities = allUsers.map((user) => user.community).filter(Boolean);
     return ['all', ...Array.from(new Set(allCommunities))];
   }, []);
 

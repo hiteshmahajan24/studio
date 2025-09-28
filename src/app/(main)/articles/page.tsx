@@ -10,6 +10,9 @@ import { ArticleCard } from '@/components/articles/article-card';
 import Link from 'next/link';
 
 export default function ArticlesPage() {
+  const featuredArticles = [...mockArticles].slice(0, 6);
+  const trendingArticles = [...mockArticles].sort((a, b) => b.likes - a.likes).slice(0, 6);
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -34,14 +37,14 @@ export default function ArticlesPage() {
         </TabsList>
         <TabsContent value="featured" className="mt-6">
            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {mockArticles.slice(0,6).map(article => (
+                {featuredArticles.map(article => (
                     <ArticleCard key={article.id} article={article} />
                 ))}
            </div>
         </TabsContent>
          <TabsContent value="trending" className="mt-6">
            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {mockArticles.slice(3,9).map(article => (
+                {trendingArticles.map(article => (
                     <ArticleCard key={article.id} article={article} />
                 ))}
            </div>
