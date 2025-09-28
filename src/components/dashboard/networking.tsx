@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Search } from "lucide-react";
+import Link from "next/link";
 
 export function Networking() {
   return (
@@ -20,9 +21,11 @@ export function Networking() {
                 <p className="text-sm text-muted-foreground">Find and connect with peers and professionals.</p>
               </div>
             </div>
-            <Button variant="outline">
-                <Search className="mr-2 h-4 w-4" />
-                Browse
+            <Button variant="outline" asChild>
+                <Link href="/networking">
+                    <Search className="mr-2 h-4 w-4" />
+                    Browse
+                </Link>
             </Button>
         </div>
       </CardContent>

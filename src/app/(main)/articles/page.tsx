@@ -7,6 +7,7 @@ import { PenSquare } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockArticles } from '@/lib/mock-data';
 import { ArticleCard } from '@/components/articles/article-card';
+import Link from 'next/link';
 
 export default function ArticlesPage() {
   return (
@@ -16,9 +17,11 @@ export default function ArticlesPage() {
           <h1 className="text-3xl font-bold">Articles</h1>
           <p className="text-muted-foreground">Read, write, and share knowledge with the community.</p>
         </div>
-        <Button>
-          <PenSquare className="mr-2" />
-          Write an Article
+        <Button asChild>
+          <Link href="/articles">
+            <PenSquare className="mr-2" />
+            Write an Article
+          </Link>
         </Button>
       </div>
 
