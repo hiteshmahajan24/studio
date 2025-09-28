@@ -29,7 +29,7 @@ export default function StudentLayout({
       return;
     }
     
-    // If a non-student/superadmin tries to access student routes, redirect them
+    // Allow access if the user is a student OR a superadmin
     if (userRole !== 'student' && userRole !== 'superadmin') {
       router.push('/login');
     }
@@ -40,10 +40,13 @@ export default function StudentLayout({
     return <LoadingSkeleton />;
   }
 
+  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the student nav.
+  const sidebarRole = userRole === 'superadmin' ? 'student' : userRole;
+
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole="student" />
+        <SidebarNav userRole={sidebarRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">

@@ -28,6 +28,7 @@ export default function FacultyLayout({
       return;
     }
     
+    // Allow access if the user is faculty OR a superadmin
     if (userRole !== 'faculty' && userRole !== 'superadmin') {
       router.push('/login');
     }
@@ -38,10 +39,13 @@ export default function FacultyLayout({
     return <LoadingSkeleton />;
   }
 
+  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the faculty nav.
+  const sidebarRole = userRole === 'superadmin' ? 'faculty' : userRole;
+
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole="faculty" />
+        <SidebarNav userRole={sidebarRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">

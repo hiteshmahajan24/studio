@@ -28,7 +28,7 @@ export default function AdminLayout({
       return;
     }
     
-    // If a non-admin/superadmin tries to access admin routes, redirect them
+    // Allow access if the user is an admin OR a superadmin
     if (userRole !== 'admin' && userRole !== 'superadmin') {
       router.push('/login');
     }
@@ -39,10 +39,13 @@ export default function AdminLayout({
     return <LoadingSkeleton />;
   }
 
+  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the admin nav.
+  const sidebarRole = userRole === 'superadmin' ? 'admin' : userRole;
+
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole="admin" />
+        <SidebarNav userRole={sidebarRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">

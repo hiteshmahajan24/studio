@@ -28,6 +28,7 @@ export default function EmployerLayout({
       return;
     }
     
+    // Allow access if the user is an employer OR a superadmin
     if (userRole !== 'employer' && userRole !== 'superadmin') {
       router.push('/login');
     }
@@ -38,10 +39,13 @@ export default function EmployerLayout({
     return <LoadingSkeleton />;
   }
 
+  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the employer nav.
+  const sidebarRole = userRole === 'superadmin' ? 'employer' : userRole;
+
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole="employer" />
+        <SidebarNav userRole={sidebarRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
