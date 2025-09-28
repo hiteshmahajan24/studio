@@ -20,40 +20,29 @@ export default function MainLayout({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // State to manage the "view as" role
   const [viewAsRole, setViewAsRole] = useState<UserRole | null>(null);
-
   const actualRole = user ? getUserRole(user.uid) : null;
-  
-  // The current role being displayed is the impersonated role, or the actual role.
   const currentRole = viewAsRole || actualRole;
   
   useEffect(() => {
-    // Superadmin can use a query param to switch views
     const viewAs = searchParams.get('viewAs') as UserRole;
     if (actualRole === 'superadmin' && viewAs) {
       if (['student', 'admin', 'faculty', 'alumni', 'employer'].includes(viewAs)) {
         setViewAsRole(viewAs);
       }
     } else {
-      // Clear the viewAsRole if not superadmin or no query param
       setViewAsRole(null);
     }
   }, [searchParams, actualRole]);
 
-
   useEffect(() => {
-    if (isUserLoading) return; // Wait until user status is resolved
+    if (isUserLoading) return;
 
     if (!user) {
       router.push('/login');
       return;
     }
 
-    // Don't run redirection logic if we're impersonating a role
-    if (viewAsRole) return;
-
-    // Get user role and determine the correct dashboard path
     const role = getUserRole(user.uid);
     const dashboardPaths: { [key: string]: string } = {
       student: '/dashboard',
@@ -61,21 +50,28 @@ export default function MainLayout({
       faculty: '/faculty',
       alumni: '/alumni',
       employer: '/employer',
-      superadmin: '/creator-view' // Superadmin defaults to creator view
+      superadmin: '/creator-view'
     };
-    const expectedPath = dashboardPaths[role] || '/dashboard';
-    
-    // List of main dashboard pages for each role
-    const mainDashboardPaths = Object.values(dashboardPaths);
+    const expectedPath = dashboardPaths[role];
 
-    // Redirect if user is on a main dashboard that doesn't match their role
-    if (mainDashboardPaths.includes(pathname) && pathname !== expectedPath) {
-        router.replace(expectedPath);
-    } else if (pathname === '/' && user) {
-        // If at root and logged in, redirect to their correct dashboard
-        router.replace(expectedPath);
+    // If superadmin is NOT impersonating, redirect to creator view if they land on a main page.
+    if (role === 'superadmin' && !viewAsRole) {
+        // Prevent redirect loop from /creator-view to /creator-view
+        if (pathname !== '/creator-view') {
+            router.replace('/creator-view');
+        }
+        return;
     }
 
+    // For other roles, if they land on a main dashboard that isn't theirs, redirect.
+    if (role !== 'superadmin') {
+        const mainDashboardPaths = Object.values(dashboardPaths).filter(p => p !== '/creator-view');
+        if (mainDashboardPaths.includes(pathname) && pathname !== expectedPath) {
+            router.replace(expectedPath);
+        } else if (pathname === '/' && user) {
+            router.replace(expectedPath);
+        }
+    }
   }, [isUserLoading, user, router, pathname, viewAsRole]);
 
   if (isUserLoading || !currentRole) {
@@ -103,6 +99,16 @@ export default function MainLayout({
           </main>
         </div>
       </div>
+    );
+  }
+
+  // If a superadmin is trying to access a non-creator page without impersonating,
+  // we show the loading screen until the redirect to /creator-view completes.
+  if (actualRole === 'superadmin' && !viewAsRole && pathname !== '/creator-view') {
+    return (
+        <div className="flex min-h-screen w-full items-center justify-center">
+            <p>Redirecting to Creator View...</p>
+        </div>
     );
   }
 

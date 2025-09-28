@@ -28,6 +28,15 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/lib/mock-data';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ClientButton } from './client-button';
 
 const navItemsByRole = {
   student: [
@@ -63,9 +72,9 @@ const navItemsByRole = {
     { href: '/employer/candidates', icon: Users, label: 'Find Candidates' },
     { href: '/employer/leaderboard', icon: BarChart3, label: 'Leaderboard' },
   ],
-  superadmin: [ // The main nav for superadmin is now simple.
+  superadmin: [
     { href: '/creator-view', icon: UserCog, label: 'Creator View' },
-  ]
+  ],
 };
 
 const LogoIcon = () => (
@@ -87,25 +96,63 @@ const LogoIcon = () => (
 
 export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actualRole: UserRole | null }) {
   const pathname = usePathname();
-  // If we are impersonating a role, show that role's nav items. Otherwise, show the actual role's items.
   const navItems = navItemsByRole[userRole] || navItemsByRole.student;
+  
+  const logoHref = navItems[0]?.href || '/dashboard';
 
-  // The logo now always links to the primary dashboard for the current view.
-  const logoHref = actualRole === 'superadmin' && userRole === 'superadmin' 
-    ? '/creator-view' 
-    : navItemsByRole[userRole]?.[0]?.href || '/dashboard';
+  const isSuperAdminView = actualRole === 'superadmin';
 
-  return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
-       <TooltipProvider delayDuration={100}>
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <Link
+  const renderLogo = () => {
+    if (isSuperAdminView) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <ClientButton
+              aria-label="Creator Menu"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-destructive text-lg font-semibold text-destructive-foreground md:h-8 md:w-8 md:text-base"
+            >
+              <LogoIcon />
+            </ClientButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" align="start">
+            <DropdownMenuLabel>Creator Tools</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/creator-view">Creator View</Link>
+            </DropdownMenuItem>
+             <DropdownMenuSeparator />
+            <DropdownMenuLabel>Impersonate</DropdownMenuLabel>
+             <DropdownMenuItem asChild>
+              <Link href="/dashboard?viewAs=student">View as Student</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin?viewAs=admin">View as Admin</Link>
+            </DropdownMenuItem>
+             <DropdownMenuItem asChild>
+              <Link href="/faculty?viewAs=faculty">View as Faculty</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+    
+    return (
+       <Link
           href={logoHref}
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <LogoIcon />
           <span className="sr-only">NexusConnect</span>
         </Link>
+    )
+  }
+
+  return (
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
+       <TooltipProvider delayDuration={100}>
+      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+        {renderLogo()}
+        
           {navItems.map((item) => (
             <Tooltip key={item.label}>
               <TooltipTrigger asChild>
@@ -113,7 +160,6 @@ export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actua
                   href={item.href}
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
-                    // Use a simple startsWith check for active state
                     pathname.startsWith(item.href) && "bg-accent text-accent-foreground"
                     )}
                 >
