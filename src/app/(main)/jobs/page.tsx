@@ -5,15 +5,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { jobApplications, openOpportunities, type JobApplication } from '@/lib/mock-data';
+import { jobApplications, openOpportunities, type JobApplication, user } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
-import { PlusCircle, Download, Zap, Briefcase, Search } from 'lucide-react';
+import { PlusCircle, Download, Zap, Briefcase, Search, CheckCircle } from 'lucide-react';
 import { AddApplicationForm } from '@/components/jobs/add-application-form';
 import { QuickApplyDialog } from '@/components/jobs/quick-apply-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { JobCard } from '@/components/jobs/job-card';
+import { useToast } from '@/hooks/use-toast';
 
 const statusVariantMap: Record<JobApplication['status'], 'secondary' | 'default' | 'outline' | 'destructive'> = {
   Applied: 'outline',
@@ -77,7 +78,7 @@ function JobApplicationTracker({ applications, onAddApplication, handleExport }:
 }
 
 
-function JobFinder() {
+function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: string, company: string, title: string) => void, appliedJobIds: Set<string>}) {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [typeFilter, setTypeFilter] = React.useState('all');
     const [locationFilter, setLocationFilter] = React.useState('all');
@@ -136,7 +137,12 @@ function JobFinder() {
                      {filteredJobs.length > 0 ? (
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {filteredJobs.map(job => (
-                                <JobCard key={job.id} job={job} />
+                                <JobCard 
+                                    key={job.id} 
+                                    job={job} 
+                                    onApplySuccess={onApplySuccess}
+                                    isApplied={appliedJobIds.has(job.id)}
+                                />
                             ))}
                         </div>
                     ) : (
@@ -153,6 +159,8 @@ function JobFinder() {
 
 export default function JobsPage() {
   const [applications, setApplications] = React.useState(jobApplications);
+  const { toast } = useToast();
+  const [appliedJobIds, setAppliedJobIds] = React.useState(new Set<string>());
 
   const handleExport = () => {
     const headers = ['Company', 'Role', 'Status', 'Date Applied'];
@@ -185,6 +193,25 @@ export default function JobsPage() {
     );
   };
 
+  const handleApplySuccess = (jobId: string, company: string, title: string) => {
+    setAppliedJobIds(prev => new Set(prev).add(jobId));
+    addApplication({
+        company: company,
+        title: title,
+        status: 'Applied',
+        dateApplied: new Date().toISOString().split('T')[0]
+    });
+    toast({
+        title: 'Applied Successfully!',
+        description: 'You will be notified before the first round.',
+        action: (
+            <div className="p-2 bg-green-500 rounded-full text-white">
+                <CheckCircle className="h-5 w-5" />
+            </div>
+        )
+    });
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -192,7 +219,7 @@ export default function JobsPage() {
           <h1 className="text-3xl font-bold">Career Center</h1>
           <p className="text-muted-foreground">Find opportunities and track your application progress.</p>
         </div>
-         <QuickApplyDialog>
+         <QuickApplyDialog onApplySuccess={handleApplySuccess} preselectedJobId={null}>
             <Button variant="outline"><Zap className="mr-2" /> AI Quick Apply</Button>
         </QuickApplyDialog>
       </div>
@@ -203,7 +230,7 @@ export default function JobsPage() {
           <TabsTrigger value="my-applications">My Applications</TabsTrigger>
         </TabsList>
         <TabsContent value="find-jobs" className="mt-6">
-            <JobFinder />
+            <JobFinder onApplySuccess={handleApplySuccess} appliedJobIds={appliedJobIds} />
         </TabsContent>
         <TabsContent value="my-applications" className="mt-6">
             <JobApplicationTracker applications={applications} onAddApplication={addApplication} handleExport={handleExport} />

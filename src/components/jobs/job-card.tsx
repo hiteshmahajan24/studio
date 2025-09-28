@@ -6,14 +6,16 @@ import type { OpenOpportunity } from '@/lib/mock-data';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Briefcase, MapPin, Zap } from 'lucide-react';
+import { Briefcase, MapPin, Zap, CheckCircle } from 'lucide-react';
 import { QuickApplyDialog } from './quick-apply-dialog';
 
 type JobCardProps = {
   job: OpenOpportunity;
+  onApplySuccess: (jobId: string, company: string, title: string) => void;
+  isApplied: boolean;
 };
 
-export function JobCard({ job }: JobCardProps) {
+export function JobCard({ job, onApplySuccess, isApplied }: JobCardProps) {
   return (
     <Card className="flex flex-col h-full">
       <CardHeader>
@@ -41,11 +43,17 @@ export function JobCard({ job }: JobCardProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <QuickApplyDialog preselectedJobId={job.id}>
-            <Button className="w-full">
-                <Zap className="mr-2" /> View & Apply
+        {isApplied ? (
+             <Button className="w-full" variant="outline" disabled>
+                <CheckCircle className="mr-2 text-green-500" /> Applied
             </Button>
-        </QuickApplyDialog>
+        ) : (
+            <QuickApplyDialog preselectedJobId={job.id} onApplySuccess={onApplySuccess}>
+                <Button className="w-full">
+                    <Zap className="mr-2" /> View & Apply
+                </Button>
+            </QuickApplyDialog>
+        )}
       </CardFooter>
     </Card>
   );

@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
     Select,
@@ -22,22 +23,28 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { openOpportunities, user } from "@/lib/mock-data";
-import { File, Loader2, Wand2 } from "lucide-react";
+import { File, Loader2, Wand2, CheckCircle, Pencil } from "lucide-react";
 import { quickApply } from "@/ai/flows/quick-apply";
 import type { QuickApplyOutput, QuickApplyInput } from "@/ai/flows/quick-apply.types";
+import { Checkbox } from "../ui/checkbox";
 
 type QuickApplyDialogProps = {
     children: React.ReactNode;
-    preselectedJobId?: string;
+    preselectedJobId: string | null;
+    onApplySuccess: (jobId: string, company: string, title: string) => void;
 }
 
-export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialogProps) {
+export function QuickApplyDialog({ children, preselectedJobId, onApplySuccess }: QuickApplyDialogProps) {
     const [isOpen, setIsOpen] = React.useState(false);
     const [step, setStep] = React.useState(1);
-    const [selectedJobId, setSelectedJobId] = React.useState<string | null>(preselectedJobId || null);
+    const [selectedJobId, setSelectedJobId] = React.useState<string | null>(preselectedJobId);
     const [isGenerating, setIsGenerating] = React.useState(false);
     const [aiResponse, setAiResponse] = React.useState<QuickApplyOutput | null>(null);
 
+    // State for document selection
+    const [selectedResumeId, setSelectedResumeId] = React.useState(user.profile.resumes[0]?.id || '');
+    const [selectedCertificateIds, setSelectedCertificateIds] = React.useState<string[]>([]);
+    
     React.useEffect(() => {
         if (preselectedJobId && isOpen) {
             setSelectedJobId(preselectedJobId);
@@ -49,35 +56,41 @@ export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialo
     const handleJobSelect = (jobId: string) => {
         setSelectedJobId(jobId);
     }
+    
+    const handleGenerate = async () => {
+        if (!selectedJob) return;
 
-    const handleNext = async () => {
-        if (step === 1 && selectedJob) {
-            setIsGenerating(true);
-            try {
-                const response = await quickApply({
-                    studentProfile: user.profile,
-                    jobDetails: { ...selectedJob, title: selectedJob.title, company: selectedJob.company, description: selectedJob.description },
-                } as QuickApplyInput);
-                setAiResponse(response);
-                setStep(2);
-            } catch (error) {
-                console.error("Error generating application:", error);
-                // Optionally, show an error toast to the user
-            } finally {
-                setIsGenerating(false);
-            }
+        setIsGenerating(true);
+        try {
+            const selectedResume = user.profile.resumes.find(r => r.id === selectedResumeId);
+            const selectedCertificates = user.profile.certificates.filter(c => selectedCertificateIds.includes(c.id));
+
+            // Create a temporary profile with only the selected documents for the AI
+            const tempProfile = {
+                ...user.profile,
+                resumes: selectedResume ? [selectedResume] : [],
+                certificates: selectedCertificates
+            };
+
+            const response = await quickApply({
+                studentProfile: tempProfile,
+                jobDetails: { ...selectedJob, title: selectedJob.title, company: selectedJob.company, description: selectedJob.description },
+            } as QuickApplyInput);
+            setAiResponse(response);
+            setStep(3); // Go to review step
+        } catch (error) {
+            console.error("Error generating application:", error);
+            // Optionally, show an error toast
+        } finally {
+            setIsGenerating(false);
         }
     }
 
-    const handleBack = () => {
-        if (step === 2) {
-            setStep(1);
-            // Don't reset selectedJobId if it was pre-selected
-            if (!preselectedJobId) {
-                 setSelectedJobId(null);
-            }
-            setAiResponse(null);
+    const handleApplyNow = () => {
+        if (selectedJob) {
+            onApplySuccess(selectedJob.id, selectedJob.company, selectedJob.title);
         }
+        setStep(4); // Go to success step
     }
 
     const resetDialog = () => {
@@ -85,26 +98,40 @@ export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialo
         setSelectedJobId(preselectedJobId || null);
         setIsGenerating(false);
         setAiResponse(null);
+        setSelectedResumeId(user.profile.resumes[0]?.id || '');
+        setSelectedCertificateIds([]);
     }
-  
+
+    const closeAndReset = () => {
+        setIsOpen(false);
+        // Delay reset to allow closing animation
+        setTimeout(() => {
+            resetDialog();
+        }, 300);
+    }
+
+    const descriptionText: Record<number, string> = {
+        1: "Select an open opportunity to apply for.",
+        2: `Select the documents you want to include for the ${selectedJob?.title} role.`,
+        3: `Review your AI-generated application for ${selectedJob?.title}.`,
+        4: "Your application has been submitted successfully!"
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={(open) => {
             setIsOpen(open);
-            // Reset state on close
             if (!open) {
-                setTimeout(() => {
-                    resetDialog();
-                }, 300);
+                closeAndReset();
             }
         }}>
           <DialogTrigger asChild>
             {children}
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>AI-Powered Quick Apply</DialogTitle>
               <DialogDescription>
-                {step === 1 ? "Select an open opportunity to apply for." : `Review your AI-generated application for ${selectedJob?.title}.`}
+                {descriptionText[step]}
               </DialogDescription>
             </DialogHeader>
 
@@ -132,14 +159,56 @@ export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialo
                 </div>
             )}
 
-            {step === 2 && selectedJob && aiResponse && (
+            {step === 2 && (
+                 <div className="py-4 space-y-6 max-h-[60vh] overflow-y-auto pr-4">
+                     <div className="space-y-3">
+                         <Label>Select one resume</Label>
+                         <Select value={selectedResumeId} onValueChange={setSelectedResumeId}>
+                             <SelectTrigger>
+                                 <SelectValue placeholder="Select a resume..." />
+                             </SelectTrigger>
+                             <SelectContent>
+                                 {user.profile.resumes.map(resume => (
+                                     <SelectItem key={resume.id} value={resume.id}>{resume.name}</SelectItem>
+                                 ))}
+                             </SelectContent>
+                         </Select>
+                     </div>
+                      <div className="space-y-3">
+                         <Label>Select relevant certificates (up to 2)</Label>
+                         <div className="space-y-2">
+                             {user.profile.certificates.map(cert => (
+                                 <div key={cert.id} className="flex items-center space-x-2">
+                                     <Checkbox 
+                                        id={`cert-${cert.id}`} 
+                                        checked={selectedCertificateIds.includes(cert.id)}
+                                        onCheckedChange={(checked) => {
+                                            setSelectedCertificateIds(prev => 
+                                                checked 
+                                                ? [...prev, cert.id] 
+                                                : prev.filter(id => id !== cert.id)
+                                            )
+                                        }}
+                                        disabled={!selectedCertificateIds.includes(cert.id) && selectedCertificateIds.length >= 2}
+                                     />
+                                     <label htmlFor={`cert-${cert.id}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                         {cert.name}
+                                     </label>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
+                 </div>
+            )}
+
+            {step === 3 && selectedJob && aiResponse && (
                 <div className="py-4 space-y-6 max-h-[60vh] overflow-y-auto pr-4">
                     <div className="space-y-2">
                         <Label htmlFor="ai-summary" className="flex items-center gap-2"><Wand2 className="text-primary"/> AI-Generated Cover Letter</Label>
-                        <Textarea id="ai-summary" defaultValue={aiResponse.coverLetter} rows={14} />
+                        <Textarea id="ai-summary" defaultValue={aiResponse.coverLetter} rows={12} />
                     </div>
                      <div className="space-y-3">
-                        <Label className="flex items-center gap-2">Suggested Documents</Label>
+                        <Label className="flex items-center gap-2">Attached Documents</Label>
                         <div className="space-y-2">
                         {aiResponse.suggestedDocuments.map(doc => (
                             <div key={doc.id} className="flex flex-col gap-1 p-3 bg-muted/50 rounded-lg text-sm">
@@ -151,20 +220,42 @@ export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialo
                             </div>
                         ))}
                         </div>
-                        <Button variant="link" size="sm" className="p-0 h-auto">Change Documents</Button>
+                        <Button variant="link" size="sm" className="p-0 h-auto" onClick={() => setStep(2)}>
+                            <Pencil className="mr-2" /> Change Documents
+                        </Button>
                     </div>
+                </div>
+            )}
+
+            {step === 4 && (
+                <div className="py-8 text-center flex flex-col items-center gap-4">
+                    <CheckCircle className="w-16 h-16 text-green-500" />
+                    <p className="text-muted-foreground">Your application for the {selectedJob?.title} role at {selectedJob?.company} has been submitted.</p>
                 </div>
             )}
             
             <DialogFooter className="pt-4">
-                {step === 1 && <Button onClick={handleNext} disabled={!selectedJobId || isGenerating}>
-                    {isGenerating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate Application"}
+                {step === 1 && <Button onClick={() => setStep(2)} disabled={!selectedJobId}>
+                    Select Documents
                 </Button>}
-                {step === 2 && (
-                    <>
-                        <Button variant="ghost" onClick={handleBack}>Back</Button>
-                        <Button>Apply Now</Button>
+                 {step === 2 && (
+                     <>
+                        <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
+                        <Button onClick={handleGenerate} disabled={isGenerating || !selectedResumeId}>
+                            {isGenerating ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Generating...</> : "Generate with AI"}
+                        </Button>
                     </>
+                 )}
+                {step === 3 && (
+                    <>
+                        <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
+                        <Button onClick={handleApplyNow}>Apply Now</Button>
+                    </>
+                )}
+                 {step === 4 && (
+                    <DialogClose asChild>
+                        <Button onClick={closeAndReset}>Done</Button>
+                    </DialogClose>
                 )}
             </DialogFooter>
           </DialogContent>
