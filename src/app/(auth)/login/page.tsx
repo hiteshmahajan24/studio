@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -29,11 +30,22 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { ClientOnly } from '@/components/layout/client-only';
+import { getUserRole } from '@/lib/mock-data';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
+
+// Map emails to UIDs for role-based redirect simulation
+const emailToUidMap: { [email: string]: string } = {
+  'student@nexus.com': 'student-user-id',
+  'admin@nexus.com': 'admin-user-id',
+  'faculty@nexus.com': 'faculty-user-id',
+  'alumni@nexus.com': 'alumni-user-id',
+  'employer@nexus.com': 'employer-user-id',
+  'superadmin@nexus.com': 'superadmin-user-id',
+};
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -50,11 +62,32 @@ export default function LoginPage() {
     },
   });
 
+  const getRedirectPath = (uid: string) => {
+    const role = getUserRole(uid);
+    const paths: { [key: string]: string } = {
+      student: '/dashboard',
+      admin: '/admin',
+      faculty: '/faculty',
+      alumni: '/alumni',
+      employer: '/employer',
+      superadmin: '/superadmin',
+    };
+    return paths[role] || '/dashboard';
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      router.push('/dashboard');
+      // Simulate UID based on email for mock purposes
+      const mockUid = emailToUidMap[values.email] || 'student-user-id';
+      
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+
+      // In a real app, the UID would come from userCredential.user.uid
+      const redirectPath = getRedirectPath(mockUid); 
+      
+      router.push(redirectPath);
+
     } catch (error: any) {
       console.error('Login Error:', error);
       toast({
@@ -97,7 +130,9 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Use a role-specific email to see different dashboards.
+            <br />
+            (e.g., admin@nexus.com, student@nexus.com)
           </CardDescription>
         </CardHeader>
         <CardContent>

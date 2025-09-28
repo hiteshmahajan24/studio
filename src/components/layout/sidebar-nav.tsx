@@ -12,7 +12,12 @@ import {
   Settings,
   Shield,
   GraduationCap,
-  Newspaper,
+  Bell,
+  Database,
+  UserPlus,
+  BarChart3,
+  Building,
+  UserCog,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -21,19 +26,52 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { UserRole } from '@/lib/mock-data';
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/mentorship', icon: Handshake, label: 'Mentorship' },
-  { href: '/jobs', icon: Briefcase, label: 'Jobs' },
-  { href: '/networking', icon: Users, label: 'Networking' },
-  { href: '/quests', icon: Shield, label: 'Quests' },
-  { href: '/academics', icon: GraduationCap, label: 'Academics' },
-  { href: '/articles', icon: FileText, label: 'Articles' },
-];
+const navItemsByRole = {
+  student: [
+    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { href: '/mentorship', icon: Handshake, label: 'Mentorship' },
+    { href: '/jobs', icon: Briefcase, label: 'Jobs' },
+    { href: '/networking', icon: Users, label: 'Networking' },
+    { href: '/quests', icon: Shield, label: 'Quests' },
+    { href: '/academics', icon: GraduationCap, label: 'Academics' },
+    { href: '/articles', icon: FileText, label: 'Articles' },
+  ],
+  admin: [
+    { href: '/admin', icon: LayoutDashboard, label: 'Admin Dashboard' },
+    { href: '/admin/manage-alumni', icon: Database, label: 'Manage Alumni' },
+    { href: '/admin/manage-faculty', icon: UserPlus, label: 'Manage Faculty' },
+    { href: '/admin/notifications', icon: Bell, label: 'Send Notifications' },
+    { href: '/admin/events', icon: Briefcase, label: 'Manage Events' },
+  ],
+  faculty: [
+    { href: '/faculty', icon: LayoutDashboard, label: 'Faculty Dashboard' },
+    { href: '/faculty/students', icon: Users, label: 'View Students' },
+    { href: '/faculty/assignments', icon: FileText, label: 'Create Assignments' },
+    { href: '/mentorship', icon: Handshake, label: 'Provide Mentorship' },
+  ],
+  alumni: [
+    { href: '/alumni', icon: LayoutDashboard, label: 'Alumni Dashboard' },
+    { href: '/mentorship', icon: Handshake, label: 'Provide Mentorship' },
+    { href: '/networking', icon: Users, label: 'Alumni Network' },
+    { href: '/articles', icon: FileText, label: 'Share Experience' },
+  ],
+  employer: [
+    { href: '/employer', icon: LayoutDashboard, label: 'Employer Dashboard' },
+    { href: '/employer/candidates', icon: Users, label: 'Find Candidates' },
+    { href: '/employer/leaderboard', icon: BarChart3, label: 'Leaderboard' },
+  ],
+  superadmin: [
+    { href: '/superadmin', icon: UserCog, label: 'Superadmin' },
+    { href: '/superadmin/users', icon: Users, label: 'Manage Users' },
+    { href: '/superadmin/data', icon: Database, label: 'Manage Data' },
+  ]
+};
 
-export function SidebarNav() {
+export function SidebarNav({ userRole }: { userRole: UserRole }) {
   const pathname = usePathname();
+  const navItems = navItemsByRole[userRole] || navItemsByRole.student;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">

@@ -4,6 +4,7 @@ import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator.types';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
 import { SkillPathOutput } from '@/ai/flows/skill-path.types';
 
+export type UserRole = 'student' | 'admin' | 'faculty' | 'alumni' | 'employer' | 'superadmin';
 
 export type JobApplication = {
   id: string;
@@ -107,6 +108,7 @@ export const earnedBadges: BadgeData[] = [
 
 export const user = {
     name: 'Alex Martinez',
+    uid: 'student-user-id',
     knowledgeCoins: 1500,
     leaderboardRank: 12,
     questPoints: 2480,
@@ -125,6 +127,23 @@ export const user = {
         ]
     }
 };
+
+const userRoles: { [uid: string]: UserRole } = {
+  'student-user-id': 'student',
+  'admin-user-id': 'admin',
+  'faculty-user-id': 'faculty',
+  'alumni-user-id': 'alumni',
+  'employer-user-id': 'employer',
+  'superadmin-user-id': 'superadmin',
+  // Default for anonymous or other users
+  'default': 'student',
+};
+
+// This function simulates fetching a user's role from a database
+export function getUserRole(uid: string | null | undefined): UserRole {
+  if (!uid) return 'student'; // Default role for guests
+  return userRoles[uid] || userRoles['default'];
+}
 
 type Experience = {
   role: string;

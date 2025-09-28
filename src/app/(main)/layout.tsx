@@ -2,12 +2,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { useUser } from "@/firebase";
 import { UserStateProvider } from "@/context/user-state-context";
 import { Skeleton } from '@/components/ui/skeleton';
+import { getUserRole } from '@/lib/mock-data';
 
 export default function MainLayout({
   children,
@@ -16,12 +17,50 @@ export default function MainLayout({
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
+    if (isUserLoading) return; // Wait until user status is resolved
+
+    if (!user) {
       router.push('/login');
+      return;
     }
-  }, [isUserLoading, user, router]);
+
+    // Get user role and determine the correct dashboard path
+    const role = getUserRole(user.uid);
+    const dashboardPaths: { [key: string]: string } = {
+      student: '/dashboard',
+      admin: '/admin',
+      faculty: '/faculty',
+      alumni: '/alumni',
+      employer: '/employer',
+      superadmin: '/superadmin'
+    };
+    const expectedPath = dashboardPaths[role] || '/dashboard';
+    
+    // Allow access to sub-paths but redirect from root if role doesn't match
+    const allowedBasePaths = ['/mentorship', '/jobs', '/networking', '/quests', '/academics', '/articles', '/communities'];
+    const isAllowedSubPath = allowedBasePaths.some(p => pathname.startsWith(p));
+
+    if (pathname === '/dashboard' && role !== 'student') {
+        router.replace(expectedPath);
+    } else if (pathname === '/admin' && role !== 'admin') {
+        router.replace(expectedPath);
+    } else if (pathname === '/faculty' && role !== 'faculty') {
+        router.replace(expectedPath);
+    } else if (pathname === '/alumni' && role !== 'alumni') {
+        router.replace(expectedPath);
+    } else if (pathname === '/employer' && role !== 'employer') {
+        router.replace(expectedPath);
+    } else if (pathname === '/superadmin' && role !== 'superadmin') {
+        router.replace(expectedPath);
+    } else if (pathname === '/' || (!isAllowedSubPath && pathname !== expectedPath)) {
+        // If at root or a dashboard path that isn't theirs, redirect.
+        router.replace(expectedPath);
+    }
+
+  }, [isUserLoading, user, router, pathname]);
 
   if (isUserLoading || !user) {
     return (
@@ -51,11 +90,13 @@ export default function MainLayout({
       </div>
     );
   }
+  
+  const role = getUserRole(user.uid);
 
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav />
+        <SidebarNav userRole={role} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
