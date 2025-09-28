@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Skeleton } from '../ui/skeleton';
 import { getPersonalizedRecommendations } from '@/ai/flows/personalized-recommendations';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
-import { allMentors, openOpportunities, communities, user, mockArticles } from '@/lib/mock-data';
+import { allMentors, openOpportunities, communities, user, mockArticles, allUsers } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 type Recommendation = PersonalizedRecommendationsOutput['recommendations'][0];
