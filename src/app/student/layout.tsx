@@ -32,7 +32,6 @@ function StudentLayoutContent({
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'student';
     
-    // Regular student or guest user (who gets defaulted to student role)
     const isStudent = userRole === 'student';
 
     if (!isStudent && !isSuperAdminImpersonating) {
