@@ -111,8 +111,8 @@ export function QuickApplyDialog({ children, preselectedJobId, onApplySuccess }:
     }
 
     const descriptionText: Record<number, string> = {
-        1: "Select an open opportunity to apply for.",
-        2: `Select the documents you want to include for the ${selectedJob?.title} role.`,
+        1: preselectedJobId ? `Quick apply for the ${selectedJob?.title} role.` : "Select an open opportunity to apply for.",
+        2: `Select documents to generate an AI cover letter for the ${selectedJob?.title} role.`,
         3: `Review your AI-generated application for ${selectedJob?.title}.`,
         4: "Your application has been submitted successfully!"
     };
@@ -137,19 +137,23 @@ export function QuickApplyDialog({ children, preselectedJobId, onApplySuccess }:
 
             {step === 1 && (
                 <div className="py-4 space-y-4">
-                    <Label htmlFor="job-select">Select a Job Posting</Label>
-                    <Select onValueChange={handleJobSelect} value={selectedJobId || ''}>
-                        <SelectTrigger id="job-select" disabled={!!preselectedJobId}>
-                            <SelectValue placeholder="Choose an opportunity..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {openOpportunities.map(job => (
-                                <SelectItem key={job.id} value={job.id}>
-                                    {job.title} - {job.company}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    {!preselectedJobId && (
+                        <>
+                            <Label htmlFor="job-select">Select a Job Posting</Label>
+                            <Select onValueChange={handleJobSelect} value={selectedJobId || ''}>
+                                <SelectTrigger id="job-select">
+                                    <SelectValue placeholder="Choose an opportunity..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {openOpportunities.map(job => (
+                                        <SelectItem key={job.id} value={job.id}>
+                                            {job.title} - {job.company}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </>
+                    )}
                     {selectedJob && (
                         <div className="p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground max-h-48 overflow-y-auto">
                            <h4 className="font-semibold text-foreground mb-2">Job Description</h4>

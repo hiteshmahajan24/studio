@@ -7,6 +7,7 @@ import { SkillPathOutput } from '@/ai/flows/skill-path.types';
 
 export type JobApplication = {
   id: string;
+  jobId: string | null; // Can be null if manually added
   title: string;
   company: string;
   status: 'Applied' | 'Under Review' | 'Interview' | 'Offered' | 'Rejected';
@@ -14,10 +15,10 @@ export type JobApplication = {
 };
 
 export const jobApplications: JobApplication[] = [
-  { id: '1', title: 'Frontend Developer', company: 'Innovate Inc.', status: 'Under Review', dateApplied: '2024-07-15' },
-  { id: '2', title: 'Full-Stack Engineer', company: 'Tech Solutions', status: 'Interview', dateApplied: '2024-07-12' },
-  { id: '3', title: 'Product Manager Intern', company: 'Creative Co.', status: 'Applied', dateApplied: '2024-07-18' },
-  { id: '4', title: 'Data Scientist', company: 'Data Insights', status: 'Rejected', dateApplied: '2024-07-05' },
+  { id: '1', jobId: 'job1', title: 'Frontend Developer', company: 'Innovate Inc.', status: 'Under Review', dateApplied: '2024-07-15' },
+  { id: '2', jobId: 'job2', title: 'AI/ML Engineer', company: 'Data Driven Co.', status: 'Interview', dateApplied: '2024-07-12' },
+  { id: '3', jobId: null, title: 'Product Manager Intern', company: 'Creative Co.', status: 'Applied', dateApplied: '2024-07-18' },
+  { id: '4', jobId: null, title: 'Data Scientist', company: 'Data Insights', status: 'Rejected', dateApplied: '2024-07-05' },
 ];
 
 export type OpenOpportunity = {
@@ -35,46 +36,46 @@ export const openOpportunities: OpenOpportunity[] = [
       id: 'job1',
       title: 'Frontend Developer',
       company: 'Innovate Inc.',
-      description: 'Seeking a creative Frontend Developer to build beautiful and responsive user interfaces using React and Tailwind CSS. The ideal candidate has experience with Next.js and a passion for clean code.',
+      description: 'Seeking a creative Frontend Developer to build beautiful and responsive user interfaces using React and Tailwind CSS. The ideal candidate has experience with Next.js and a passion for clean code. You will be responsible for developing new user-facing features, building reusable components, and ensuring the technical feasibility of UI/UX designs. You will work closely with our product and design teams to deliver high-quality products.',
       location: 'Remote',
       type: 'Full-time',
-      skills: ['React', 'Next.js', 'Tailwind']
+      skills: ['React', 'Next.js', 'Tailwind', 'TypeScript', 'UI/UX']
     },
     {
       id: 'job2',
       title: 'AI/ML Engineer',
       company: 'Data Driven Co.',
-      description: 'Join our AI team to build next-generation machine learning models. Experience with Python, TensorFlow, and cloud platforms like GCP is a must.',
+      description: 'Join our AI team to build next-generation machine learning models. Experience with Python, TensorFlow, and cloud platforms like GCP is a must. Your work will involve prototyping, training, and deploying models that solve real-world problems. You should be comfortable with data preprocessing, feature engineering, and model evaluation.',
       location: 'San Francisco, CA',
       type: 'Full-time',
-      skills: ['Python', 'TensorFlow', 'GCP']
+      skills: ['Python', 'TensorFlow', 'GCP', 'PyTorch', 'scikit-learn']
     },
     {
         id: 'job3',
         title: 'Cloud Solutions Architect',
         company: 'ScaleUp Cloud',
-        description: 'Design and implement scalable cloud infrastructure on GCP and AWS. Looking for experts in Kubernetes, Terraform, and CI/CD.',
+        description: 'Design and implement scalable cloud infrastructure on GCP and AWS. Looking for experts in Kubernetes, Terraform, and CI/CD. You will be a key player in our infrastructure team, ensuring our services are reliable, scalable, and secure. Strong understanding of networking and security principles is required.',
         location: 'New York, NY',
         type: 'Full-time',
-        skills: ['GCP', 'AWS', 'Kubernetes']
+        skills: ['GCP', 'AWS', 'Kubernetes', 'Terraform', 'CI/CD']
     },
     {
         id: 'job4',
         title: 'Software Engineer Intern',
         company: 'Innovate Inc.',
-        description: 'Exciting internship opportunity for students passionate about web development. You will work alongside our senior developers on real projects.',
+        description: 'Exciting internship opportunity for students passionate about web development. You will work alongside our senior developers on real projects, contributing to our main codebase. This is a great chance to learn about professional software development practices, including code reviews, testing, and agile methodologies.',
         location: 'Remote',
         type: 'Internship',
-        skills: ['JavaScript', 'HTML/CSS', 'Git']
+        skills: ['JavaScript', 'HTML/CSS', 'Git', 'React']
     },
      {
         id: 'job5',
         title: 'Data Science Intern',
         company: 'Data Driven Co.',
-        description: 'Work with our data science team on analyzing large datasets, building predictive models, and creating visualizations.',
+        description: 'Work with our data science team on analyzing large datasets, building predictive models, and creating visualizations. This internship will provide hands-on experience with the entire data science lifecycle, from data collection and cleaning to model deployment and interpretation. A strong foundation in statistics is a plus.',
         location: 'San Francisco, CA',
         type: 'Internship',
-        skills: ['Python', 'Pandas', 'SQL']
+        skills: ['Python', 'Pandas', 'SQL', 'R', 'Tableau']
     }
 ];
 

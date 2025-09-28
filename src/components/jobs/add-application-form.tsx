@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -73,6 +74,7 @@ export function AddApplicationForm({ children, onAddApplication }: AddApplicatio
     function onSubmit(values: z.infer<typeof formSchema>) {
         onAddApplication({
             ...values,
+            jobId: null, // Manually added applications don't link to a job posting
             dateApplied: format(values.dateApplied, 'yyyy-MM-dd'),
         });
         toast({

@@ -6,8 +6,9 @@ import type { OpenOpportunity } from '@/lib/mock-data';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Briefcase, MapPin, Zap, CheckCircle } from 'lucide-react';
+import { Briefcase, MapPin, Zap, CheckCircle, Eye } from 'lucide-react';
 import { QuickApplyDialog } from './quick-apply-dialog';
+import Link from 'next/link';
 
 type JobCardProps = {
   job: OpenOpportunity;
@@ -28,7 +29,6 @@ export function JobCard({ job, onApplySuccess, isApplied }: JobCardProps) {
         </div>
       </CardHeader>
       <CardContent className="flex-1 space-y-4">
-        <p className="text-sm text-muted-foreground line-clamp-3">{job.description}</p>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <MapPin className="w-4 h-4" />
             <span>{job.location}</span>
@@ -36,21 +36,27 @@ export function JobCard({ job, onApplySuccess, isApplied }: JobCardProps) {
         <div>
             <h4 className='text-xs font-semibold mb-2'>Skills</h4>
              <div className="flex flex-wrap gap-2">
-                {job.skills.map(skill => (
+                {job.skills.slice(0, 3).map(skill => (
                     <Badge key={skill} variant="secondary">{skill}</Badge>
                 ))}
+                {job.skills.length > 3 && <Badge variant="outline">+{job.skills.length - 3} more</Badge>}
             </div>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="grid grid-cols-2 gap-2">
+        <Button variant="outline" asChild>
+            <Link href={`/jobs/${job.id}`}>
+                <Eye className="mr-2" /> View Details
+            </Link>
+        </Button>
         {isApplied ? (
-             <Button className="w-full" variant="outline" disabled>
-                <CheckCircle className="mr-2 text-green-500" /> Applied
+             <Button variant="secondary" disabled>
+                <CheckCircle className="mr-2" /> Applied
             </Button>
         ) : (
             <QuickApplyDialog preselectedJobId={job.id} onApplySuccess={onApplySuccess}>
-                <Button className="w-full">
-                    <Zap className="mr-2" /> View & Apply
+                <Button>
+                    <Zap className="mr-2" /> Quick Apply
                 </Button>
             </QuickApplyDialog>
         )}

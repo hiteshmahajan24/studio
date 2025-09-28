@@ -1,6 +1,8 @@
+
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -32,7 +34,15 @@ const statusColorMap: Record<JobApplication['status'], string> = {
   Rejected: '',
 };
 
-function JobApplicationTracker({ applications, onAddApplication, handleExport }: { applications: JobApplication[], onAddApplication: (app: Omit<JobApplication, 'id'>) => void, handleExport: () => void }) {
+function JobApplicationTracker({ applications, onAddApplication, handleExport }: { applications: JobApplication[], onAddApplication: (app: Omit<JobApplication, 'id' | 'jobId'> & {jobId: string | null}) => void, handleExport: () => void }) {
+  const router = useRouter();
+
+  const handleRowClick = (jobId: string | null) => {
+    if (jobId) {
+      router.push(`/jobs/${jobId}`);
+    }
+  };
+
   return (
     <Card>
       <CardHeader className='flex-row items-center justify-between'>
@@ -59,7 +69,7 @@ function JobApplicationTracker({ applications, onAddApplication, handleExport }:
           </TableHeader>
           <TableBody>
             {applications.map((app) => (
-              <TableRow key={app.id}>
+              <TableRow key={app.id} onClick={() => handleRowClick(app.jobId)} className={cn(app.jobId && "cursor-pointer")}>
                 <TableCell className="font-medium">{app.company}</TableCell>
                 <TableCell>{app.title}</TableCell>
                 <TableCell>
@@ -158,9 +168,9 @@ function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: 
 }
 
 export default function JobsPage() {
-  const [applications, setApplications] = React.useState(jobApplications);
+  const [applications, setApplications] = React.useState<JobApplication[]>(jobApplications);
   const { toast } = useToast();
-  const [appliedJobIds, setAppliedJobIds] = React.useState(new Set<string>());
+  const [appliedJobIds, setAppliedJobIds] = React.useState(new Set(jobApplications.map(app => app.jobId).filter(Boolean) as string[]));
 
   const handleExport = () => {
     const headers = ['Company', 'Role', 'Status', 'Date Applied'];
@@ -194,13 +204,16 @@ export default function JobsPage() {
   };
 
   const handleApplySuccess = (jobId: string, company: string, title: string) => {
-    setAppliedJobIds(prev => new Set(prev).add(jobId));
-    addApplication({
-        company: company,
-        title: title,
-        status: 'Applied',
-        dateApplied: new Date().toISOString().split('T')[0]
-    });
+    if (!appliedJobIds.has(jobId)) {
+        addApplication({
+            jobId: jobId,
+            company: company,
+            title: title,
+            status: 'Applied',
+            dateApplied: new Date().toISOString().split('T')[0]
+        });
+        setAppliedJobIds(prev => new Set(prev).add(jobId));
+    }
     toast({
         title: 'Applied Successfully!',
         description: 'You will be notified before the first round.',
@@ -219,9 +232,6 @@ export default function JobsPage() {
           <h1 className="text-3xl font-bold">Career Center</h1>
           <p className="text-muted-foreground">Find opportunities and track your application progress.</p>
         </div>
-         <QuickApplyDialog onApplySuccess={handleApplySuccess} preselectedJobId={null}>
-            <Button variant="outline"><Zap className="mr-2" /> AI Quick Apply</Button>
-        </QuickApplyDialog>
       </div>
 
       <Tabs defaultValue="find-jobs">
@@ -233,7 +243,7 @@ export default function JobsPage() {
             <JobFinder onApplySuccess={handleApplySuccess} appliedJobIds={appliedJobIds} />
         </TabsContent>
         <TabsContent value="my-applications" className="mt-6">
-            <JobApplicationTracker applications={applications} onAddApplication={addApplication} handleExport={handleExport} />
+            <JobApplicationTracker applications={applications} onAddApplication={(app) => addApplication({...app, id: String(Date.now())})} handleExport={handleExport} />
         </TabsContent>
       </Tabs>
     </div>
