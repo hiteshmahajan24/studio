@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -39,6 +40,7 @@ export function RequestSessionDialog({ children, mentor }: RequestSessionDialogP
         return;
     }
     
+    // In a real app, you would send this request to a backend service
     console.log({
         mentorId: mentor.id,
         topic,
