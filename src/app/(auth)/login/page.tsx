@@ -31,6 +31,8 @@ import { Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { ClientOnly } from '@/components/layout/client-only';
 import { getUserRole, type UserRole } from '@/lib/mock-data';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -48,6 +50,8 @@ const emailToRoleMap: { [email: string]: UserRole } = {
 };
 
 const roleEmails = Object.keys(emailToRoleMap);
+const availableRoles: UserRole[] = ['student', 'admin', 'faculty', 'alumni', 'employer', 'superadmin'];
+
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -55,6 +59,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isGuestLoading, setIsGuestLoading] = React.useState(false);
+  const [selectedRole, setSelectedRole] = React.useState<UserRole>('student');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +69,7 @@ export default function LoginPage() {
     },
   });
 
-  const getRedirectPath = (role: UserRole) => {
+  const getRedirectPath = (role: UserRole, isGuest: boolean = false) => {
     const paths: { [key in UserRole]: string } = {
       student: '/student/dashboard',
       admin: '/admin/dashboard',
@@ -73,7 +78,8 @@ export default function LoginPage() {
       employer: '/employer/dashboard',
       superadmin: '/creator-view',
     };
-    return paths[role] || '/student/dashboard';
+    const basePath = paths[role] || '/student/dashboard';
+    return isGuest ? `${basePath}?viewAs=${role}` : basePath;
   };
 
   const handleLoginSuccess = (userCredential: any, email: string) => {
@@ -133,9 +139,10 @@ export default function LoginPage() {
         });
         toast({
             title: 'Welcome, Guest!',
-            description: 'You are now browsing as a guest.',
+            description: `You are now browsing as a ${selectedRole}.`,
         });
-        router.push('/student/dashboard');
+        const redirectPath = getRedirectPath(selectedRole, true);
+        router.push(redirectPath);
     } catch (error: any) {
         console.error('Guest Login Error:', error);
         toast({
@@ -201,11 +208,27 @@ export default function LoginPage() {
               OR
             </div>
           </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+                <Label>Select a Role to View As</Label>
+                <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as UserRole)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a role..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {availableRoles.map(role => (
+                            <SelectItem key={role} value={role} className="capitalize">{role}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
           
-          <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
-              {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Continue as Guest
-          </Button>
+            <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
+                {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Continue as Guest
+            </Button>
+          </div>
 
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
