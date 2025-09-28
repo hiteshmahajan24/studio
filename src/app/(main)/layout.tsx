@@ -24,6 +24,8 @@ export default function MainLayout({
   const [viewAsRole, setViewAsRole] = useState<UserRole | null>(null);
 
   const actualRole = user ? getUserRole(user.uid) : null;
+  
+  // The current role being displayed is the impersonated role, or the actual role.
   const currentRole = viewAsRole || actualRole;
   
   useEffect(() => {

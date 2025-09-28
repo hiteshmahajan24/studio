@@ -160,6 +160,7 @@ export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actua
                   href={item.href}
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
+                    // Use a simple startsWith check for active state
                     pathname.startsWith(item.href) && "bg-accent text-accent-foreground"
                     )}
                 >
