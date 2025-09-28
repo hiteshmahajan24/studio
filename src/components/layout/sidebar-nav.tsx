@@ -36,6 +36,7 @@ import {
   } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/lib/mock-data';
+import { ClientButton } from './client-button';
 
 const navItemsByRole = {
   student: [
@@ -104,12 +105,14 @@ export function SidebarNav({ userRole, actualRole }: { userRole: UserRole, actua
       return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button
-                    className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+                <ClientButton
+                    variant="ghost"
+                    size="icon"
+                    className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base hover:bg-primary/90"
                 >
                     <LogoIcon />
                     <span className="sr-only">Switch View</span>
-                </button>
+                </ClientButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="right">
                 <DropdownMenuLabel>Switch View</DropdownMenuLabel>

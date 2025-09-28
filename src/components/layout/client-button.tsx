@@ -16,7 +16,15 @@ export function ClientButton(props: ButtonProps) {
   }, []);
 
   if (!isMounted) {
-    return null; // Or a placeholder
+    // Render a placeholder on the server that matches the final client button's dimensions
+    const sizeClasses = {
+      default: "h-10",
+      sm: "h-9",
+      lg: "h-11",
+      icon: "h-10 w-10",
+    };
+    const size = props.size || 'default';
+    return <div className={`${props.className} ${sizeClasses[size]} animate-pulse bg-muted rounded-md`}></div>;
   }
 
   return <Button {...props} />;
