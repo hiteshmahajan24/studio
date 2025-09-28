@@ -39,7 +39,7 @@ export function EventCard({ event }: EventCardProps) {
     const isRegistered = registeredEventIds.includes(event.id);
 
     return (
-        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
+        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg group">
             <CardHeader className="p-0 relative h-40">
                 {eventImage && (
                     <Image 
@@ -47,7 +47,7 @@ export function EventCard({ event }: EventCardProps) {
                         alt={event.title}
                         data-ai-hint={eventImage.imageHint}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
