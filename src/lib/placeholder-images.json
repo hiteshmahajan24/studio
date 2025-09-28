@@ -137,6 +137,12 @@
       "description": "Abstract image for Pandas article",
       "imageUrl": "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?q=80&w=2070&auto=format&fit=crop",
       "imageHint": "python code"
+    },
+    {
+      "id": "article-content",
+      "description": "Abstract image for article content body",
+      "imageUrl": "https://images.unsplash.com/photo-1618335829733-2d57a5c1835b?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "abstract code"
     }
   ]
 }

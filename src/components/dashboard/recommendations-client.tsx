@@ -2,6 +2,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Handshake, Lightbulb, Info, RefreshCw, AlertTriangle, Users } from "lucide-react";
@@ -9,30 +10,33 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Skeleton } from '../ui/skeleton';
 import { getPersonalizedRecommendations } from '@/ai/flows/personalized-recommendations';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
-import { allMentors, openOpportunities, communities, user } from '@/lib/mock-data';
+import { allMentors, openOpportunities, communities, user, mockArticles } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 
 type Recommendation = PersonalizedRecommendationsOutput['recommendations'][0];
 
-const recommendationDetails: { [key: string]: { name: string, description: string, href?: string } } = {
+const recommendationDetails: { [key: string]: { name: string, description: string, href: string } } = {
   // Mentors
   ...allMentors.reduce((acc, mentor) => {
-    acc[mentor.id] = { name: mentor.name, description: mentor.title, href: `/mentorship?q=${mentor.name}` };
+    acc[mentor.id] = { name: mentor.name, description: mentor.title, href: `/mentorship?q=${encodeURIComponent(mentor.expertise[0])}` };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href?: string } }),
+  }, {} as { [key: string]: { name: string, description: string, href: string } }),
   // Jobs
   ...openOpportunities.reduce((acc, job) => {
     acc[job.id] = { name: job.title, description: job.company, href: '/jobs' };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href?: string } }),
+  }, {} as { [key: string]: { name: string, description: string, href: string } }),
   // Communities
   ...communities.reduce((acc, community) => {
     acc[community.id] = { name: community.name, description: `${community.memberCount} members`, href: `/communities/${community.id}` };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href?: string } }),
-  
-  // Fallback Article
-  article789: { name: 'The Future of Web Components', description: 'TechReads' },
+  }, {} as { [key: string]: { name: string, description: string, href: string } }),
+  // Articles
+  ...mockArticles.reduce((acc, article) => {
+    const author = allUsers.find(u => u.id === article.authorId);
+    acc[article.id] = { name: article.title, description: `By ${author?.name || 'Unknown'}`, href: `/articles/${article.id}` };
+    return acc;
+  }, {} as { [key: string]: { name: string, description: string, href: string } }),
 };
 
 
@@ -69,16 +73,8 @@ export function RecommendationsClient({ className }: { className?: string }) {
     fetchRecommendations();
   }, [fetchRecommendations]);
 
-  const getDetails = (type: string, id: string) => {
-    const details = recommendationDetails[id];
-    if (details) return details;
-    
-    // Handle dynamic article IDs
-    if (type === 'article') {
-        return { name: id.replace(/-/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '), description: 'Suggested Reading' };
-    }
-    
-    return { name: `${type.charAt(0).toUpperCase() + type.slice(1)}: ${id}`, description: "Click to learn more" };
+  const getDetails = (id: string) => {
+    return recommendationDetails[id] || { name: `Item ${id}`, description: "Click to learn more", href: '#' };
   };
 
   return (
@@ -104,32 +100,35 @@ export function RecommendationsClient({ className }: { className?: string }) {
                 <p className="text-sm">{error}</p>
             </div>
         ) : (
-          recommendations.slice(0, 4).map((rec) => (
-            <div key={rec.itemId} className="flex items-center justify-between gap-4 p-2.5 rounded-lg transition-colors hover:bg-muted/50">
-              <div className="flex items-center gap-4 flex-1 truncate">
-                <div className="bg-muted p-2 rounded-full">
-                  {React.createElement(recommendationIcons[rec.type] || Info, { className: "w-5 h-5 text-muted-foreground" })}
+          recommendations.slice(0, 4).map((rec) => {
+            const details = getDetails(rec.itemId);
+            return (
+                <div key={rec.itemId} className="flex items-center justify-between gap-4 p-2.5 rounded-lg transition-colors hover:bg-muted/50">
+                    <Link href={details.href} className="flex items-center gap-4 flex-1 truncate">
+                        <div className="bg-muted p-2 rounded-full">
+                        {React.createElement(recommendationIcons[rec.type] || Info, { className: "w-5 h-5 text-muted-foreground" })}
+                        </div>
+                        <div className="truncate">
+                        <p className="font-semibold text-sm truncate">{details.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{details.description}</p>
+                        </div>
+                    </Link>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="ghost" size="sm">Why?</Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80">
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <h4 className="font-medium leading-none">Reasoning</h4>
+                                    <p className="text-sm text-muted-foreground">{rec.reason}</p>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 </div>
-                <div className="truncate">
-                  <p className="font-semibold text-sm truncate">{getDetails(rec.type, rec.itemId).name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{getDetails(rec.type, rec.itemId).description}</p>
-                </div>
-              </div>
-              <Popover>
-                  <PopoverTrigger asChild>
-                      <Button variant="ghost" size="sm">Why?</Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80">
-                      <div className="grid gap-4">
-                          <div className="space-y-2">
-                              <h4 className="font-medium leading-none">Reasoning</h4>
-                              <p className="text-sm text-muted-foreground">{rec.reason}</p>
-                          </div>
-                      </div>
-                  </PopoverContent>
-              </Popover>
-            </div>
-          ))
+            )
+          })
         )}
       </CardContent>
     </Card>

@@ -35,7 +35,7 @@ const prompt = ai.definePrompt({
   **Available Item IDs (use these in your response):**
   - Mentors: mentor-1, mentor-2, mentor-3, mentor-4, mentor-5, mentor-6
   - Jobs: job1, job2, job3
-  - Articles: No specific IDs, generate a compelling, realistic article title and use a placeholder ID like 'article-123'.
+  - Articles: article-1, article-2, article-3, article-4, article-5, article-6, article-7, article-8, article-9
   - Communities: comm-1, comm-2, comm-3
 
   **Example Response:**
@@ -50,6 +50,11 @@ const prompt = ai.definePrompt({
         "type": "job",
         "itemId": "job1",
         "reason": "This Frontend Developer role is a great fit for your strong React and Next.js skills."
+      },
+       {
+        "type": "article",
+        "itemId": "article-1",
+        "reason": "Since you use React, this deep dive into Server Components would be a great read."
       },
       {
         "type": "community",
