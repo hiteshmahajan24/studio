@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -27,11 +28,13 @@ const statusColorMap: Record<JobApplication['status'], string> = {
 };
 
 export default function JobsPage() {
+  const [applications, setApplications] = React.useState(jobApplications);
+
   const handleExport = () => {
     const headers = ["Company", "Role", "Status", "Date Applied"];
     const csvRows = [
       headers.join(','),
-      ...jobApplications.map(app => 
+      ...applications.map(app => 
         [
           `"${app.company.replace(/"/g, '""')}"`,
           `"${app.title.replace(/"/g, '""')}"`,
@@ -55,6 +58,13 @@ export default function JobsPage() {
     document.body.removeChild(link);
   };
 
+  const addApplication = (newApplication: Omit<JobApplication, 'id'>) => {
+    setApplications(prev => [
+        { ...newApplication, id: String(Date.now()) },
+        ...prev
+    ].sort((a,b) => new Date(b.dateApplied).getTime() - new Date(a.dateApplied).getTime()));
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -67,7 +77,7 @@ export default function JobsPage() {
             <QuickApplyDialog>
               <Button variant="outline"><Zap className="mr-2" /> Quick Apply</Button>
             </QuickApplyDialog>
-            <AddApplicationForm>
+            <AddApplicationForm onAddApplication={addApplication}>
               <Button><PlusCircle className="mr-2" /> Add Application</Button>
             </AddApplicationForm>
         </div>
@@ -89,7 +99,7 @@ export default function JobsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {jobApplications.map((app) => (
+              {applications.map((app) => (
                 <TableRow key={app.id}>
                   <TableCell className="font-medium">{app.company}</TableCell>
                   <TableCell>{app.title}</TableCell>

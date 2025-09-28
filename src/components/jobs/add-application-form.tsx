@@ -5,14 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, PlusCircle } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,6 +41,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import type { JobApplication } from "@/lib/mock-data";
 
 
 const formSchema = z.object({
@@ -53,9 +53,10 @@ const formSchema = z.object({
 
 type AddApplicationFormProps = {
     children: React.ReactNode;
+    onAddApplication: (newApplication: Omit<JobApplication, 'id'>) => void;
 }
 
-export function AddApplicationForm({ children }: AddApplicationFormProps) {
+export function AddApplicationForm({ children, onAddApplication }: AddApplicationFormProps) {
     const [isOpen, setIsOpen] = React.useState(false);
     const { toast } = useToast();
 
@@ -70,7 +71,10 @@ export function AddApplicationForm({ children }: AddApplicationFormProps) {
     });
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+        onAddApplication({
+            ...values,
+            dateApplied: format(values.dateApplied, 'yyyy-MM-dd'),
+        });
         toast({
             title: "Application Added!",
             description: `Your application for the ${values.role} role at ${values.company} has been tracked.`,
