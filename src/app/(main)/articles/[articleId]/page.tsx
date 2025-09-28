@@ -4,11 +4,12 @@
 import { useParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader } from '@/components/ui/card';
 import { allUsers, mockArticles } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Calendar, Clock } from 'lucide-react';
 import Image from 'next/image';
+import { ArticleImageSlider } from '@/components/articles/article-image-slider';
 
 export default function ArticlePage() {
   const params = useParams();
@@ -22,7 +23,12 @@ export default function ArticlePage() {
   const articleImage = PlaceHolderImages.find((img) => img.id === article.imageId);
   const author = allUsers.find(user => user.id === article.authorId);
   const authorAvatar = PlaceHolderImages.find(img => img.id === author?.avatarId);
-  const contentImage = PlaceHolderImages.find(img => img.id === "article-content");
+
+  const sliderImages = [
+    PlaceHolderImages.find(img => img.id === "article-content-1"),
+    PlaceHolderImages.find(img => img.id === "article-content-2"),
+    PlaceHolderImages.find(img => img.id === "article-content-3"),
+  ].filter(Boolean);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -76,16 +82,9 @@ export default function ArticlePage() {
             The world of web development is in a constant state of flux, with new tools, frameworks, and paradigms emerging at a breathtaking pace. One of the most significant shifts in recent years has been the evolution of component architectures, particularly within the React ecosystem. For a long time, client-side rendering (CSR) was the undisputed king, but the pendulum is swinging back towards the server, bringing with it powerful new capabilities.
         </p>
 
-        {contentImage && (
+        {sliderImages.length > 0 && (
              <div className="my-8 rounded-lg overflow-hidden">
-                <Image
-                    src={contentImage.imageUrl}
-                    alt="Abstract code"
-                    data-ai-hint={contentImage.imageHint}
-                    width={1200}
-                    height={600}
-                    className="object-cover"
-                />
+                <ArticleImageSlider images={sliderImages as any} />
             </div>
         )}
         
