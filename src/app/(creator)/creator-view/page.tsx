@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateInstituteDialog } from "@/components/superadmin/create-institute-dialog";
 import { Building, Database, UserCog, Eye, Users, GraduationCap, User, Briefcase } from "lucide-react";
