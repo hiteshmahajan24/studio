@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { signInWithEmailAndPassword, signInAnonymously, updateProfile } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, updateProfile } from 'firebase/auth';
 import { useAuth } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import {
@@ -47,6 +47,8 @@ const emailToUidMap: { [email: string]: string } = {
   'CreaterOfBlood@nexus.com': 'superadmin-user-id',
 };
 
+const roleEmails = Object.keys(emailToUidMap);
+
 export default function LoginPage() {
   const auth = useAuth();
   const router = useRouter();
@@ -75,35 +77,51 @@ export default function LoginPage() {
     return paths[role] || '/dashboard';
   };
 
+  const handleLoginSuccess = (userCredential: any) => {
+    const user = userCredential.user;
+    // Use the actual UID from Firebase for role mapping in the layout
+    const redirectPath = getRedirectPath(user.uid);
+    router.push(redirectPath);
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-
-      // Simulate UID based on email for mock purposes
-      const mockUid = emailToUidMap[values.email] || 'student-user-id';
-      const redirectPath = getRedirectPath(mockUid); 
-      
-      router.push(redirectPath);
-
+      handleLoginSuccess(userCredential);
     } catch (error: any) {
-      console.error('Login Error:', error);
-      // For Superadmin login, check for specific password
-      if (values.email === 'CreaterOfBlood@nexus.com' && error.code === 'auth/wrong-password') {
-         toast({
+      // If login fails because the user doesn't exist, and it's a special role email, create the user.
+      if (error.code === 'auth/invalid-credential' && roleEmails.includes(values.email.toLowerCase())) {
+        try {
+          const newUserCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+          // Set display name based on role
+          const role = getUserRole(emailToUidMap[values.email.toLowerCase()]);
+          await updateProfile(newUserCredential.user, {
+            displayName: `${role.charAt(0).toUpperCase() + role.slice(1)} User`,
+          });
+          toast({
+            title: `Created ${role} account!`,
+            description: 'This special account has been created for you.',
+          });
+          handleLoginSuccess(newUserCredential);
+        } catch (createError: any) {
+          console.error('Auto-signup Error:', createError);
+          toast({
             variant: 'destructive',
-            title: 'Login Failed',
-            description: 'Incorrect password for Superadmin.',
-        });
+            title: 'Setup Failed',
+            description: createError.message || 'Could not create the special role account.',
+          });
+        }
       } else {
+        console.error('Login Error:', error);
         toast({
-            variant: 'destructive',
-            title: 'Login Failed',
-            description: error.message || 'An unexpected error occurred. Please try again.',
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: error.message || 'An unexpected error occurred. Please try again.',
         });
       }
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   }
 

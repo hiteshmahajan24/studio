@@ -41,7 +41,7 @@ const disallowedEmails = [
     'faculty@nexus.com',
     'alumni@nexus.com',
     'employer@nexus.com',
-    'CreaterOfBlood@nexus.com',
+    'createrofblood@nexus.com',
 ];
 
 export default function SignupPage() {
@@ -64,7 +64,7 @@ export default function SignupPage() {
         toast({
             variant: 'destructive',
             title: 'Permission Denied',
-            description: 'This email is reserved for a specific role. Please use a different email or log in.',
+            description: 'This email is reserved. Please use the login page for this role.',
         });
         return;
     }
