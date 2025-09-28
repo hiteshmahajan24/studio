@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -23,7 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { openOpportunities, user } from "@/lib/mock-data";
 import { File, Loader2, Wand2 } from "lucide-react";
 import { quickApply } from "@/ai/flows/quick-apply";
-import type { QuickApplyOutput, QuickApplyInput } from "@/ai/flows/quick-apply";
+import type { QuickApplyOutput, QuickApplyInput } from "@/ai/flows/quick-apply.types";
 
 type QuickApplyDialogProps = {
     children: React.ReactNode;

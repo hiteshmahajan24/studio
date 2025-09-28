@@ -1,31 +1,15 @@
+
+'use server';
+
 /**
  * @fileOverview A file that provides AI-powered skill path recommendations.
  *
  * - skillPath - A function to generate skill recommendations.
- * - SkillPathInput - The input type for the skillPath function.
- * - SkillPathOutput - The output type for the skillPath function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { SkillPathInputSchema, SkillPathOutputSchema, type SkillPathInput, type SkillPathOutput } from './skill-path.types';
 
-export const SkillPathInputSchema = z.object({
-  currentSkills: z.array(z.string()).describe('The current skills of the user.'),
-  learningGoals: z.string().describe('The user\'s learning goals.'),
-});
-export type SkillPathInput = z.infer<typeof SkillPathInputSchema>;
-
-export const SkillPathOutputSchema = z.object({
-  suggestedSkills: z
-    .array(
-      z.object({
-        name: z.string().describe('The name of the suggested skill.'),
-        reason: z.string().describe('The reason for suggesting this skill.'),
-      })
-    )
-    .describe('A list of suggested skills for the user to learn.'),
-});
-export type SkillPathOutput = z.infer<typeof SkillPathOutputSchema>;
 
 export async function skillPath(input: SkillPathInput): Promise<SkillPathOutput> {
   return skillPathFlow(input);

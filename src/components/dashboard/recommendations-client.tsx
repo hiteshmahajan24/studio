@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Handshake, Lightbulb, Info, RefreshCw, AlertTriangle, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from '../ui/skeleton';
-import { getPersonalizedRecommendations, type PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
+import { getPersonalizedRecommendations } from '@/ai/flows/personalized-recommendations';
+import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
 import { allMentors, openOpportunities, communities } from '@/lib/mock-data';
 
 type Recommendation = PersonalizedRecommendationsOutput['recommendations'][0];

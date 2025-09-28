@@ -12,7 +12,8 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Wand2, Edit, AlertTriangle } from "lucide-react"
-import { skillPath, type SkillPathOutput } from "@/ai/flows/skill-path"
+import { skillPath } from "@/ai/flows/skill-path"
+import type { SkillPathOutput } from "@/ai/flows/skill-path.types"
 import { SkillsChartClient } from "./skills-chart-client"
 import { cn } from "@/lib/utils"
 import { Skeleton } from '../ui/skeleton';
