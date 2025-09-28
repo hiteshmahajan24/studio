@@ -72,7 +72,7 @@ export default function MainLayout({
             router.replace(expectedPath);
         }
     }
-  }, [isUserLoading, user, router, pathname, viewAsRole]);
+  }, [isUserLoading, user, router, pathname, viewAsRole, actualRole]);
 
   if (isUserLoading || !currentRole) {
     return (
@@ -103,8 +103,8 @@ export default function MainLayout({
   }
 
   // If a superadmin is trying to access a non-creator page without impersonating,
-  // we show the loading screen until the redirect to /creator-view completes.
-  if (actualRole === 'superadmin' && !viewAsRole && pathname !== '/creator-view') {
+  // we show a loading screen until the redirect to /creator-view completes.
+  if (actualRole === 'superadmin' && !viewAsRole && !pathname.startsWith('/creator-view')) {
     return (
         <div className="flex min-h-screen w-full items-center justify-center">
             <p>Redirecting to Creator View...</p>
