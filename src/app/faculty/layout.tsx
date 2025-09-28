@@ -31,8 +31,9 @@ function FacultyLayoutContent({
     }
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'faculty';
+    const isFaculty = userRole === 'faculty';
 
-    if (userRole !== 'faculty' && !isSuperAdminImpersonating) {
+    if (!isFaculty && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 

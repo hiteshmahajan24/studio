@@ -31,8 +31,9 @@ function EmployerLayoutContent({
     }
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'employer';
+    const isEmployer = userRole === 'employer';
 
-    if (userRole !== 'employer' && !isSuperAdminImpersonating) {
+    if (!isEmployer && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 

@@ -31,7 +31,6 @@ function StudentLayoutContent({
     }
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'student';
-    
     const isStudent = userRole === 'student';
 
     if (!isStudent && !isSuperAdminImpersonating) {

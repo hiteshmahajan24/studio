@@ -31,8 +31,9 @@ function AdminLayoutContent({
     }
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'admin';
+    const isAdmin = userRole === 'admin';
 
-    if (userRole !== 'admin' && !isSuperAdminImpersonating) {
+    if (!isAdmin && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 

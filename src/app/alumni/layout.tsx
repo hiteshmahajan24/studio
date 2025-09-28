@@ -31,8 +31,9 @@ function AlumniLayoutContent({
     }
     
     const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'alumni';
+    const isAlumni = userRole === 'alumni';
 
-    if (userRole !== 'alumni' && !isSuperAdminImpersonating) {
+    if (!isAlumni && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 
