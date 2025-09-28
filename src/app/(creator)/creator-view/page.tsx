@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +8,11 @@ import Link from "next/link";
 
 export default function CreatorViewPage() {
   const roleViews = [
-    { role: 'Student', href: '/student/dashboard', icon: Users },
-    { role: 'Admin', href: '/admin/dashboard', icon: UserCog },
-    { role: 'Faculty', href: '/faculty/dashboard', icon: GraduationCap },
-    { role: 'Alumni', href: '/alumni/dashboard', icon: User },
-    { role: 'Employer', href: '/employer/dashboard', icon: Briefcase },
+    { role: 'Student', href: '/student/dashboard?viewAs=student', icon: Users },
+    { role: 'Admin', href: '/admin/dashboard?viewAs=admin', icon: UserCog },
+    { role: 'Faculty', href: '/faculty/dashboard?viewAs=faculty', icon: GraduationCap },
+    { role: 'Alumni', href: '/alumni/dashboard?viewAs=alumni', icon: User },
+    { role: 'Employer', href: '/employer/dashboard?viewAs=employer', icon: Briefcase },
   ];
 
   return (
@@ -24,7 +23,7 @@ export default function CreatorViewPage() {
             <p className="text-muted-foreground">Global control panel for platform management.</p>
         </div>
         <Button asChild variant="outline">
-            <Link href="/student/dashboard">Exit Creator View</Link>
+            <Link href="/login">Exit Creator View</Link>
         </Button>
       </div>
 

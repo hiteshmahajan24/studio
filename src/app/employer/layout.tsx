@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { useUser } from "@/firebase";
@@ -10,14 +10,16 @@ import { UserStateProvider } from "@/context/user-state-context";
 import { Skeleton } from '@/components/ui/skeleton';
 import { getUserRole } from '@/lib/mock-data';
 
-export default function EmployerLayout({
+function EmployerLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const viewAsRole = searchParams.get('viewAs');
   const userRole = user ? getUserRole(user.uid) : null;
   
   useEffect(() => {
@@ -28,19 +30,22 @@ export default function EmployerLayout({
       return;
     }
     
-    // Allow access if the user is an employer OR a superadmin
-    if (userRole !== 'employer' && userRole !== 'superadmin') {
+    const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'employer';
+
+    if (userRole !== 'employer' && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 
-  }, [isUserLoading, user, router, userRole]);
+  }, [isUserLoading, user, router, userRole, viewAsRole]);
 
   if (isUserLoading || !userRole) {
     return <LoadingSkeleton />;
   }
 
-  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the employer nav.
-  const sidebarRole = userRole === 'superadmin' ? 'employer' : userRole;
+  const sidebarRole = (userRole === 'superadmin' && viewAsRole === 'employer') ? 'employer' : userRole;
+  if (sidebarRole !== 'employer') {
+     return <LoadingSkeleton />;
+  }
 
   return (
     <UserStateProvider>
@@ -57,6 +62,14 @@ export default function EmployerLayout({
   );
 }
 
+export default function EmployerLayout({ children }: { children: React.ReactNode; }) {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <EmployerLayoutContent>{children}</EmployerLayoutContent>
+    </Suspense>
+  )
+}
+
 function LoadingSkeleton() {
     return (
       <div className="flex min-h-screen w-full">
@@ -71,7 +84,7 @@ function LoadingSkeleton() {
           <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
             <Skeleton className="h-8 w-48" />
             <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
-              <Skeleton className="h-8 w-[320px] rounded-lg" />
+              <Skeleton className="h-8 w-[320px]" rounded-lg" />
               <Skeleton className="h-9 w-9 rounded-full" />
             </div>
           </header>

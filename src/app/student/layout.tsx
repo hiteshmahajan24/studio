@@ -1,8 +1,8 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { useUser } from "@/firebase";
@@ -10,15 +10,16 @@ import { UserStateProvider } from "@/context/user-state-context";
 import { Skeleton } from '@/components/ui/skeleton';
 import { getUserRole } from '@/lib/mock-data';
 
-export default function StudentLayout({
+function StudentLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { user, isUserLoading } = useUser();
   const router = useRouter();
-  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
+  const viewAsRole = searchParams.get('viewAs');
   const userRole = user ? getUserRole(user.uid) : null;
   
   useEffect(() => {
@@ -29,19 +30,25 @@ export default function StudentLayout({
       return;
     }
     
-    // Allow access if the user is a student OR a superadmin
-    if (userRole !== 'student' && userRole !== 'superadmin') {
+    const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'student';
+    
+    // Regular student or guest user (who gets defaulted to student role)
+    const isStudent = userRole === 'student';
+
+    if (!isStudent && !isSuperAdminImpersonating) {
       router.push('/login');
     }
 
-  }, [isUserLoading, user, router, userRole]);
+  }, [isUserLoading, user, router, userRole, viewAsRole]);
 
   if (isUserLoading || !userRole) {
     return <LoadingSkeleton />;
   }
 
-  // Pass the correct role to the sidebar for navigation. If superadmin is viewing, show the student nav.
-  const sidebarRole = userRole === 'superadmin' ? 'student' : userRole;
+  const sidebarRole = (userRole === 'superadmin' && viewAsRole === 'student') ? 'student' : userRole;
+  if (sidebarRole !== 'student') {
+     return <LoadingSkeleton />;
+  }
 
   return (
     <UserStateProvider>
@@ -56,6 +63,14 @@ export default function StudentLayout({
       </div>
     </UserStateProvider>
   );
+}
+
+export default function StudentLayout({ children }: { children: React.ReactNode; }) {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <StudentLayoutContent>{children}</StudentLayoutContent>
+    </Suspense>
+  )
 }
 
 function LoadingSkeleton() {
