@@ -28,6 +28,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { ClientOnly } from '@/components/layout/client-only';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -91,68 +92,70 @@ export default function LoginPage() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="m@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={isLoading || isGuestLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Login
-            </Button>
-          </form>
-        </Form>
-        
-        <div className="relative my-4">
-          <Separator />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 bg-card text-sm text-muted-foreground">
-            OR
+    <ClientOnly>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="m@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={isLoading || isGuestLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Login
+              </Button>
+            </form>
+          </Form>
+          
+          <div className="relative my-4">
+            <Separator />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 bg-card text-sm text-muted-foreground">
+              OR
+            </div>
           </div>
-        </div>
-        
-        <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
-            {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Continue as Guest
-        </Button>
+          
+          <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
+              {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Continue as Guest
+          </Button>
 
-        <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline">
-            Sign up
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{' '}
+            <Link href="/signup" className="underline">
+              Sign up
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </ClientOnly>
   );
 }
