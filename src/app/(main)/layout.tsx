@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { useUser } from "@/firebase";
 import { UserStateProvider } from "@/context/user-state-context";
 import { Skeleton } from '@/components/ui/skeleton';
-import { getUserRole } from '@/lib/mock-data';
+import { getUserRole, type UserRole } from '@/lib/mock-data';
 
 export default function MainLayout({
   children,
@@ -18,6 +18,27 @@ export default function MainLayout({
   const { user, isUserLoading } = useUser();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // State to manage the "view as" role
+  const [viewAsRole, setViewAsRole] = useState<UserRole | null>(null);
+
+  const actualRole = user ? getUserRole(user.uid) : null;
+  const currentRole = viewAsRole || actualRole;
+  
+  useEffect(() => {
+    // Superadmin can use a query param to switch views
+    const viewAs = searchParams.get('viewAs') as UserRole;
+    if (actualRole === 'superadmin' && viewAs) {
+      if (['student', 'admin', 'faculty', 'alumni', 'employer'].includes(viewAs)) {
+        setViewAsRole(viewAs);
+      }
+    } else {
+      // Clear the viewAsRole if not superadmin or no query param
+      setViewAsRole(null);
+    }
+  }, [searchParams, actualRole]);
+
 
   useEffect(() => {
     if (isUserLoading) return; // Wait until user status is resolved
@@ -27,8 +48,10 @@ export default function MainLayout({
       return;
     }
 
+    // Don't run redirection logic if we're impersonating a role
+    if (viewAsRole) return;
+
     // Get user role and determine the correct dashboard path
-    // For mock purposes, we'll use a hardcoded map on login, but the layout relies on the UID.
     const role = getUserRole(user.uid);
     const dashboardPaths: { [key: string]: string } = {
       student: '/dashboard',
@@ -36,26 +59,24 @@ export default function MainLayout({
       faculty: '/faculty',
       alumni: '/alumni',
       employer: '/employer',
-      superadmin: '/superadmin'
+      superadmin: '/creator-view' // Superadmin defaults to creator view
     };
     const expectedPath = dashboardPaths[role] || '/dashboard';
     
-    const allowedSubPaths = ['/mentorship', '/jobs', '/networking', '/quests', '/academics', '/articles', '/communities'];
-    const isAllowedSubPath = allowedSubPaths.some(p => pathname.startsWith(p));
+    // List of main dashboard pages for each role
+    const mainDashboardPaths = Object.values(dashboardPaths);
 
-    // Redirect if user is on a dashboard that doesn't match their role
-    const isAtWrongDashboard = Object.values(dashboardPaths).includes(pathname) && pathname !== expectedPath;
-
-    if (isAtWrongDashboard) {
-      router.replace(expectedPath);
+    // Redirect if user is on a main dashboard that doesn't match their role
+    if (mainDashboardPaths.includes(pathname) && pathname !== expectedPath) {
+        router.replace(expectedPath);
     } else if (pathname === '/' && user) {
-      // If at root and logged in, redirect to their correct dashboard
-      router.replace(expectedPath);
+        // If at root and logged in, redirect to their correct dashboard
+        router.replace(expectedPath);
     }
 
-  }, [isUserLoading, user, router, pathname]);
+  }, [isUserLoading, user, router, pathname, viewAsRole]);
 
-  if (isUserLoading || !user) {
+  if (isUserLoading || !currentRole) {
     return (
       <div className="flex min-h-screen w-full">
         <div className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex p-2 items-center gap-4">
@@ -82,13 +103,11 @@ export default function MainLayout({
       </div>
     );
   }
-  
-  const role = getUserRole(user.uid);
 
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole={role} />
+        <SidebarNav userRole={currentRole} actualRole={actualRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
