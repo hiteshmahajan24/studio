@@ -28,14 +28,21 @@ import type { QuickApplyOutput, QuickApplyInput } from "@/ai/flows/quick-apply.t
 
 type QuickApplyDialogProps = {
     children: React.ReactNode;
+    preselectedJobId?: string;
 }
 
-export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
+export function QuickApplyDialog({ children, preselectedJobId }: QuickApplyDialogProps) {
     const [isOpen, setIsOpen] = React.useState(false);
     const [step, setStep] = React.useState(1);
-    const [selectedJobId, setSelectedJobId] = React.useState<string | null>(null);
+    const [selectedJobId, setSelectedJobId] = React.useState<string | null>(preselectedJobId || null);
     const [isGenerating, setIsGenerating] = React.useState(false);
     const [aiResponse, setAiResponse] = React.useState<QuickApplyOutput | null>(null);
+
+    React.useEffect(() => {
+        if (preselectedJobId && isOpen) {
+            setSelectedJobId(preselectedJobId);
+        }
+    }, [preselectedJobId, isOpen])
 
     const selectedJob = openOpportunities.find(job => job.id === selectedJobId);
 
@@ -49,7 +56,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
             try {
                 const response = await quickApply({
                     studentProfile: user.profile,
-                    jobDetails: selectedJob,
+                    jobDetails: { ...selectedJob, title: selectedJob.title, company: selectedJob.company, description: selectedJob.description },
                 } as QuickApplyInput);
                 setAiResponse(response);
                 setStep(2);
@@ -65,9 +72,19 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
     const handleBack = () => {
         if (step === 2) {
             setStep(1);
-            setSelectedJobId(null);
+            // Don't reset selectedJobId if it was pre-selected
+            if (!preselectedJobId) {
+                 setSelectedJobId(null);
+            }
             setAiResponse(null);
         }
+    }
+
+    const resetDialog = () => {
+        setStep(1);
+        setSelectedJobId(preselectedJobId || null);
+        setIsGenerating(false);
+        setAiResponse(null);
     }
   
     return (
@@ -76,10 +93,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
             // Reset state on close
             if (!open) {
                 setTimeout(() => {
-                    setStep(1);
-                    setSelectedJobId(null);
-                    setIsGenerating(false);
-                    setAiResponse(null);
+                    resetDialog();
                 }, 300);
             }
         }}>
@@ -97,8 +111,8 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
             {step === 1 && (
                 <div className="py-4 space-y-4">
                     <Label htmlFor="job-select">Select a Job Posting</Label>
-                    <Select onValueChange={handleJobSelect}>
-                        <SelectTrigger id="job-select">
+                    <Select onValueChange={handleJobSelect} value={selectedJobId || ''}>
+                        <SelectTrigger id="job-select" disabled={!!preselectedJobId}>
                             <SelectValue placeholder="Choose an opportunity..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -110,7 +124,7 @@ export function QuickApplyDialog({ children }: QuickApplyDialogProps) {
                         </SelectContent>
                     </Select>
                     {selectedJob && (
-                        <div className="p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground">
+                        <div className="p-4 bg-muted/50 rounded-lg text-sm text-muted-foreground max-h-48 overflow-y-auto">
                            <h4 className="font-semibold text-foreground mb-2">Job Description</h4>
                            {selectedJob.description}
                         </div>

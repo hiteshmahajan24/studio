@@ -1,8 +1,8 @@
 
 import { Award, Star, Trophy, type LucideIcon, Code, Bot, BarChart2, Newspaper } from 'lucide-react';
-import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator';
-import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations';
-import { SkillPathOutput } from '@/ai/flows/skill-path';
+import type { AIQuestOutput } from '@/ai/flows/ai-quest-generator.types';
+import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
+import { SkillPathOutput } from '@/ai/flows/skill-path.types';
 
 
 export type JobApplication = {
@@ -20,26 +20,63 @@ export const jobApplications: JobApplication[] = [
   { id: '4', title: 'Data Scientist', company: 'Data Insights', status: 'Rejected', dateApplied: '2024-07-05' },
 ];
 
-export const openOpportunities = [
+export type OpenOpportunity = {
+    id: string;
+    title: string;
+    company: string;
+    description: string;
+    location: string;
+    type: 'Full-time' | 'Internship';
+    skills: string[];
+};
+
+export const openOpportunities: OpenOpportunity[] = [
     {
       id: 'job1',
       title: 'Frontend Developer',
       company: 'Innovate Inc.',
       description: 'Seeking a creative Frontend Developer to build beautiful and responsive user interfaces using React and Tailwind CSS. The ideal candidate has experience with Next.js and a passion for clean code.',
+      location: 'Remote',
+      type: 'Full-time',
+      skills: ['React', 'Next.js', 'Tailwind']
     },
     {
       id: 'job2',
       title: 'AI/ML Engineer',
       company: 'Data Driven Co.',
       description: 'Join our AI team to build next-generation machine learning models. Experience with Python, TensorFlow, and cloud platforms like GCP is a must.',
+      location: 'San Francisco, CA',
+      type: 'Full-time',
+      skills: ['Python', 'TensorFlow', 'GCP']
     },
     {
         id: 'job3',
         title: 'Cloud Solutions Architect',
         company: 'ScaleUp Cloud',
         description: 'Design and implement scalable cloud infrastructure on GCP and AWS. Looking for experts in Kubernetes, Terraform, and CI/CD.',
+        location: 'New York, NY',
+        type: 'Full-time',
+        skills: ['GCP', 'AWS', 'Kubernetes']
+    },
+    {
+        id: 'job4',
+        title: 'Software Engineer Intern',
+        company: 'Innovate Inc.',
+        description: 'Exciting internship opportunity for students passionate about web development. You will work alongside our senior developers on real projects.',
+        location: 'Remote',
+        type: 'Internship',
+        skills: ['JavaScript', 'HTML/CSS', 'Git']
+    },
+     {
+        id: 'job5',
+        title: 'Data Science Intern',
+        company: 'Data Driven Co.',
+        description: 'Work with our data science team on analyzing large datasets, building predictive models, and creating visualizations.',
+        location: 'San Francisco, CA',
+        type: 'Internship',
+        skills: ['Python', 'Pandas', 'SQL']
     }
-]
+];
 
 export type MentorshipSession = {
   id: string;
