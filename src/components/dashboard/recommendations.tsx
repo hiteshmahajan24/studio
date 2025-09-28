@@ -30,11 +30,7 @@ export async function Recommendations({ className }: RecommendationsProps) {
 
   return (
     <Card className={cn("flex flex-col", className)}>
-      <RecommendationsClient 
-        initialRecommendations={initialRecommendations.recommendations} 
-        initialError={initialError}
-        studentProfile={studentProfile}
-        studentActivity={studentActivity}
+      <RecommendationsClient
       />
     </Card>
   );

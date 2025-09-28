@@ -2,23 +2,17 @@
 'use client';
 
 import * as React from 'react';
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Briefcase, FileText, Handshake, Lightbulb, Info, RefreshCw, AlertTriangle, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from '../ui/skeleton';
 import { getPersonalizedRecommendations } from '@/ai/flows/personalized-recommendations';
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
-import { allMentors, openOpportunities, communities } from '@/lib/mock-data';
+import { allMentors, openOpportunities, communities, user } from '@/lib/mock-data';
+import { cn } from '@/lib/utils';
 
 type Recommendation = PersonalizedRecommendationsOutput['recommendations'][0];
-
-type RecommendationsClientProps = {
-  initialRecommendations: Recommendation[];
-  initialError?: string;
-  studentProfile: string;
-  studentActivity: string;
-};
 
 const recommendationDetails: { [key: string]: { name: string, description: string, href?: string } } = {
   // Mentors
@@ -50,24 +44,30 @@ const recommendationIcons: Record<string, React.ElementType> = {
   community: Users,
 };
 
-export function RecommendationsClient({ initialRecommendations, initialError, studentProfile, studentActivity }: RecommendationsClientProps) {
-  const [recommendations, setRecommendations] = React.useState(initialRecommendations);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState(initialError);
+export function RecommendationsClient({ className }: { className?: string }) {
+  const [recommendations, setRecommendations] = React.useState<Recommendation[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   const fetchRecommendations = React.useCallback(async () => {
     setIsLoading(true);
-    setError(undefined);
+    setError(null);
     try {
-      const result = await getPersonalizedRecommendations({ studentProfile, studentActivity });
-      setRecommendations(result.recommendations);
+        const studentProfile = `Name: ${user.name}, Skills: ${user.profile.skills.join(', ')}, Experience: ${user.profile.experience}`;
+        const studentActivity = "Viewed articles on web development, applied for a frontend role, contacted a mentor in the software industry.";
+        const result = await getPersonalizedRecommendations({ studentProfile, studentActivity });
+        setRecommendations(result.recommendations);
     } catch (e) {
       console.error(e);
       setError("Failed to generate new recommendations. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  }, [studentProfile, studentActivity]);
+  }, []);
+
+  React.useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
   const getDetails = (type: string, id: string) => {
     const details = recommendationDetails[id];
@@ -82,7 +82,7 @@ export function RecommendationsClient({ initialRecommendations, initialError, st
   };
 
   return (
-    <>
+    <Card className={cn("flex flex-col", className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>For You</CardTitle>
@@ -132,6 +132,6 @@ export function RecommendationsClient({ initialRecommendations, initialError, st
           ))
         )}
       </CardContent>
-    </>
+    </Card>
   );
 }
