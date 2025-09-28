@@ -30,24 +30,24 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { ClientOnly } from '@/components/layout/client-only';
-import { getUserRole } from '@/lib/mock-data';
+import { getUserRole, type UserRole } from '@/lib/mock-data';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-// Map emails to UIDs for role-based redirect simulation
-const emailToUidMap: { [email: string]: string } = {
-  'student@nexus.com': 'student-user-id',
-  'admin@nexus.com': 'admin-user-id',
-  'faculty@nexus.com': 'faculty-user-id',
-  'alumni@nexus.com': 'alumni-user-id',
-  'employer@nexus.com': 'employer-user-id',
-  'createrofblood@nexus.com': 'superadmin-user-id',
+// Map emails to roles for redirection logic
+const emailToRoleMap: { [email: string]: UserRole } = {
+  'student@nexus.com': 'student',
+  'admin@nexus.com': 'admin',
+  'faculty@nexus.com': 'faculty',
+  'alumni@nexus.com': 'alumni',
+  'employer@nexus.com': 'employer',
+  'createrofblood@nexus.com': 'superadmin',
 };
 
-const roleEmails = Object.keys(emailToUidMap);
+const roleEmails = Object.keys(emailToRoleMap);
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -64,8 +64,7 @@ export default function LoginPage() {
     },
   });
 
-  const getRedirectPath = (uid: string) => {
-    const role = getUserRole(uid);
+  const getRedirectPath = (role: UserRole) => {
     const paths: { [key: string]: string } = {
       student: '/dashboard',
       admin: '/admin',
@@ -77,25 +76,25 @@ export default function LoginPage() {
     return paths[role] || '/dashboard';
   };
 
-  const handleLoginSuccess = (userCredential: any) => {
+  const handleLoginSuccess = (userCredential: any, email: string) => {
     const user = userCredential.user;
-    // Use the actual UID from Firebase for role mapping in the layout
-    const redirectPath = getRedirectPath(user.uid);
+    // For special roles, use email to determine role. Otherwise, use UID.
+    const role = emailToRoleMap[email.toLowerCase()] || getUserRole(user.uid);
+    const redirectPath = getRedirectPath(role);
     router.push(redirectPath);
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    const lowercaseEmail = values.email.toLowerCase();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      handleLoginSuccess(userCredential);
+      handleLoginSuccess(userCredential, lowercaseEmail);
     } catch (error: any) {
-      // If login fails because the user doesn't exist, and it's a special role email, create the user.
-      if (error.code === 'auth/invalid-credential' && roleEmails.includes(values.email.toLowerCase())) {
+      if (error.code === 'auth/invalid-credential' && roleEmails.includes(lowercaseEmail)) {
         try {
           const newUserCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-          // Set display name based on role
-          const role = getUserRole(emailToUidMap[values.email.toLowerCase()]);
+          const role = emailToRoleMap[lowercaseEmail];
           await updateProfile(newUserCredential.user, {
             displayName: `${role.charAt(0).toUpperCase() + role.slice(1)} User`,
           });
@@ -103,7 +102,7 @@ export default function LoginPage() {
             title: `Created ${role} account!`,
             description: 'This special account has been created for you.',
           });
-          handleLoginSuccess(newUserCredential);
+          handleLoginSuccess(newUserCredential, lowercaseEmail);
         } catch (createError: any) {
           console.error('Auto-signup Error:', createError);
           toast({
