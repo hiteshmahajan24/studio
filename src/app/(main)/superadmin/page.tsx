@@ -1,7 +1,8 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Database, UserCog } from "lucide-react";
+import { Database, UserCog, Building } from "lucide-react";
+import { CreateInstituteDialog } from "@/components/superadmin/create-institute-dialog";
 
 export default function SuperAdminPage() {
   return (
@@ -14,23 +15,34 @@ export default function SuperAdminPage() {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Manage All Users</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Building /> Institute Management</CardTitle>
+            <CardDescription>Create and manage institute profiles and their administrators.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CreateInstituteDialog>
+                <Button className="w-full">Create New Institute</Button>
+            </CreateInstituteDialog>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><UserCog /> User Management</CardTitle>
             <CardDescription>View, edit, and manage every user account on the platform.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="w-full" variant="destructive">
-              <UserCog className="mr-2" /> Access User Management
+               Access User Management
             </Button>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Raw Data Access</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Database /> Raw Data Access</CardTitle>
             <CardDescription>Directly interact with the entire Firestore database.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button className="w-full" variant="destructive">
-              <Database className="mr-2" /> Open Data Explorer
+              Open Data Explorer
             </Button>
           </CardContent>
         </Card>
