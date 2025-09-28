@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Wand2, Edit } from "lucide-react"
-import { skillPath } from "@/ai/flows/skill-path"
+import { Wand2, Edit, AlertTriangle } from "lucide-react"
+import { skillPath, type SkillPathOutput } from "@/ai/flows/skill-path"
 import { SkillsChartClient } from "./skills-chart-client"
 import { cn } from "@/lib/utils"
 
@@ -24,10 +24,20 @@ const skillsData = [
 ]
 
 export async function SkillsGrowth({ className }: { className?: string }) {
-  const { suggestedSkills } = await skillPath({
-    currentSkills: currentTechStack,
-    learningGoals: "Transition into a full-stack role with a focus on cloud-native technologies and AI integration.",
-  });
+  let skillPathResult: SkillPathOutput | null = null;
+  let skillPathError: string | null = null;
+
+  try {
+    skillPathResult = await skillPath({
+      currentSkills: currentTechStack,
+      learningGoals: "Transition into a full-stack role with a focus on cloud-native technologies and AI integration.",
+    });
+  } catch (error) {
+    console.error("Failed to fetch skill path:", error);
+    skillPathError = "Could not load AI skill suggestions. Please try again later.";
+  }
+  
+  const suggestedSkills = skillPathResult?.suggestedSkills;
 
   return (
     <Card className={cn("flex flex-col", className)}>
@@ -59,14 +69,24 @@ export async function SkillsGrowth({ className }: { className?: string }) {
                 <Wand2 className="text-primary" />
                 AI-Suggested Future Stack
                 </h3>
-                <div className="space-y-3">
-                {suggestedSkills.slice(0, 3).map((item) => (
-                    <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
-                    <p className="font-semibold text-sm">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">{item.reason}</p>
+                {skillPathError ? (
+                  <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-sm text-destructive flex items-center gap-3">
+                    <AlertTriangle className="h-5 w-5" />
+                    <div>
+                      <p className="font-semibold">Error</p>
+                      <p>{skillPathError}</p>
                     </div>
-                ))}
-                </div>
+                  </div>
+                ) : suggestedSkills ? (
+                  <div className="space-y-3">
+                    {suggestedSkills.slice(0, 3).map((item) => (
+                        <div key={item.name} className="p-3 bg-muted/50 rounded-lg">
+                        <p className="font-semibold text-sm">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">{item.reason}</p>
+                        </div>
+                    ))}
+                  </div>
+                ) : null}
             </div>
         </div>
 
