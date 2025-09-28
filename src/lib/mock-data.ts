@@ -483,13 +483,14 @@ export type Quest = {
     status: 'active' | 'completed';
     progress: number;
     cta: string;
+    ctaLink: string;
 }
 
 export const allQuests: Quest[] = [
-    { id: 'q1', title: 'Community Connector', description: 'Join a new community and introduce yourself.', category: 'Community', rewardPoints: 100, status: 'active', progress: 0, cta: 'Explore Communities' },
-    { id: 'q2', title: 'Knowledge Sharer', description: 'Ask a thoughtful question in a community discussion.', category: 'Community', rewardPoints: 150, status: 'active', progress: 50, cta: 'Go to Feed' },
-    { id: 'q3', title: 'Weekly Wisdom', description: 'Read 3 articles from your recommended feed.', category: 'Weekly', rewardPoints: 75, status: 'active', progress: 33, cta: 'Read Articles' },
-    { id: 'q4', title: 'Mentor Meetup', description: 'Schedule your first session with a mentor.', category: 'Weekly', rewardPoints: 200, status: 'completed', progress: 100, cta: '' },
-    { id: 'q5', title: 'Career Kickstarter', description: 'Apply for a job using the AI Quick Apply feature.', category: 'Weekly', rewardPoints: 100, status: 'completed', progress: 100, cta: '' },
-    { id: 'q6', title: 'Hackathon Participant', description: 'Register for the upcoming "AI for Good" hackathon.', category: 'Special Event', rewardPoints: 500, status: 'active', progress: 0, cta: 'Register Now' },
+    { id: 'q1', title: 'Community Connector', description: 'Join a new community and introduce yourself.', category: 'Community', rewardPoints: 100, status: 'active', progress: 0, cta: 'Explore Communities', ctaLink: '/networking?tab=communities' },
+    { id: 'q2', title: 'Knowledge Sharer', description: 'Ask a thoughtful question in a community discussion.', category: 'Community', rewardPoints: 150, status: 'active', progress: 50, cta: 'Go to Feed', ctaLink: '/communities/comm-1' },
+    { id: 'q3', title: 'Weekly Wisdom', description: 'Read 3 articles from your recommended feed.', category: 'Weekly', rewardPoints: 75, status: 'active', progress: 33, cta: 'Read Articles', ctaLink: '/articles' },
+    { id: 'q4', title: 'Mentor Meetup', description: 'Schedule your first session with a mentor.', category: 'Weekly', rewardPoints: 200, status: 'completed', progress: 100, cta: '', ctaLink: '' },
+    { id: 'q5', title: 'Career Kickstarter', description: 'Apply for a job using the AI Quick Apply feature.', category: 'Weekly', rewardPoints: 100, status: 'completed', progress: 100, cta: '', ctaLink: '' },
+    { id: 'q6', title: 'Hackathon Participant', description: 'Register for the upcoming "AI for Good" hackathon.', category: 'Special Event', rewardPoints: 500, status: 'active', progress: 0, cta: 'Register Now', ctaLink: '/networking' },
 ];

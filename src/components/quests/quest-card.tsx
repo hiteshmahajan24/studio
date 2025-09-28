@@ -8,6 +8,8 @@ import { Button } from "../ui/button";
 import { CheckCircle2, Shield, Gem } from 'lucide-react';
 import { Progress } from "../ui/progress";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 type QuestCardProps = {
@@ -22,6 +24,14 @@ const categoryIcon: Record<string, React.ReactNode> = {
 
 export function QuestCard({ quest }: QuestCardProps) {
     const isCompleted = quest.status === 'completed';
+    const router = useRouter();
+
+    const handleAction = () => {
+        if (quest.ctaLink) {
+            router.push(quest.ctaLink);
+        }
+    }
+
     return (
         <Card className={cn("flex flex-col", isCompleted && "bg-muted/50")}>
             <CardHeader>
@@ -48,9 +58,9 @@ export function QuestCard({ quest }: QuestCardProps) {
                     <Progress value={quest.progress} className="h-2" />
                 )}
             </CardContent>
-            {!isCompleted && (
+            {!isCompleted && quest.ctaLink && (
                 <CardFooter>
-                    <Button className="w-full">
+                    <Button className="w-full" onClick={handleAction}>
                         {quest.cta}
                     </Button>
                 </CardFooter>
