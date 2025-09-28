@@ -85,7 +85,7 @@ function LoadingSkeleton() {
           <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
             <Skeleton className="h-8 w-48" />
             <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
-              <Skeleton className="h-8 w-[320px]" rounded-lg" />
+              <Skeleton className="h-8 w-[320px] rounded-lg" />
               <Skeleton className="h-9 w-9 rounded-full" />
             </div>
           </header>
