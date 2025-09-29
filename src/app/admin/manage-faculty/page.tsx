@@ -119,16 +119,16 @@ export default function FacultyDatabasePage() {
         <Card>
             <ClientOnly>
                 <CardHeader>
-                    <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-4 flex-1">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="grid gap-4 sm:grid-cols-2 md:flex-1 md:flex md:items-center">
                             <Input 
                                 placeholder="Search by name, email, title..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
+                                className="w-full md:max-w-xs"
                             />
                              <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                                <SelectTrigger className="w-[220px]">
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Filter by department" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -157,9 +157,9 @@ export default function FacultyDatabasePage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Email</TableHead>
+                                <TableHead className="hidden sm:table-cell">Email</TableHead>
                                 <TableHead>Title</TableHead>
-                                <TableHead>Department</TableHead>
+                                <TableHead className="hidden lg:table-cell">Department</TableHead>
                                 <TableHead>
                                     <span className="sr-only">Actions</span>
                                 </TableHead>
@@ -169,10 +169,10 @@ export default function FacultyDatabasePage() {
                             {displayedFaculty.map(member => (
                                 <TableRow key={member.id}>
                                     <TableCell className="font-medium">{member.name}</TableCell>
-                                    <TableCell className="text-muted-foreground">{member.email}</TableCell>
+                                    <TableCell className="text-muted-foreground hidden sm:table-cell">{member.email}</TableCell>
                                     <TableCell>{member.title}</TableCell>
                                     {/* This is mock data, in a real app this would be a direct field */}
-                                    <TableCell>{member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities'}</TableCell>
+                                    <TableCell className="hidden lg:table-cell">{member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities'}</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>

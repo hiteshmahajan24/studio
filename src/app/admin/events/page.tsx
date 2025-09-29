@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -22,42 +22,44 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 export default function ManageEventsPage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Manage Events</h1>
-        <p className="text-muted-foreground">Oversee all platform and college-hosted events.</p>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 className="text-3xl font-bold">Manage Events</h1>
+            <p className="text-muted-foreground">Oversee all platform and college-hosted events.</p>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <PlusCircle className='mr-2'/>
+              Create New Event
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
+              <AlertDialogDescription>
+                The form to create a new event has not been implemented yet. This is a placeholder action.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Understood</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
       <Card>
         <CardHeader>
-            <div className='flex justify-end'>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button>
-                      <PlusCircle className='mr-2'/>
-                      Create New Event
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        The form to create a new event has not been implemented yet. This is a placeholder action.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Understood</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-            </div>
+            <CardTitle>All Events</CardTitle>
+            <CardDescription>A list of all upcoming and past events on the platform.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Event Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Host</TableHead>
+                <TableHead className="hidden sm:table-cell">Category</TableHead>
+                <TableHead className="hidden md:table-cell">Host</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Spots Left</TableHead>
                 <TableHead>
@@ -69,10 +71,10 @@ export default function ManageEventsPage() {
               {allEvents.map((event) => (
                 <TableRow key={event.id}>
                   <TableCell className="font-medium">{event.title}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Badge variant="secondary">{event.category}</Badge>
                   </TableCell>
-                   <TableCell>
+                   <TableCell className="hidden md:table-cell">
                     <Badge variant={event.hostType === 'platform' ? 'default' : 'outline'} className='capitalize'>{event.hostType}</Badge>
                   </TableCell>
                   <TableCell>{format(new Date(event.date), 'MMM d, yyyy')}</TableCell>

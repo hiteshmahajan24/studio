@@ -223,16 +223,16 @@ export default function AlumniDatabasePage() {
         <Card>
             <ClientOnly>
                 <CardHeader>
-                    <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-4 flex-1">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="grid gap-4 sm:grid-cols-2 md:flex-1 md:flex md:items-center">
                             <Input 
                                 placeholder="Search by name, email, company..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="max-w-sm"
+                                className="w-full md:max-w-xs"
                             />
                             <Select value={yearFilter} onValueChange={setYearFilter}>
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Filter by year" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -242,7 +242,7 @@ export default function AlumniDatabasePage() {
                                 </SelectContent>
                             </Select>
                              <Select value={majorFilter} onValueChange={setMajorFilter}>
-                                <SelectTrigger className="w-[220px]">
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Filter by major" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -276,10 +276,9 @@ export default function AlumniDatabasePage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Company</TableHead>
+                                <TableHead className="hidden sm:table-cell">Email</TableHead>
+                                <TableHead className="hidden lg:table-cell">Company</TableHead>
                                 <TableHead>Graduation Year</TableHead>
-                                <TableHead>Major</TableHead>
                                 <TableHead>
                                     <span className="sr-only">Actions</span>
                                 </TableHead>
@@ -289,10 +288,9 @@ export default function AlumniDatabasePage() {
                             {displayedAlumni.map(alumnus => (
                                 <TableRow key={alumnus.id}>
                                     <TableCell className="font-medium">{alumnus.name}</TableCell>
-                                    <TableCell className="text-muted-foreground">{alumnus.email}</TableCell>
-                                    <TableCell>{alumnus.currentCompany || 'N/A'}</TableCell>
+                                    <TableCell className="text-muted-foreground hidden sm:table-cell">{alumnus.email}</TableCell>
+                                    <TableCell className="hidden lg:table-cell">{alumnus.currentCompany || 'N/A'}</TableCell>
                                     <TableCell>{alumnus.education.year}</TableCell>
-                                    <TableCell>{alumnus.education.degree}</TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -326,7 +324,3 @@ export default function AlumniDatabasePage() {
     </div>
   );
 }
-
-    
-
-    

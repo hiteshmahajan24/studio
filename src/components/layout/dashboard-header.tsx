@@ -37,39 +37,67 @@ export function DashboardHeader() {
   const avatarFallback = userName.split(' ').map(n => n[0]).join('');
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-30 flex h-auto flex-col gap-4 border-b bg-background/80 px-4 py-4 backdrop-blur-sm md:h-16 md:flex-row md:items-center md:justify-between md:px-6 md:py-0">
+      <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold md:text-2xl">Welcome, {userName}!</h1>
-      </div>
-      <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
-        <div className="relative ml-auto flex-1 md:grow-0">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-muted pl-8 md:w-[200px] lg:w-[320px]" />
-        </div>
-        <ClientButton variant="ghost" size="icon" className="rounded-full">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Toggle notifications</span>
-        </ClientButton>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+         <div className="flex items-center gap-2 md:hidden">
             <ClientButton variant="ghost" size="icon" className="rounded-full">
-              <Avatar className="h-9 w-9">
-                <AvatarFallback>{avatarFallback}</AvatarFallback>
-              </Avatar>
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Toggle notifications</span>
             </ClientButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Logout</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <ClientButton variant="ghost" size="icon" className="rounded-full">
+                <Avatar className="h-9 w-9">
+                    <AvatarFallback>{avatarFallback}</AvatarFallback>
+                </Avatar>
+                </ClientButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+      </div>
+      <div className="flex w-full items-center gap-4 md:w-auto md:flex-1 md:justify-end md:gap-2 lg:gap-4">
+        <div className="relative flex-1 md:grow-0">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input type="search" placeholder="Search..." className="w-full rounded-lg bg-muted pl-8" />
+        </div>
+        <div className="hidden items-center gap-2 md:flex">
+            <ClientButton variant="ghost" size="icon" className="rounded-full">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Toggle notifications</span>
+            </ClientButton>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <ClientButton variant="ghost" size="icon" className="rounded-full">
+                <Avatar className="h-9 w-9">
+                    <AvatarFallback>{avatarFallback}</AvatarFallback>
+                </Avatar>
+                </ClientButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
       </div>
     </header>
   );

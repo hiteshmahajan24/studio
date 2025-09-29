@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -38,25 +38,25 @@ export default function ViewStudentsPage() {
       </div>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4 flex-1">
-              <Input
-                placeholder="Search by name, email..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
-              />
-              <Select value={majorFilter} onValueChange={setMajorFilter}>
-                <SelectTrigger className="w-[220px]">
-                  <SelectValue placeholder="Filter by major" />
-                </SelectTrigger>
-                <SelectContent>
-                  {majors.map(major => (
-                    <SelectItem key={major} value={major}>{major === 'all' ? 'All Majors' : major}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+           <CardTitle>All Students</CardTitle>
+           <CardDescription>A directory of all students currently on the platform.</CardDescription>
+          <div className="flex flex-col gap-4 pt-4 md:flex-row">
+            <Input
+              placeholder="Search by name, email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full md:max-w-sm"
+            />
+            <Select value={majorFilter} onValueChange={setMajorFilter}>
+              <SelectTrigger className="w-full md:w-[220px]">
+                <SelectValue placeholder="Filter by major" />
+              </SelectTrigger>
+              <SelectContent>
+                {majors.map(major => (
+                  <SelectItem key={major} value={major}>{major === 'all' ? 'All Majors' : major}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
         <CardContent>
@@ -64,9 +64,9 @@ export default function ViewStudentsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
+                <TableHead className="hidden sm:table-cell">Email</TableHead>
                 <TableHead>Major</TableHead>
-                <TableHead>Graduation Year</TableHead>
+                <TableHead className="hidden md:table-cell">Graduation Year</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -74,9 +74,9 @@ export default function ViewStudentsPage() {
                 <StudentProgressDialog key={student.id} student={student}>
                   <TableRow className="cursor-pointer">
                     <TableCell className="font-medium">{student.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{student.email}</TableCell>
+                    <TableCell className="text-muted-foreground hidden sm:table-cell">{student.email}</TableCell>
                     <TableCell>{student.education.degree}</TableCell>
-                    <TableCell>{student.education.year}</TableCell>
+                    <TableCell className="hidden md:table-cell">{student.education.year}</TableCell>
                   </TableRow>
                 </StudentProgressDialog>
               ))}

@@ -86,7 +86,7 @@ export default function AlumniNetworkingPage() {
             <CardHeader>
               <CardTitle>People Directory</CardTitle>
               <CardDescription>Find and connect with students, faculty, and fellow alumni.</CardDescription>
-              <div className="flex flex-col gap-4 md:flex-row pt-4">
+              <div className="flex flex-col gap-4 pt-4 md:flex-row">
                 <div className="relative flex-1">
                   <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -96,9 +96,9 @@ export default function AlumniNetworkingPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
+                <div className="flex flex-1 flex-wrap gap-4 sm:flex-nowrap md:flex-initial">
                   <Select value={roleFilter} onValueChange={setRoleFilter}>
-                    <SelectTrigger className="w-full md:w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue placeholder="Filter by role" />
                     </SelectTrigger>
                     <SelectContent>
@@ -110,7 +110,7 @@ export default function AlumniNetworkingPage() {
                     </SelectContent>
                   </Select>
                   <Select value={industryFilter} onValueChange={setIndustryFilter}>
-                    <SelectTrigger className="w-full md:w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue placeholder="Filter by industry" />
                     </SelectTrigger>
                     <SelectContent>

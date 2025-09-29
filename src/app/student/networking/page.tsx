@@ -108,12 +108,13 @@ export default function NetworkingPage() {
                 <CardHeader>
                   <CardTitle>Platform-Hosted Events</CardTitle>
                   <CardDescription>Participate in challenges and workshops hosted by NexusConnect to earn exclusive rewards.</CardDescription>
-                   <div className="flex items-center gap-2 pt-2">
+                   <div className="flex flex-wrap items-center gap-2 pt-2">
                     {categories.map(cat => (
                       <Button 
                         key={cat} 
                         variant={platformCategory === cat ? 'default' : 'outline'}
                         onClick={() => setPlatformCategory(cat)}
+                        size="sm"
                       >
                         {cat}
                       </Button>
@@ -130,12 +131,13 @@ export default function NetworkingPage() {
                 <CardHeader>
                   <CardTitle>College-Hosted Events</CardTitle>
                   <CardDescription>Compete in official university events for prize money and recognition.</CardDescription>
-                  <div className="flex items-center gap-2 pt-2">
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
                     {categories.map(cat => (
                       <Button 
                         key={cat} 
                         variant={collegeCategory === cat ? 'default' : 'outline'}
                         onClick={() => setCollegeCategory(cat)}
+                        size="sm"
                       >
                         {cat}
                       </Button>
@@ -177,21 +179,21 @@ export default function NetworkingPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
+                <div className="flex flex-1 gap-4 md:flex-initial flex-wrap sm:flex-nowrap">
                   <Select value={communityFilter} onValueChange={setCommunityFilter}>
-                    <SelectTrigger className="w-full md:w-[180px]">
-                      <SelectValue placeholder="Filter by community" />
+                    <SelectTrigger className="w-full sm:w-[180px]">
+                      <SelectValue placeholder="Filter by role" />
                     </SelectTrigger>
                     <SelectContent>
                       {communitiesList.map((c) => (
                         <SelectItem key={c} value={c} className="capitalize">
-                          {c === 'all' ? 'All Communities' : c}
+                          {c === 'all' ? 'All Roles' : c}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <Select value={industryFilter} onValuechange={setIndustryFilter}>
-                    <SelectTrigger className="w-full md:w-[180px]">
+                  <Select value={industryFilter} onValueChange={setIndustryFilter}>
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue placeholder="Filter by industry" />
                     </SelectTrigger>
                     <SelectContent>

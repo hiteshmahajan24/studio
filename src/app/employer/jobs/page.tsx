@@ -16,7 +16,7 @@ const myJobPostings = openOpportunities.filter(job => job.company === 'Innovate 
 export default function ManageJobsPage() {
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Manage Job Postings</h1>
           <p className="text-muted-foreground">Post new opportunities and manage your existing listings.</p>
@@ -52,8 +52,8 @@ export default function ManageJobsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Role</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Location</TableHead>
+                <TableHead className="hidden sm:table-cell">Type</TableHead>
+                <TableHead className="hidden md:table-cell">Location</TableHead>
                 <TableHead>Applicants</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
@@ -64,10 +64,10 @@ export default function ManageJobsPage() {
               {myJobPostings.map((job) => (
                 <TableRow key={job.id}>
                   <TableCell className="font-medium">{job.title}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Badge variant="outline">{job.type}</Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{job.location}</TableCell>
+                  <TableCell className="text-muted-foreground hidden md:table-cell">{job.location}</TableCell>
                   <TableCell className="font-medium">{Math.floor(Math.random() * 50) + 5}</TableCell>
                   <TableCell>
                     <DropdownMenu>

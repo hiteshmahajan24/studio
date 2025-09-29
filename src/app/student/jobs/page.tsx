@@ -47,7 +47,7 @@ function JobApplicationTracker({ applications, onAddApplication, handleExport }:
 
   return (
     <Card>
-        <CardHeader className='flex-row items-center justify-between'>
+        <CardHeader className='flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between'>
             <div>
             <CardTitle>My Applications</CardTitle>
             <CardDescription>A complete list of your job applications.</CardDescription>
@@ -64,22 +64,22 @@ function JobApplicationTracker({ applications, onAddApplication, handleExport }:
             <TableHeader>
                 <TableRow>
                 <TableHead>Company</TableHead>
-                <TableHead>Role</TableHead>
+                <TableHead className="hidden sm:table-cell">Role</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Date Applied</TableHead>
+                <TableHead className="text-right hidden md:table-cell">Date Applied</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {applications.map((app) => (
                 <TableRow key={app.id} onClick={() => handleRowClick(app.jobId)} className={cn(app.jobId && "cursor-pointer")}>
                     <TableCell className="font-medium">{app.company}</TableCell>
-                    <TableCell>{app.title}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{app.title}</TableCell>
                     <TableCell>
                     <Badge variant={statusVariantMap[app.status]} className={cn('capitalize', statusColorMap[app.status])}>
                         {app.status}
                     </Badge>
                     </TableCell>
-                    <TableCell className="text-right text-muted-foreground">{app.dateApplied}</TableCell>
+                    <TableCell className="text-right text-muted-foreground hidden md:table-cell">{app.dateApplied}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>
@@ -121,9 +121,9 @@ function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: 
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
+                        <div className="flex flex-1 flex-wrap gap-4 sm:flex-nowrap md:flex-initial">
                             <Select value={typeFilter} onValueChange={setTypeFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectTrigger className="w-full sm:w-[180px]">
                                     <SelectValue placeholder="Filter by type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -133,7 +133,7 @@ function JobFinder({ onApplySuccess, appliedJobIds }: { onApplySuccess: (jobId: 
                                 </SelectContent>
                             </Select>
                             <Select value={locationFilter} onValueChange={setLocationFilter}>
-                                <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectTrigger className="w-full sm:w-[180px]">
                                     <SelectValue placeholder="Filter by location" />
                                 </SelectTrigger>
                                 <SelectContent>

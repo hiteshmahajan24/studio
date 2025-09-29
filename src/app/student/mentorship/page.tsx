@@ -127,9 +127,9 @@ function MentorshipPageContent() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex flex-1 gap-4 md:flex-initial flex-wrap">
+            <div className="flex flex-1 flex-wrap gap-4 sm:flex-nowrap md:flex-initial">
               <Select value={expertiseFilter} onValueChange={setExpertiseFilter}>
-                <SelectTrigger className="w-full md:w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Filter by expertise" />
                 </SelectTrigger>
                 <SelectContent>
@@ -141,7 +141,7 @@ function MentorshipPageContent() {
                 </SelectContent>
               </Select>
               <Select value={industryFilter} onValueChange={setIndustryFilter}>
-                <SelectTrigger className="w-full md:w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Filter by industry" />
                 </SelectTrigger>
                 <SelectContent>
@@ -153,7 +153,7 @@ function MentorshipPageContent() {
                 </SelectContent>
               </Select>
                <Select value={communityFilter} onValueChange={setCommunityFilter}>
-                <SelectTrigger className="w-full md:w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Filter by community" />
                 </SelectTrigger>
                 <SelectContent>

@@ -63,7 +63,7 @@ export function StudentProgressDialog({ children, student }: { children: React.R
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-4xl h-[90vh]">
         <DialogHeader className="flex-row items-center gap-4">
-          <Avatar className="h-20 w-20">
+          <Avatar className="h-16 w-16 sm:h-20 sm:w-20">
             {avatar && <AvatarImage src={avatar.imageUrl} alt={student.name} data-ai-hint={avatar.imageHint} />}
             <AvatarFallback>{student.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
@@ -79,7 +79,7 @@ export function StudentProgressDialog({ children, student }: { children: React.R
             </div>
           </div>
         </DialogHeader>
-        <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pr-4 h-full">
+        <div className="py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pr-2 sm:pr-4 h-full">
             
             <Card className="lg:col-span-3">
                 <CardHeader>
