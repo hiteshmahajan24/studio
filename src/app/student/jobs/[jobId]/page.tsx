@@ -10,6 +10,7 @@ import { openOpportunities, user } from '@/lib/mock-data';
 import { QuickApplyDialog } from '@/components/jobs/quick-apply-dialog';
 import * as React from 'react';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 export default function JobDetailsPage() {
   const params = useParams();
@@ -36,9 +37,11 @@ export default function JobDetailsPage() {
       <div className="text-center py-10">
         <h2 className="text-2xl font-bold">Job Not Found</h2>
         <p className="text-muted-foreground">The job listing you are looking for does not exist or has been removed.</p>
-        <Button onClick={() => router.push('/student/jobs')} className="mt-4">
-          <ArrowLeft className="mr-2" />
-          Back to Jobs
+        <Button asChild className="mt-4">
+          <Link href="/student/jobs?role=student">
+            <ArrowLeft className="mr-2" />
+            Back to Jobs
+          </Link>
         </Button>
       </div>
     );
@@ -49,8 +52,10 @@ export default function JobDetailsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
        <div>
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-          <ArrowLeft className="mr-2" /> Back
+        <Button variant="ghost" asChild className="mb-4">
+          <Link href="/student/jobs?role=student">
+            <ArrowLeft className="mr-2" /> Back to Jobs
+          </Link>
         </Button>
       </div>
       <Card>

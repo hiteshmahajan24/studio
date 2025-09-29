@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,18 +10,19 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Check, UserCheck, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const mentorshipRequests = allUsers.filter(u => u.community === 'Student').slice(3, 5);
+const initialMentorshipRequests = allUsers.filter(u => u.community === 'Student').slice(3, 5);
 const currentMentees = allUsers.filter(u => u.community === 'Student').slice(0, 3);
 
 export default function ProvideMentorshipPage() {
     const { toast } = useToast();
+    const [mentorshipRequests, setMentorshipRequests] = React.useState(initialMentorshipRequests);
 
-    const handleRequest = (name: string, accepted: boolean) => {
+    const handleRequest = (requestId: string, name: string, accepted: boolean) => {
         toast({
             title: `Request ${accepted ? 'Accepted' : 'Declined'}`,
             description: `You have ${accepted ? 'accepted' : 'declined'} the mentorship request from ${name}.`
         });
-        // In a real app, this would update state and remove the request from the list
+        setMentorshipRequests(prev => prev.filter(req => req.id !== requestId));
     }
 
   return (
@@ -55,10 +57,10 @@ export default function ProvideMentorshipPage() {
                                 </div>
                             </div>
                             <div className="flex gap-2">
-                                <Button size="icon" variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20 hover:text-green-500" onClick={() => handleRequest(request.name, true)}>
+                                <Button size="icon" variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20 hover:text-green-500" onClick={() => handleRequest(request.id, request.name, true)}>
                                     <Check className="h-4 w-4"/>
                                 </Button>
-                                <Button size="icon" variant="destructive" onClick={() => handleRequest(request.name, false)}>
+                                <Button size="icon" variant="destructive" onClick={() => handleRequest(request.id, request.name, false)}>
                                     <X className="h-4 w-4"/>
                                 </Button>
                             </div>
