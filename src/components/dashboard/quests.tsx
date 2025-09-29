@@ -64,9 +64,9 @@ export function Quests({ className }: { className?: string }) {
       <CardContent className="space-y-4 flex flex-col flex-1 justify-between">
         {isLoading ? (
           <div className="space-y-4">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-6 w-3/4 rounded-md" />
+            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-4 w-5/6 rounded-md" />
           </div>
         ) : error ? (
             <div className="flex flex-col items-center justify-center text-center text-destructive py-4">
@@ -85,7 +85,7 @@ export function Quests({ className }: { className?: string }) {
             <Badge variant="secondary" className="flex items-center gap-2 py-2 px-3">
                 <Coins className="w-5 h-5 text-amber-400" />
                 {isLoading ? (
-                    <Skeleton className="h-5 w-12" />
+                    <Skeleton className="h-6 w-16" />
                 ) : (
                     <span className="font-semibold text-base">{quest?.knowledgeCoinsReward} Coins</span>
                 )}

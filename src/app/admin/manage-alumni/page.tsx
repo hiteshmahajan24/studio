@@ -255,7 +255,7 @@ export default function AlumniDatabasePage() {
                         <div className="flex items-center gap-2">
                              <input type="file" ref={fileInputRef} onChange={handleFileImport} accept=".csv" className="hidden" />
                              <Button size="sm" variant="outline" onClick={handleImportClick} disabled={isImporting}>
-                                {isImporting ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Wand2 className="mr-2 h-3.5 w-3.5" />}
+                                {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
                                 AI Import
                             </Button>
                              <Button size="sm" variant="outline" onClick={handleExport}>

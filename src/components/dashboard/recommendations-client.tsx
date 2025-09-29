@@ -12,31 +12,29 @@ import { getPersonalizedRecommendations } from '@/ai/flows/personalized-recommen
 import type { PersonalizedRecommendationsOutput } from '@/ai/flows/personalized-recommendations.types';
 import { allMentors, openOpportunities, communities, user, mockArticles, allUsers } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 type Recommendation = PersonalizedRecommendationsOutput['recommendations'][0];
 
-const recommendationDetails: { [key: string]: { name: string, description: string, href: string } } = {
-  // Mentors
+const recommendationDetails: { [key: string]: { name: string, description: string, href: string, avatarId?: string } } = {
   ...allMentors.reduce((acc, mentor) => {
-    acc[mentor.id] = { name: mentor.name, description: mentor.title, href: `/mentorship?q=${encodeURIComponent(mentor.expertise[0])}` };
+    acc[mentor.id] = { name: mentor.name, description: mentor.title, href: `/student/mentorship?q=${encodeURIComponent(mentor.expertise[0])}`, avatarId: mentor.avatarId };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href: string } }),
-  // Jobs
+  }, {} as { [key: string]: any }),
   ...openOpportunities.reduce((acc, job) => {
-    acc[job.id] = { name: job.title, description: job.company, href: '/jobs' };
+    acc[job.id] = { name: job.title, description: job.company, href: `/student/jobs/${job.id}` };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href: string } }),
-  // Communities
+  }, {} as { [key: string]: any }),
   ...communities.reduce((acc, community) => {
-    acc[community.id] = { name: community.name, description: `${community.memberCount} members`, href: `/communities/${community.id}` };
+    acc[community.id] = { name: community.name, description: `${community.memberCount} members`, href: `/student/communities/${community.id}` };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href: string } }),
-  // Articles
+  }, {} as { [key: string]: any }),
   ...mockArticles.reduce((acc, article) => {
     const author = allUsers.find(u => u.id === article.authorId);
-    acc[article.id] = { name: article.title, description: `By ${author?.name || 'Unknown'}`, href: `/articles/${article.id}` };
+    acc[article.id] = { name: article.title, description: `By ${author?.name || 'Unknown'}`, href: `/student/articles/${article.id}`, avatarId: author?.avatarId };
     return acc;
-  }, {} as { [key: string]: { name: string, description: string, href: string } }),
+  }, {} as { [key: string]: any }),
 };
 
 
@@ -91,7 +89,15 @@ export function RecommendationsClient({ className }: { className?: string }) {
       <CardContent className="space-y-4 flex-1">
         {isLoading ? (
           <div className="space-y-4">
-            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+            {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex items-center gap-4 p-2.5">
+                    <Skeleton className="h-10 w-10 rounded-full" />
+                    <div className="space-y-2 flex-1">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-1/2" />
+                    </div>
+                </div>
+            ))}
           </div>
         ) : error ? (
             <div className="flex flex-col items-center justify-center text-center text-destructive py-4">
@@ -102,15 +108,24 @@ export function RecommendationsClient({ className }: { className?: string }) {
         ) : (
           recommendations.slice(0, 4).map((rec) => {
             const details = getDetails(rec.itemId);
+            const RecIcon = recommendationIcons[rec.type] || Info;
+            const avatarImg = PlaceHolderImages.find(img => img.id === details.avatarId);
             return (
                 <div key={rec.itemId} className="flex items-center justify-between gap-4 p-2.5 rounded-lg transition-colors hover:bg-muted/50">
-                    <Link href={details.href} className="flex items-center gap-4 flex-1 truncate">
-                        <div className="bg-muted p-2 rounded-full">
-                        {React.createElement(recommendationIcons[rec.type] || Info, { className: "w-5 h-5 text-muted-foreground" })}
-                        </div>
+                    <Link href={`${details.href}?role=student`} className="flex items-center gap-4 flex-1 truncate">
+                        {details.avatarId && avatarImg ? (
+                             <Avatar className='h-10 w-10'>
+                                <AvatarImage src={avatarImg.imageUrl} alt={details.name} data-ai-hint={avatarImg.imageHint} />
+                                <AvatarFallback>{details.name.slice(0,2)}</AvatarFallback>
+                            </Avatar>
+                        ) : (
+                            <div className="bg-muted p-2 rounded-full">
+                                <RecIcon className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                        )}
                         <div className="truncate">
-                        <p className="font-semibold text-sm truncate">{details.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{details.description}</p>
+                            <p className="font-semibold text-sm truncate">{details.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">{details.description}</p>
                         </div>
                     </Link>
                     <Popover>

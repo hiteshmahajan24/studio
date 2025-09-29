@@ -54,19 +54,26 @@ function LoadingSkeleton() {
         </div>
         <div className="flex flex-1 flex-col sm:pl-16">
           <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
-            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-8 w-48 rounded-md" />
             <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
-              <Skeleton className="h-8 w-[320px] rounded-lg" />
+              <Skeleton className="h-8 w-[200px] lg:w-[320px] rounded-lg" />
               <Skeleton className="h-9 w-9 rounded-full" />
             </div>
           </header>
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
-             <div className="space-y-8 animate-pulse">
-                <Skeleton className="h-[100px]" />
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    <Skeleton className="h-[200px]" />
-                    <Skeleton className="h-[200px]" />
-                    <Skeleton className="h-[200px]" />
+             <div className="space-y-8">
+                <div className="space-y-2">
+                    <Skeleton className="h-8 w-1/3" />
+                    <Skeleton className="h-4 w-2/3" />
+                </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-24 rounded-lg" />
+                </div>
+                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    <Skeleton className="md:col-span-2 h-[350px] rounded-lg" />
+                    <Skeleton className="h-[350px] rounded-lg" />
                 </div>
             </div>
           </main>

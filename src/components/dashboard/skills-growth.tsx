@@ -90,8 +90,8 @@ export function SkillsGrowth({ className }: { className?: string }) {
                   <div className="space-y-3">
                     {[...Array(3)].map((_, i) => (
                       <div key={i} className="p-3 bg-muted/50 rounded-lg space-y-2">
-                        <Skeleton className="h-4 w-1/3" />
-                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-4 w-1/3 rounded-md" />
+                        <Skeleton className="h-3 w-full rounded-md" />
                       </div>
                     ))}
                   </div>
