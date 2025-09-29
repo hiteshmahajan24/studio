@@ -39,7 +39,7 @@ export function EventCard({ event }: EventCardProps) {
     const isRegistered = registeredEventIds.includes(event.id);
 
     return (
-        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg group">
+        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg group hover:scale-[1.02] duration-300">
             <CardHeader className="p-0 relative h-40">
                 {eventImage && (
                     <Image 

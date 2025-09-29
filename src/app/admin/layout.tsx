@@ -24,7 +24,7 @@ function AdminLayoutContent({
         <SidebarNav userRole={displayRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
-          <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
+          <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8 animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
               {children}
           </main>
         </div>

@@ -19,7 +19,7 @@ export function UserCard({ user }: UserCardProps) {
   const avatar = PlaceHolderImages.find((img) => img.id === user.avatarId);
   return (
     <UserProfileDialog user={user}>
-        <Card className="flex flex-col hover:bg-muted/50 cursor-pointer transition-colors">
+        <Card className="flex flex-col hover:bg-muted/50 cursor-pointer transition-all hover:shadow-lg group hover:scale-[1.02] duration-300">
         <CardHeader className="flex-row items-center gap-4 pb-4">
             <Avatar className="h-16 w-16">
             {avatar && <AvatarImage src={avatar.imageUrl} alt={user.name} data-ai-hint={avatar.imageHint} />}

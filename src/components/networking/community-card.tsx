@@ -22,7 +22,7 @@ export function CommunityCard({ community }: CommunityCardProps) {
   const isJoined = joinedCommunityIds.includes(community.id);
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg group">
+    <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg group hover:scale-[1.02] duration-300">
        <CardHeader className="p-0 relative h-32">
          {communityImage && (
             <Image

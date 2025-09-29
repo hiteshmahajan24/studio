@@ -14,29 +14,29 @@ import { JoinedCommunities } from "@/components/dashboard/joined-communities";
 export default function DashboardPage() {
   return (
     <>
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 animate-in fade-in-0 duration-500">
         <Gamification className="lg:col-span-3" />
         <RecommendationsClient className="lg:col-span-2" />
       </div>
       
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-8 animate-in fade-in-0 duration-500 delay-150">
         <SkillsGrowth />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 animate-in fade-in-0 duration-500 delay-300">
         <WellnessNook className="h-[350px]" />
         <Quests className="h-[350px]" />
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-8 animate-in fade-in-0 duration-500 delay-500">
         <JoinedCommunities />
       </div>
 
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-8 animate-in fade-in-0 duration-500 delay-700">
         <JobTracking />
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:grid-cols-2 animate-in fade-in-0 duration-500 delay-1000">
         <div className="grid grid-cols-1 gap-8">
           <Mentorship />
           <Networking />
