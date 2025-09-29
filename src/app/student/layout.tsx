@@ -63,14 +63,6 @@ function StudentLayoutContent({
   );
 }
 
-export default function StudentLayout({ children }: { children: React.ReactNode; }) {
-  return (
-    <Suspense fallback={<LoadingSkeleton />}>
-      <StudentLayoutContent>{children}</StudentLayoutContent>
-    </Suspense>
-  )
-}
-
 function LoadingSkeleton() {
   return (
     <div className="flex min-h-screen w-full">
@@ -102,4 +94,13 @@ function LoadingSkeleton() {
       </div>
     </div>
   );
+}
+
+
+export default function StudentLayout({ children }: { children: React.ReactNode; }) {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <StudentLayoutContent>{children}</StudentLayoutContent>
+    </Suspense>
+  )
 }
