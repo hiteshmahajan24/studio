@@ -26,7 +26,15 @@ export function DashboardHeader() {
     router.push('/login');
   };
 
-  const userName = role ? `${role.charAt(0).toUpperCase() + role.slice(1)} User` : mockUser.name;
+  const getUserNameForRole = (role: UserRole | null) => {
+    if (!role || role === 'student') {
+      return mockUser.name;
+    }
+    return `${role.charAt(0).toUpperCase() + role.slice(1)} User`;
+  };
+
+  const userName = getUserNameForRole(role);
+  const avatarFallback = userName.split(' ').map(n => n[0]).join('');
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
@@ -46,7 +54,7 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
             <ClientButton variant="ghost" size="icon" className="rounded-full">
               <Avatar className="h-9 w-9">
-                <AvatarFallback>{userName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{avatarFallback}</AvatarFallback>
               </Avatar>
             </ClientButton>
           </DropdownMenuTrigger>
