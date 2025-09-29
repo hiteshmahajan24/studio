@@ -7,9 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { allUsers, type UserProfile } from "@/lib/mock-data";
-import { MoreHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { StudentProgressDialog } from '@/components/faculty/student-progress-dialog';
 
 const studentData = allUsers.filter(u => u.community === 'Student');
 
@@ -36,7 +34,7 @@ export default function ViewStudentsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Student Directory</h1>
-        <p className="text-muted-foreground">Search and manage student profiles.</p>
+        <p className="text-muted-foreground">Select a student to view their progress dashboard.</p>
       </div>
       <Card>
         <CardHeader>
@@ -69,37 +67,27 @@ export default function ViewStudentsPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Major</TableHead>
                 <TableHead>Graduation Year</TableHead>
-                <TableHead>
-                    <span className="sr-only">Actions</span>
-                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {students.map(student => (
-                <TableRow key={student.id}>
-                  <TableCell className="font-medium">{student.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{student.email}</TableCell>
-                  <TableCell>{student.education.degree}</TableCell>
-                  <TableCell>{student.education.year}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>View Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Send Message</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                <StudentProgressDialog key={student.id} student={student}>
+                  <TableRow className="cursor-pointer">
+                    <TableCell className="font-medium">{student.name}</TableCell>
+                    <TableCell className="text-muted-foreground">{student.email}</TableCell>
+                    <TableCell>{student.education.degree}</TableCell>
+                    <TableCell>{student.education.year}</TableCell>
+                  </TableRow>
+                </StudentProgressDialog>
               ))}
             </TableBody>
           </Table>
+           {students.length === 0 && (
+              <div className="text-center py-16">
+                  <h3 className="text-lg font-semibold">No Students Found</h3>
+                  <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
+              </div>
+          )}
         </CardContent>
       </Card>
     </div>
