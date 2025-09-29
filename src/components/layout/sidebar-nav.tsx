@@ -17,6 +17,7 @@ import {
   UserPlus,
   BarChart3,
   Calendar,
+  Trophy,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -58,6 +59,9 @@ const navItemsByRole = {
   ],
   employer: [
     { href: '/employer/dashboard', icon: LayoutDashboard, label: 'Employer Dashboard' },
+    { href: '/employer/candidates', icon: Users, label: 'Browse Candidates' },
+    { href: '/employer/jobs', icon: Briefcase, label: 'Manage Jobs' },
+    { href: '/employer/leaderboard', icon: Trophy, label: 'Leaderboard' },
   ],
   superadmin: [], // Superadmin has a separate view
 };
