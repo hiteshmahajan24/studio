@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { PersonalizedRecommendationsInputSchema, PersonalizedRecommendationsOutputSchema, type PersonalizedRecommendationsInput, type PersonalizedRecommendationsOutput } from './personalized-recommendations.types';
 
 
@@ -21,6 +22,7 @@ const prompt = ai.definePrompt({
   name: 'personalizedRecommendationsPrompt',
   input: {schema: PersonalizedRecommendationsInputSchema},
   output: {schema: PersonalizedRecommendationsOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are an AI-powered recommendation engine for the NexusConnect platform. Your goal is to provide highly relevant recommendations to help students with their career development.
 
   Based on the student's profile and recent platform activity, generate a list of 3-4 recommendations for mentors, jobs, articles, or communities.

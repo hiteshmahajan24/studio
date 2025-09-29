@@ -9,6 +9,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { QuickApplyInputSchema, QuickApplyOutputSchema, type QuickApplyInput, type QuickApplyOutput } from './quick-apply.types';
 
 
@@ -20,6 +21,7 @@ const quickApplyPrompt = ai.definePrompt({
   name: 'quickApplyPrompt',
   input: { schema: QuickApplyInputSchema },
   output: { schema: QuickApplyOutputSchema },
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `
     You are an expert career coach acting on behalf of a student named {{{studentProfile.name}}}.
     Your task is to generate a compelling, formal cover letter for a job application and suggest the most relevant documents to attach.

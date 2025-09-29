@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { SkillPathInputSchema, SkillPathOutputSchema, type SkillPathInput, type SkillPathOutput } from './skill-path.types';
 
 
@@ -19,6 +20,7 @@ const skillPathPrompt = ai.definePrompt({
   name: 'skillPathPrompt',
   input: {schema: SkillPathInputSchema},
   output: {schema: SkillPathOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are an expert career coach and technical skills advisor.
   Your goal is to recommend a "future stack" of 3-4 technologies for a user to learn based on their current skills and learning goals.
 

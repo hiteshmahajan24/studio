@@ -8,6 +8,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { AIQuestInputSchema, AIQuestOutputSchema, type AIQuestInput, type AIQuestOutput } from './ai-quest-generator.types';
 
 
@@ -19,6 +20,7 @@ const aiQuestGeneratorPrompt = ai.definePrompt({
   name: 'aiQuestGeneratorPrompt',
   input: {schema: AIQuestInputSchema},
   output: {schema: AIQuestOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are an AI Quest Generator for the NexusConnect platform. Your goal is to create engaging and rewarding quests for students to encourage them to explore and use different aspects of the platform.
 
   Generate a quest that is achievable, clearly defined, and provides a valuable learning experience. The quest should have a catchy title, a clear description, and a Knowledge Coins reward between 10 and 100.
