@@ -10,6 +10,7 @@ import { allUsers } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
+import * as React from 'react';
 
 const alumniStats = [
   { name: 'Mentees Guided', value: '5', icon: Handshake },
@@ -27,17 +28,20 @@ const engagementData = [
     { name: 'Jun', total: 9 },
 ];
 
-const mentorshipRequests = allUsers.filter(u => u.community === 'Student').slice(0, 2);
+const initialMentorshipRequests = allUsers.filter(u => u.community === 'Student').slice(0, 2);
 const spotlightAlumni = allUsers.filter(u => u.community === 'Alumni').slice(1, 4);
 
 export default function AlumniPage() {
   const { toast } = useToast();
+  const [mentorshipRequests, setMentorshipRequests] = React.useState(initialMentorshipRequests);
 
-  const handleRequest = (name: string, accepted: boolean) => {
+  const handleRequest = (requestId: string, name: string, accepted: boolean) => {
       toast({
           title: `Request ${accepted ? 'Accepted' : 'Declined'}`,
           description: `You have ${accepted ? 'accepted' : 'declined'} the mentorship request from ${name}.`
       });
+      // Visually remove the request from the list
+      setMentorshipRequests(prev => prev.filter(req => req.id !== requestId));
   }
 
   return (
@@ -94,7 +98,7 @@ export default function AlumniPage() {
                 <PlusCircle className="mr-2" /> Post a Job Opening
             </Button>
             <Button variant="outline" className="w-full" asChild>
-                <Link href="/student/articles">
+                <Link href="/alumni/articles">
                     <Newspaper className="mr-2" /> Write an Article
                 </Link>
             </Button>
@@ -112,7 +116,7 @@ export default function AlumniPage() {
                 <CardDescription>Review and respond to students seeking guidance.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                {mentorshipRequests.map(request => (
+                {mentorshipRequests.length > 0 ? mentorshipRequests.map(request => (
                     <div key={request.id} className="p-3 bg-muted/50 rounded-lg flex items-center justify-between">
                         <div className="flex items-center gap-3">
                              <Avatar className="h-10 w-10">
@@ -125,15 +129,19 @@ export default function AlumniPage() {
                             </div>
                         </div>
                         <div className="flex gap-2">
-                            <Button size="icon" variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20 hover:text-green-500" onClick={() => handleRequest(request.name, true)}>
+                            <Button size="icon" variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20 hover:text-green-500" onClick={() => handleRequest(request.id, request.name, true)}>
                                 <Check className="h-4 w-4"/>
                             </Button>
-                            <Button size="icon" variant="destructive" onClick={() => handleRequest(request.name, false)}>
+                            <Button size="icon" variant="destructive" onClick={() => handleRequest(request.id, request.name, false)}>
                                 <X className="h-4 w-4"/>
                             </Button>
                         </div>
                     </div>
-                ))}
+                )) : (
+                  <div className="text-center py-8">
+                    <p className="text-sm text-muted-foreground">No pending requests.</p>
+                  </div>
+                )}
             </CardContent>
         </Card>
          <Card>
@@ -155,7 +163,7 @@ export default function AlumniPage() {
                             </div>
                         </div>
                         <Button variant="ghost" size="sm" asChild>
-                            <Link href="/student/networking?tab=people">
+                            <Link href="/alumni/networking">
                                 Connect
                             </Link>
                         </Button>
