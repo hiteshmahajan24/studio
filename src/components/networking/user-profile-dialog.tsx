@@ -10,15 +10,15 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import type { UserProfile } from '@/lib/mock-data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '../ui/badge';
-import { Briefcase, GraduationCap, Handshake, Mail } from 'lucide-react';
+import { Briefcase, GraduationCap, Handshake, Mail, Loader2, Check } from 'lucide-react';
 import { Separator } from '../ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 type UserProfileDialogProps = {
   children: React.ReactNode;
@@ -27,7 +27,32 @@ type UserProfileDialogProps = {
 
 export function UserProfileDialog({ children, user }: UserProfileDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isConnecting, setIsConnecting] = React.useState(false);
+  const [isConnected, setIsConnected] = React.useState(false);
+  const { toast } = useToast();
   const avatar = PlaceHolderImages.find((img) => img.id === user.avatarId);
+
+  const handleConnect = async () => {
+    setIsConnecting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsConnecting(false);
+    setIsConnected(true);
+    toast({
+      title: 'Connection Request Sent!',
+      description: `Your connection request to ${user.name} has been sent.`,
+    });
+  };
+
+  // Reset state when dialog is closed
+  React.useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        setIsConnecting(false);
+        setIsConnected(false);
+      }, 300); // Delay to allow animation
+    }
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -87,8 +112,10 @@ export function UserProfileDialog({ children, user }: UserProfileDialogProps) {
           <Button type="button" variant="outline">
             <Mail className="mr-2" /> Message
           </Button>
-          <Button type="submit">
-            <Handshake className="mr-2" /> Connect
+          <Button type="submit" onClick={handleConnect} disabled={isConnecting || isConnected}>
+            {isConnecting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isConnected && <Check className="mr-2 h-4 w-4" />}
+            {isConnecting ? 'Connecting...' : isConnected ? 'Connected' : <><Handshake className="mr-2" /> Connect</>}
           </Button>
         </DialogFooter>
       </DialogContent>
