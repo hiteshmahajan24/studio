@@ -19,8 +19,21 @@ export default function NotificationsPage() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
-        const formData = new FormData(event.currentTarget);
+        const form = event.currentTarget;
+        const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
+        
+        // Basic validation
+        if (!data.audience || !data.title || !data.message) {
+            toast({
+                variant: "destructive",
+                title: "Incomplete Form",
+                description: "Please fill out all fields before sending.",
+            });
+            setIsLoading(false);
+            return;
+        }
+        
         console.log("Sending notification:", data);
 
         // Simulate API call
@@ -32,7 +45,7 @@ export default function NotificationsPage() {
         });
 
         setIsLoading(false);
-        event.currentTarget.reset();
+        form.reset();
     };
 
   return (

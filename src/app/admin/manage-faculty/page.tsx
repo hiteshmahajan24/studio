@@ -36,29 +36,78 @@ import { Input } from '@/components/ui/input';
 import { allUsers, type UserProfile } from '@/lib/mock-data';
 import { AddFacultyDialog } from '@/components/admin/add-faculty-dialog';
 import { ClientOnly } from '@/components/layout/client-only';
+import { useToast } from '@/hooks/use-toast';
 
 const facultyData = allUsers.filter(u => u.community === 'Faculty');
 
 export default function FacultyDatabasePage() {
-  const [faculty, setFaculty] = React.useState<UserProfile[]>(facultyData);
+  const [allFaculty, setAllFaculty] = React.useState<UserProfile[]>(facultyData);
+  const [displayedFaculty, setDisplayedFaculty] = React.useState<UserProfile[]>(facultyData);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [departmentFilter, setDepartmentFilter] = React.useState('all');
+  const { toast } = useToast();
 
-  // Let's assume departments can be derived from experience or a dedicated field
-  const departments = React.useMemo(() => ['all', 'Computer Science', 'Electrical Engineering', 'Humanities'], []);
+  const departments = React.useMemo(() => {
+      const depts = new Set(allFaculty.map(f => f.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities'));
+      return ['all', ...Array.from(depts)];
+  }, [allFaculty]);
 
 
   React.useEffect(() => {
-    const filtered = facultyData.filter(member => {
+    const filtered = allFaculty.filter(member => {
         const searchTermLower = searchTerm.toLowerCase();
-        const department = member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities'; // Mock logic
+        // This is mock logic, in a real app this would be a direct field
+        const department = member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities';
+        
         return (
-            (member.name.toLowerCase().includes(searchTermLower) || member.title.toLowerCase().includes(searchTermLower)) &&
+            (member.name.toLowerCase().includes(searchTermLower) || 
+             member.email.toLowerCase().includes(searchTermLower) ||
+             member.title.toLowerCase().includes(searchTermLower)) &&
             (departmentFilter === 'all' || department === departmentFilter)
         );
     });
-    setFaculty(filtered);
-  }, [searchTerm, departmentFilter]);
+    setDisplayedFaculty(filtered);
+  }, [searchTerm, departmentFilter, allFaculty]);
+
+  const handleAddFaculty = (newFacultyData: any) => {
+    // Note: The AddFacultyDialog is for "inviting". In a real app, this would trigger an email
+    // and the user would appear after sign-up. Here, we just show a toast.
+    toast({
+        title: "Faculty Invited!",
+        description: `An invitation has been sent to ${newFacultyData.name} at ${newFacultyData.email}.`,
+    });
+  }
+
+  const handleExport = () => {
+    const headers = ['Name', 'Email', 'Title', 'Department'];
+    const csvRows = [
+      headers.join(','),
+      ...displayedFaculty.map((member) =>
+        [
+          `"${member.name.replace(/"/g, '""')}"`,
+          member.email,
+          `"${member.title.replace(/"/g, '""')}"`,
+          `"${(member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities').replace(/"/g, '""')}"`,
+        ].join(',')
+      ),
+    ];
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', 'faculty_database.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast({
+        title: "Export Successful",
+        description: "The current view of the faculty database has been exported."
+    });
+  };
 
 
   return (
@@ -73,7 +122,7 @@ export default function FacultyDatabasePage() {
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 flex-1">
                             <Input 
-                                placeholder="Search by name, title..." 
+                                placeholder="Search by name, email, title..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="max-w-sm"
@@ -90,11 +139,11 @@ export default function FacultyDatabasePage() {
                             </Select>
                         </div>
                         <div className="flex items-center gap-2">
-                             <Button size="sm" variant="outline">
+                             <Button size="sm" variant="outline" onClick={handleExport}>
                                 <File className="mr-2 h-3.5 w-3.5" />
                                 Export
                             </Button>
-                            <AddFacultyDialog>
+                            <AddFacultyDialog onAddFaculty={handleAddFaculty}>
                                 <Button size="sm">
                                     <PlusCircle className="mr-2 h-3.5 w-3.5" />
                                     Add Faculty
@@ -108,6 +157,7 @@ export default function FacultyDatabasePage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
                                 <TableHead>Title</TableHead>
                                 <TableHead>Department</TableHead>
                                 <TableHead>
@@ -116,9 +166,10 @@ export default function FacultyDatabasePage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {faculty.map(member => (
+                            {displayedFaculty.map(member => (
                                 <TableRow key={member.id}>
                                     <TableCell className="font-medium">{member.name}</TableCell>
+                                    <TableCell className="text-muted-foreground">{member.email}</TableCell>
                                     <TableCell>{member.title}</TableCell>
                                     {/* This is mock data, in a real app this would be a direct field */}
                                     <TableCell>{member.experience[0]?.company === 'Innovate Inc.' ? 'Computer Science' : 'Humanities'}</TableCell>
@@ -143,7 +194,7 @@ export default function FacultyDatabasePage() {
                             ))}
                         </TableBody>
                     </Table>
-                     {faculty.length === 0 && (
+                     {displayedFaculty.length === 0 && (
                         <div className="text-center py-16">
                             <h3 className="text-lg font-semibold">No Faculty Found</h3>
                             <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>

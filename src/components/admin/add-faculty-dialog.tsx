@@ -13,7 +13,6 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
 import { Input } from '../ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,12 +30,12 @@ const formSchema = z.object({
 
 type AddFacultyDialogProps = {
   children: React.ReactNode;
+  onAddFaculty: (values: z.infer<typeof formSchema>) => void;
 };
 
-export function AddFacultyDialog({ children }: AddFacultyDialogProps) {
+export function AddFacultyDialog({ children, onAddFaculty }: AddFacultyDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,16 +48,9 @@ export function AddFacultyDialog({ children }: AddFacultyDialogProps) {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsLoading(true);
-    console.log("Onboarding new faculty:", values);
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    toast({
-        title: "Faculty Invited!",
-        description: `An invitation has been sent to ${values.name} at ${values.email}.`,
-    });
-
+    setIsLoading(true);    
+    await new Promise(resolve => setTimeout(resolve, 500));
+    onAddFaculty(values);
     setIsLoading(false);
     setIsOpen(false);
     form.reset();
@@ -115,10 +107,10 @@ export function AddFacultyDialog({ children }: AddFacultyDialogProps) {
                             </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectItem value="computer-science">Computer Science</SelectItem>
-                                <SelectItem value="electrical-engineering">Electrical Engineering</SelectItem>
-                                <SelectItem value="mechanical-engineering">Mechanical Engineering</SelectItem>
-                                <SelectItem value="humanities">Humanities</SelectItem>
+                                <SelectItem value="Computer Science">Computer Science</SelectItem>
+                                <SelectItem value="Electrical Engineering">Electrical Engineering</SelectItem>
+                                <SelectItem value="Mechanical Engineering">Mechanical Engineering</SelectItem>
+                                <SelectItem value="Humanities">Humanities</SelectItem>
                             </SelectContent>
                         </Select>
                         <FormMessage />

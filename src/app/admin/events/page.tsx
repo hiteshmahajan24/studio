@@ -17,6 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { allEvents, CollegeEvent, PlatformEvent } from '@/lib/events-data';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function ManageEventsPage() {
   return (
@@ -28,10 +29,26 @@ export default function ManageEventsPage() {
       <Card>
         <CardHeader>
             <div className='flex justify-end'>
-                <Button>
-                    <PlusCircle className='mr-2'/>
-                    Create New Event
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button>
+                      <PlusCircle className='mr-2'/>
+                      Create New Event
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        The form to create a new event has not been implemented yet. This is a placeholder action.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Understood</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
             </div>
         </CardHeader>
         <CardContent>
