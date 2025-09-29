@@ -38,7 +38,7 @@ const navItemsByRole = {
   ],
   admin: [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard' },
-    { href: '/admin/manage-alumni', icon: Database, label: 'Manage Alumni' },
+    { href: '/admin/manage-alumni', icon: Database, label: 'Alumni Database' },
     { href: '/admin/manage-faculty', icon: UserPlus, label: 'Manage Faculty' },
     { href: '/admin/notifications', icon: Bell, label: 'Send Notifications' },
     { href: '/admin/events', icon: Briefcase, label: 'Manage Events' },
@@ -84,7 +84,7 @@ export function SidebarNav({ userRole }: { userRole: UserRole }) {
   const pathname = usePathname();
   const navItems = navItemsByRole[userRole] || [];
   
-  const logoHref = navItems[0]?.href || '/';
+  const logoHref = `/${userRole}/dashboard`;
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col border-r bg-card sm:flex">
@@ -102,7 +102,7 @@ export function SidebarNav({ userRole }: { userRole: UserRole }) {
             <Tooltip key={item.label}>
               <TooltipTrigger asChild>
                 <Link
-                  href={item.href}
+                  href={`${item.href}?role=${userRole}`}
                   className={cn(
                     "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8",
                     pathname.startsWith(item.href) && "bg-accent text-accent-foreground"
