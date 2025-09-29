@@ -115,48 +115,96 @@ export default function AlumniDatabasePage() {
     setIsImporting(true);
     const reader = new FileReader();
     reader.onload = async (e) => {
+        const text = e.target?.result as string;
         try {
-            const text = e.target?.result as string;
             const { alumni: parsedAlumni } = await mapCsvToAlumni({ csvData: text });
 
-            if (parsedAlumni && parsedAlumni.length > 0) {
-              const newAlumni: UserProfile[] = parsedAlumni.map((record, index) => ({
-                    id: `import-${Date.now()}-${index}`,
-                    name: record.name,
-                    email: record.email,
-                    phone: record.phone,
-                    address: record.address,
-                    education: {
-                        degree: record.major,
-                        university: 'Imported',
-                        year: String(record.graduationYear)
-                    },
-                    currentCompany: record.currentCompany,
-                    title: record.role || 'Alumni',
-                    community: 'Alumni',
-                    avatarId: `mentor-${(Math.floor(Math.random() * 6) + 1)}`,
-                    expertise: [],
-                    industry: 'N/A',
-                    bio: 'Imported via AI-parsed CSV.',
-                    leaderboardRank: 999,
-                    experience: record.currentCompany ? [{ role: record.role || 'Alumni', company: record.currentCompany, period: 'Present' }] : [],
-                }));
-
-              setAllAlumni(prev => [...newAlumni, ...prev]);
-              toast({
-                  title: "AI Import Successful",
-                  description: `${newAlumni.length} alumni have been intelligently parsed and added.`
-              });
-            } else {
-              throw new Error("AI could not parse valid data from the CSV.")
+            if (!parsedAlumni || parsedAlumni.length === 0) {
+              throw new Error("AI could not parse any records from the CSV.");
             }
-        } catch (error) {
-            console.error(error);
+
+            const newAlumni: UserProfile[] = parsedAlumni.map((record, index) => ({
+                id: `import-ai-${Date.now()}-${index}`,
+                name: record.name,
+                email: record.email,
+                phone: record.phone,
+                address: record.address,
+                education: {
+                    degree: record.major,
+                    university: 'Imported',
+                    year: String(record.graduationYear)
+                },
+                currentCompany: record.currentCompany,
+                title: record.role || 'Alumni',
+                community: 'Alumni',
+                avatarId: `mentor-${(Math.floor(Math.random() * 6) + 1)}`,
+                expertise: [],
+                industry: 'N/A',
+                bio: 'Imported via AI-parsed CSV.',
+                leaderboardRank: 999,
+                experience: record.currentCompany ? [{ role: record.role || 'Alumni', company: record.currentCompany, period: 'Present' }] : [],
+            }));
+
+            setAllAlumni(prev => [...newAlumni, ...prev]);
             toast({
-                variant: 'destructive',
-                title: "Import Failed",
-                description: error instanceof Error ? error.message : "Could not parse the file. Please check format and try again."
+                title: "AI Import Successful",
+                description: `${newAlumni.length} alumni have been intelligently parsed and added.`
             });
+
+        } catch (aiError) {
+            console.warn("AI Import failed, attempting fallback standard import:", aiError);
+            try {
+                // Fallback Logic: Simple CSV parsing
+                const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+                if (lines.length < 2) throw new Error("CSV has no data rows for fallback.");
+
+                const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+                const nameIndex = headers.indexOf('name');
+                const emailIndex = headers.indexOf('email');
+                const yearIndex = headers.indexOf('graduation year');
+                const majorIndex = headers.indexOf('major');
+                
+                if (nameIndex === -1 || emailIndex === -1) {
+                    throw new Error("Fallback failed: CSV must contain 'Name' and 'Email' columns.");
+                }
+
+                const newAlumni: UserProfile[] = lines.slice(1).map((line, index) => {
+                    const values = line.split(',');
+                    return {
+                        id: `import-fallback-${Date.now()}-${index}`,
+                        name: values[nameIndex] || 'Unknown',
+                        email: values[emailIndex] || 'Unknown',
+                        education: {
+                            degree: majorIndex > -1 ? values[majorIndex] : 'N/A',
+                            university: 'Imported',
+                            year: yearIndex > -1 ? values[yearIndex] : 'N/A',
+                        },
+                        community: 'Alumni',
+                        title: 'Alumni',
+                        avatarId: `mentor-${(Math.floor(Math.random() * 6) + 1)}`,
+                        expertise: [],
+                        industry: 'N/A',
+                        bio: 'Imported via fallback CSV method.',
+                        leaderboardRank: 999,
+                        experience: [],
+                    };
+                });
+                
+                setAllAlumni(prev => [...newAlumni, ...prev]);
+                toast({
+                  title: "Fallback Import Successful",
+                  description: `AI parsing failed, but ${newAlumni.length} records were added using standard import.`
+                });
+
+            } catch (fallbackError) {
+                console.error("AI and Fallback Imports both failed:", fallbackError);
+                const errorMessage = fallbackError instanceof Error ? fallbackError.message : "Could not parse the file. Please check format and try again.";
+                toast({
+                    variant: 'destructive',
+                    title: "Import Failed",
+                    description: errorMessage,
+                });
+            }
         } finally {
             setIsImporting(false);
             if(fileInputRef.current) fileInputRef.current.value = "";
@@ -278,5 +326,7 @@ export default function AlumniDatabasePage() {
     </div>
   );
 }
+
+    
 
     
