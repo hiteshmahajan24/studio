@@ -58,8 +58,6 @@ const navItemsByRole = {
   ],
   employer: [
     { href: '/employer/dashboard', icon: LayoutDashboard, label: 'Employer Dashboard' },
-    { href: '/employer/candidates', icon: Users, label: 'Find Candidates' },
-    { href: '/employer/leaderboard', icon: BarChart3, label: 'Leaderboard' },
   ],
   superadmin: [], // Superadmin has a separate view
 };
