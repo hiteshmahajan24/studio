@@ -3,11 +3,17 @@
 
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { allUsers } from '@/lib/mock-data';
+import { allEvents, CollegeEvent, PlatformEvent } from '@/lib/events-data';
+import { EventCard } from '@/components/networking/event-card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CommunityCard } from '@/components/networking/community-card';
+import { communities, allUsers } from '@/lib/mock-data';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserCard } from '@/components/networking/user-card';
+
+const platformEvents = allEvents.filter(e => e.hostType === 'platform');
 
 export default function AlumniNetworkingPage() {
     const [searchTerm, setSearchTerm] = React.useState('');
@@ -36,12 +42,50 @@ export default function AlumniNetworkingPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Alumni Network</h1>
-        <p className="text-muted-foreground">Connect with students, faculty, and fellow alumni.</p>
+        <p className="text-muted-foreground">Engage with events, communities, and people across the platform.</p>
       </div>
-       <Card>
+      <Tabs defaultValue="people" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="events">Events</TabsTrigger>
+          <TabsTrigger value="communities">Communities</TabsTrigger>
+          <TabsTrigger value="people">People</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="events" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Collaborative Events</CardTitle>
+              <CardDescription>Participate in challenges and workshops to share your expertise and connect with innovators.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {platformEvents.map(event => (
+                  <EventCard key={event.id} event={event} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="communities" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Explore Communities</CardTitle>
+                    <CardDescription>Join groups of like-minded peers and professionals to learn, share, and grow together.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {communities.map((community) => (
+                        <CommunityCard key={community.id} community={community} />
+                    ))}
+                </CardContent>
+            </Card>
+        </TabsContent>
+
+        <TabsContent value="people" className="mt-6">
+          <Card>
             <CardHeader>
               <CardTitle>People Directory</CardTitle>
-              <CardDescription>Find and connect with others in the NexusConnect community.</CardDescription>
+              <CardDescription>Find and connect with students, faculty, and fellow alumni.</CardDescription>
               <div className="flex flex-col gap-4 md:flex-row pt-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground" />
@@ -97,6 +141,8 @@ export default function AlumniNetworkingPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

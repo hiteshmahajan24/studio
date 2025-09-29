@@ -16,6 +16,7 @@ import {
   Database,
   UserPlus,
   BarChart3,
+  Calendar,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -41,7 +42,7 @@ const navItemsByRole = {
     { href: '/admin/manage-alumni', icon: Database, label: 'Alumni Database' },
     { href: '/admin/manage-faculty', icon: UserPlus, label: 'Manage Faculty' },
     { href: '/admin/notifications', icon: Bell, label: 'Send Notifications' },
-    { href: '/admin/events', icon: Briefcase, label: 'Manage Events' },
+    { href: '/admin/events', icon: Calendar, label: 'Manage Events' },
   ],
   faculty: [
     { href: '/faculty/dashboard', icon: LayoutDashboard, label: 'Faculty Dashboard' },
