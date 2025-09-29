@@ -8,6 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { MapCsvToAlumniInputSchema, MapCsvToAlumniOutputSchema, type MapCsvToAlumniInput, type MapCsvToAlumniOutput, AlumniRecordSchema } from './map-csv-to-alumni.types';
 
 export async function mapCsvToAlumni(input: MapCsvToAlumniInput): Promise<MapCsvToAlumniOutput> {
@@ -18,6 +19,7 @@ const mapCsvPrompt = ai.definePrompt({
   name: 'mapCsvToAlumniPrompt',
   input: { schema: MapCsvToAlumniInputSchema },
   output: { schema: MapCsvToAlumniOutputSchema },
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `
     You are an expert data mapping tool. Your task is to parse the provided CSV data and map it to a structured JSON format based on the provided Alumni schema.
 
