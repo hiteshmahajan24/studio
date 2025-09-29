@@ -23,7 +23,9 @@ function StudentLayoutContent({
   const userRole = user ? getUserRole(user.uid) : null;
   
   useEffect(() => {
-    if (isUserLoading) return;
+    if (isUserLoading) {
+      return; // Do nothing while loading
+    }
 
     if (!user) {
       router.push('/login');
@@ -39,11 +41,16 @@ function StudentLayoutContent({
 
   }, [isUserLoading, user, router, userRole, viewAsRole]);
 
-  if (isUserLoading || !userRole) {
+  // While loading, or if the role isn't determined, show a skeleton.
+  // This prevents rendering the page before the auth check completes.
+  if (isUserLoading || !user) {
     return <LoadingSkeleton />;
   }
 
   const sidebarRole = (userRole === 'superadmin' && viewAsRole === 'student') ? 'student' : userRole;
+
+  // If the user is authenticated but not the correct role, the useEffect will handle the redirect.
+  // We render a loading skeleton to avoid a flash of incorrect content.
   if (sidebarRole !== 'student') {
      return <LoadingSkeleton />;
   }

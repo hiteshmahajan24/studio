@@ -23,7 +23,9 @@ function EmployerLayoutContent({
   const userRole = user ? getUserRole(user.uid) : null;
   
   useEffect(() => {
-    if (isUserLoading) return;
+    if (isUserLoading) {
+      return; // Do nothing while loading
+    }
 
     if (!user) {
       router.push('/login');
@@ -39,7 +41,7 @@ function EmployerLayoutContent({
 
   }, [isUserLoading, user, router, userRole, viewAsRole]);
 
-  if (isUserLoading || !userRole) {
+  if (isUserLoading || !user) {
     return <LoadingSkeleton />;
   }
 
