@@ -13,6 +13,45 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 const myJobPostings = openOpportunities.filter(job => job.company === 'Innovate Inc.' || job.company === 'Data Driven Co.');
 
+function JobRow({ job }: { job: typeof myJobPostings[0] }) {
+  const [applicantCount, setApplicantCount] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    // Generate the random number only on the client, after the initial render.
+    setApplicantCount(Math.floor(Math.random() * 50) + 5);
+  }, []);
+
+  return (
+    <TableRow key={job.id}>
+      <TableCell className="font-medium">{job.title}</TableCell>
+      <TableCell className="hidden sm:table-cell">
+        <Badge variant="outline">{job.type}</Badge>
+      </TableCell>
+      <TableCell className="text-muted-foreground hidden md:table-cell">{job.location}</TableCell>
+      <TableCell className="font-medium">
+        {applicantCount !== null ? applicantCount : '...'}
+      </TableCell>
+      <TableCell>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button aria-haspopup="true" size="icon" variant="ghost">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>Edit Posting</DropdownMenuItem>
+            <DropdownMenuItem>View Applicants</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">Close Posting</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+
 export default function ManageJobsPage() {
   return (
     <div className="space-y-8">
@@ -62,30 +101,7 @@ export default function ManageJobsPage() {
             </TableHeader>
             <TableBody>
               {myJobPostings.map((job) => (
-                <TableRow key={job.id}>
-                  <TableCell className="font-medium">{job.title}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
-                    <Badge variant="outline">{job.type}</Badge>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground hidden md:table-cell">{job.location}</TableCell>
-                  <TableCell className="font-medium">{Math.floor(Math.random() * 50) + 5}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit Posting</DropdownMenuItem>
-                        <DropdownMenuItem>View Applicants</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Close Posting</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                <JobRow key={job.id} job={job} />
               ))}
             </TableBody>
           </Table>
