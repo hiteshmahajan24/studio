@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, DonutChart, RadarChart, PolarGrid, PolarAngleAxis, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis } from 'recharts';
 import { allQuests, allEvents } from '@/lib/mock-data';
 
 const skillsData = [
@@ -121,14 +121,14 @@ export function StudentProgressDialog({ children, student }: { children: React.R
                 </CardHeader>
                 <CardContent>
                      <ResponsiveContainer width="100%" height={200}>
-                        <DonutChart>
+                        <PieChart>
                             <Pie data={applicationStatusData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} labelLine={false} label={({ name, value }) => `${name}: ${value}`}>
                                 {applicationStatusData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
                             <Tooltip contentStyle={{ backgroundColor: "hsl(var(--background))", border: "1px solid hsl(var(--border))" }}/>
-                        </DonutChart>
+                        </PieChart>
                     </ResponsiveContainer>
                 </CardContent>
             </Card>
