@@ -13,23 +13,32 @@ import { user } from '@/lib/mock-data';
 import { Skeleton } from '../ui/skeleton';
 import { useUserState } from '@/context/user-state-context';
 
+const mockQuests: AIQuestOutput[] = [
+    { questTitle: "Connect with a Mentor", questDescription: "Find a mentor in the 'Tech' industry and send them a connection request to learn more about their career path.", knowledgeCoinsReward: 30 },
+    { questTitle: "Explore Your Network", questDescription: "Find and view the profile of three alumni working in your field of interest.", knowledgeCoinsReward: 25 },
+    { questTitle: "Sharpen Your Skills", questDescription: "Read an article about a technology you want to learn and save it to your bookmarks.", knowledgeCoinsReward: 20 },
+    { questTitle: "Career Explorer", questDescription: "Find an internship opportunity on the job board and view its details.", knowledgeCoinsReward: 35 },
+];
+
+let mockQuestIndex = 0;
+
 export function Quests({ className }: { className?: string }) {
   const [quest, setQuest] = React.useState<AIQuestOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
   const { setKnowledgeCoins } = useUserState();
 
   const fetchQuest = React.useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const studentProfile = `Name: ${user.name}, Skills: ${user.profile.skills.join(', ')}, Experience: ${user.profile.experience}`;
       const platformFeatures = ['find mentors', 'apply for jobs', 'join communities', 'read articles'];
       const newQuest = await generateAIQuest({ studentProfile, platformFeatures });
       setQuest(newQuest);
     } catch (e) {
-      console.error(e);
-      setError("Failed to generate a new quest. Please try again.");
+      console.error("AI Quest generation failed. Falling back to mock quest.", e);
+      // Fallback to mock data
+      mockQuestIndex = (mockQuestIndex + 1) % mockQuests.length;
+      setQuest(mockQuests[mockQuestIndex]);
     } finally {
       setIsLoading(false);
     }
@@ -68,12 +77,6 @@ export function Quests({ className }: { className?: string }) {
             <Skeleton className="h-4 w-full rounded-md" />
             <Skeleton className="h-4 w-5/6 rounded-md" />
           </div>
-        ) : error ? (
-            <div className="flex flex-col items-center justify-center text-center text-destructive py-4">
-                <AlertTriangle className="w-8 h-8 mb-2" />
-                <p className="font-semibold">Error</p>
-                <p className="text-sm">{error}</p>
-            </div>
         ) : quest ? (
           <div>
             <h3 className="font-semibold text-lg">{quest.questTitle}</h3>
@@ -90,7 +93,7 @@ export function Quests({ className }: { className?: string }) {
                     <span className="font-semibold text-base">{quest?.knowledgeCoinsReward} Coins</span>
                 )}
             </Badge>
-            <Button size="lg" disabled={isLoading || !!error} onClick={handleCompleteQuest}>Complete Quest</Button>
+            <Button size="lg" disabled={isLoading} onClick={handleCompleteQuest}>Complete Quest</Button>
         </div>
       </CardContent>
     </Card>

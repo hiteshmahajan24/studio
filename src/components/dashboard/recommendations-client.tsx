@@ -37,6 +37,12 @@ const recommendationDetails: { [key: string]: { name: string, description: strin
   }, {} as { [key: string]: any }),
 };
 
+const mockRecommendations: Recommendation[] = [
+    { type: 'mentor', itemId: 'mentor-2', reason: "David Chen's expertise in System Design directly aligns with your interest in cloud architecture." },
+    { type: 'job', itemId: 'job1', reason: "This Frontend Developer role is a great fit for your strong React and Next.js skills." },
+    { type: 'article', itemId: 'article-1', reason: "Since you use React, this deep dive into Server Components would be a great read." },
+    { type: 'community', itemId: 'comm-2', reason: "Joining the 'AI Innovators' community will connect you with peers who share your passion for machine learning." },
+];
 
 const recommendationIcons: Record<string, React.ElementType> = {
   mentor: Handshake,
@@ -49,19 +55,18 @@ const recommendationIcons: Record<string, React.ElementType> = {
 export function RecommendationsClient({ className }: { className?: string }) {
   const [recommendations, setRecommendations] = React.useState<Recommendation[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
 
   const fetchRecommendations = React.useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     try {
         const studentProfile = `Name: ${user.name}, Skills: ${user.profile.skills.join(', ')}, Experience: ${user.profile.experience}`;
         const studentActivity = "Viewed articles on web development, applied for a frontend role, contacted a mentor in the software industry.";
         const result = await getPersonalizedRecommendations({ studentProfile, studentActivity });
         setRecommendations(result.recommendations);
     } catch (e) {
-      console.error(e);
-      setError("Failed to generate new recommendations. Please try again.");
+      console.error("AI Recommendation generation failed. Falling back to mock recommendations.", e);
+      // Fallback to mock data
+      setRecommendations(mockRecommendations);
     } finally {
       setIsLoading(false);
     }
@@ -99,12 +104,6 @@ export function RecommendationsClient({ className }: { className?: string }) {
                 </div>
             ))}
           </div>
-        ) : error ? (
-            <div className="flex flex-col items-center justify-center text-center text-destructive py-4">
-                <AlertTriangle className="w-8 h-8 mb-2" />
-                <p className="font-semibold">Error</p>
-                <p className="text-sm">{error}</p>
-            </div>
         ) : (
           recommendations.slice(0, 4).map((rec) => {
             const details = getDetails(rec.itemId);

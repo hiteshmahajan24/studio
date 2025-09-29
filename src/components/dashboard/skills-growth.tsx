@@ -29,15 +29,21 @@ const skillsData = [
   { subject: "Teamwork", A: 95, fullMark: 100 },
 ]
 
+const mockSuggestedSkills: SkillPathOutput = {
+  suggestedSkills: [
+    { name: 'Go', reason: 'Excellent for high-performance backend services and concurrency.' },
+    { name: 'Kubernetes', reason: 'The industry standard for container orchestration and managing scalable apps.' },
+    { name: 'Python', reason: 'A versatile language essential for integrating with AI/ML services.' },
+  ],
+};
+
 export function SkillsGrowth({ className }: { className?: string }) {
   const [skillPathResult, setSkillPathResult] = React.useState<SkillPathOutput | null>(null);
-  const [skillPathError, setSkillPathError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchSkills = async () => {
       setIsLoading(true);
-      setSkillPathError(null);
       try {
         const result = await skillPath({
           currentSkills: currentTechStack,
@@ -45,8 +51,8 @@ export function SkillsGrowth({ className }: { className?: string }) {
         });
         setSkillPathResult(result);
       } catch (error) {
-        console.error("Failed to fetch skill path:", error);
-        setSkillPathError("Could not load AI skill suggestions.");
+        console.error("Failed to fetch skill path, falling back to mock data:", error);
+        setSkillPathResult(mockSuggestedSkills);
       } finally {
         setIsLoading(false);
       }
@@ -94,14 +100,6 @@ export function SkillsGrowth({ className }: { className?: string }) {
                         <Skeleton className="h-3 w-full rounded-md" />
                       </div>
                     ))}
-                  </div>
-                ) : skillPathError ? (
-                  <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-sm text-destructive flex items-center gap-3">
-                    <AlertTriangle className="h-5 w-5" />
-                    <div>
-                      <p className="font-semibold">Error</p>
-                      <p>{skillPathError}</p>
-                    </div>
                   </div>
                 ) : suggestedSkills ? (
                   <div className="space-y-3">
