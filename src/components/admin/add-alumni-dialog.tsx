@@ -13,50 +13,54 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
 import { Input } from '../ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Loader2 } from 'lucide-react';
+import type { UserProfile } from '@/lib/mock-data';
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
     email: z.string().email({ message: "Please enter a valid email." }),
-    graduationYear: z.coerce.number().min(1950, "Invalid year.").max(new Date().getFullYear(), "Invalid year."),
-    major: z.string().min(2, { message: "Major is required." }),
+    education: z.object({
+        year: z.coerce.number().min(1950, "Invalid year.").max(new Date().getFullYear() + 5, "Invalid year."),
+        degree: z.string().min(2, { message: "Major is required." }),
+        university: z.string().optional(),
+    }),
 });
+
+type AddAlumniFormValues = Omit<UserProfile, 'id' | 'community' | 'leaderboardRank' | 'experience' | 'avatarId' | 'title' | 'expertise' | 'industry' | 'bio'>
 
 type AddAlumniDialogProps = {
   children: React.ReactNode;
+  onAddAlumni: (values: AddAlumniFormValues) => void;
 };
 
-export function AddAlumniDialog({ children }: AddAlumniDialogProps) {
+export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
         name: "",
         email: "",
-        graduationYear: new Date().getFullYear() - 1,
-        major: "",
+        education: {
+            year: new Date().getFullYear() - 1,
+            degree: "",
+            university: "Nexus University"
+        }
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    console.log("Adding new alumni:", values);
+    // Simulate some async action
+    await new Promise(resolve => setTimeout(resolve, 500));
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    toast({
-        title: "Alumni Added!",
-        description: `${values.name} has been added to the alumni database.`,
-    });
+    onAddAlumni(values);
 
     setIsLoading(false);
     setIsOpen(false);
@@ -104,7 +108,7 @@ export function AddAlumniDialog({ children }: AddAlumniDialogProps) {
                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
-                        name="graduationYear"
+                        name="education.year"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Graduation Year</FormLabel>
@@ -117,7 +121,7 @@ export function AddAlumniDialog({ children }: AddAlumniDialogProps) {
                     />
                     <FormField
                         control={form.control}
-                        name="major"
+                        name="education.degree"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Major</FormLabel>
