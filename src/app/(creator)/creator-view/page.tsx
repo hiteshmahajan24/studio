@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +9,11 @@ import Link from "next/link";
 
 export default function CreatorViewPage() {
   const roleViews = [
-    { role: 'Student', href: '/student/dashboard?viewAs=student', icon: Users },
-    { role: 'Admin', href: '/admin/dashboard?viewAs=admin', icon: UserCog },
-    { role: 'Faculty', href: '/faculty/dashboard?viewAs=faculty', icon: GraduationCap },
-    { role: 'Alumni', href: '/alumni/dashboard?viewAs=alumni', icon: User },
-    { role: 'Employer', href: '/employer/dashboard?viewAs=employer', icon: Briefcase },
+    { role: 'Student', href: '/student/dashboard?role=student', icon: Users },
+    { role: 'Admin', href: '/admin/dashboard?role=admin', icon: UserCog },
+    { role: 'Faculty', href: '/faculty/dashboard?role=faculty', icon: GraduationCap },
+    { role: 'Alumni', href: '/alumni/dashboard?role=alumni', icon: User },
+    { role: 'Employer', href: '/employer/dashboard?role=employer', icon: Briefcase },
   ];
 
   return (

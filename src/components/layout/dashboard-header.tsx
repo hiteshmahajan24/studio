@@ -13,26 +13,25 @@ import {
 import { Bell, Search, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ClientButton } from "./client-button";
-import { useAuth, useUser } from "@/firebase";
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { user as mockUser, type UserRole } from "@/lib/mock-data";
 
 export function DashboardHeader() {
-  const { user } = useUser();
-  const auth = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const role = searchParams.get('role') as UserRole;
 
   const handleLogout = async () => {
-    await signOut(auth);
     router.push('/login');
   };
 
-  const studentName = user?.displayName || user?.email?.split('@')[0] || "User";
+  const userName = role ? `${role.charAt(0).toUpperCase() + role.slice(1)} User` : mockUser.name;
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-semibold md:text-2xl">Welcome, {studentName}!</h1>
+        <h1 className="text-xl font-semibold md:text-2xl">Welcome, {userName}!</h1>
       </div>
       <div className="flex flex-1 items-center justify-end gap-4 md:gap-2 lg:gap-4">
         <div className="relative ml-auto flex-1 md:grow-0">
@@ -47,8 +46,7 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
             <ClientButton variant="ghost" size="icon" className="rounded-full">
               <Avatar className="h-9 w-9">
-                {user?.photoURL && <AvatarImage src={user.photoURL} alt={studentName} />}
-                <AvatarFallback>{studentName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{userName.slice(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
             </ClientButton>
           </DropdownMenuTrigger>

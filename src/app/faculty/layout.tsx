@@ -1,59 +1,27 @@
 
 'use client';
 
-import { useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { DashboardHeader } from "@/components/layout/dashboard-header";
-import { useUser } from "@/firebase";
 import { UserStateProvider } from "@/context/user-state-context";
 import { Skeleton } from '@/components/ui/skeleton';
-import { getUserRole } from '@/lib/mock-data';
+import type { UserRole } from '@/lib/mock-data';
 
 function FacultyLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isUserLoading } = useUser();
-  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const viewAsRole = searchParams.get('viewAs');
-  const userRole = user ? getUserRole(user.uid) : null;
-  
-  useEffect(() => {
-    if (isUserLoading) {
-      return; // Do nothing while loading
-    }
-
-    if (!user) {
-      router.push('/login');
-      return;
-    }
-    
-    const isSuperAdminImpersonating = userRole === 'superadmin' && viewAsRole === 'faculty';
-    const isFaculty = userRole === 'faculty';
-
-    if (!isFaculty && !isSuperAdminImpersonating) {
-      router.push('/login');
-    }
-
-  }, [isUserLoading, user, router, userRole, viewAsRole]);
-
-  if (isUserLoading || !user) {
-    return <LoadingSkeleton />;
-  }
-
-  const sidebarRole = (userRole === 'superadmin' && viewAsRole === 'faculty') ? 'faculty' : userRole;
-  if (sidebarRole !== 'faculty') {
-     return <LoadingSkeleton />;
-  }
+  const role = searchParams.get('role') as UserRole | null;
+  const displayRole = role || 'faculty';
 
   return (
     <UserStateProvider>
       <div className="flex min-h-screen w-full">
-        <SidebarNav userRole={sidebarRole} />
+        <SidebarNav userRole={displayRole} />
         <div className="flex flex-1 flex-col sm:pl-16">
           <DashboardHeader />
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">

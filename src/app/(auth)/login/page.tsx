@@ -7,8 +7,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, updateProfile } from 'firebase/auth';
-import { useAuth } from '@/firebase';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -26,39 +24,24 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { ClientOnly } from '@/components/layout/client-only';
-import { getUserRole, type UserRole } from '@/lib/mock-data';
+import { type UserRole } from '@/lib/mock-data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email.' }),
-  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
+  email: z.string().optional(),
+  password: z.string().optional(),
 });
 
-// Map emails to roles for redirection logic
-const emailToRoleMap: { [email: string]: UserRole } = {
-  'student@nexus.com': 'student',
-  'admin@nexus.com': 'admin',
-  'faculty@nexus.com': 'faculty',
-  'alumni@nexus.com': 'alumni',
-  'employer@nexus.com': 'employer',
-  'createrofblood@nexus.com': 'superadmin',
-};
-
-const roleEmails = Object.keys(emailToRoleMap);
 const availableRoles: UserRole[] = ['student', 'admin', 'faculty', 'alumni', 'employer', 'superadmin'];
 
 
 export default function LoginPage() {
-  const auth = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isGuestLoading, setIsGuestLoading] = React.useState(false);
   const [selectedRole, setSelectedRole] = React.useState<UserRole>('student');
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,7 +52,7 @@ export default function LoginPage() {
     },
   });
 
-  const getRedirectPath = (role: UserRole, isGuest: boolean = false) => {
+  const getRedirectPath = (role: UserRole) => {
     const paths: { [key in UserRole]: string } = {
       student: '/student/dashboard',
       admin: '/admin/dashboard',
@@ -78,107 +61,50 @@ export default function LoginPage() {
       employer: '/employer/dashboard',
       superadmin: '/creator-view',
     };
-    const basePath = paths[role] || '/student/dashboard';
-    return isGuest ? `${basePath}?viewAs=${role}` : basePath;
+    // Pass the role as a query parameter to be used by the layout
+    return `${paths[role]}?role=${role}`;
   };
 
-  const handleLoginSuccess = (userCredential: any, email: string) => {
-    const user = userCredential.user;
-    // For special roles, use email to determine role. Otherwise, use UID.
-    const role = emailToRoleMap[email.toLowerCase()] || getUserRole(user.uid);
-    const redirectPath = getRedirectPath(role);
-    router.push(redirectPath);
-  };
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit() {
     setIsLoading(true);
-    const lowercaseEmail = values.email.toLowerCase();
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      handleLoginSuccess(userCredential, lowercaseEmail);
-    } catch (error: any) {
-      if (error.code === 'auth/invalid-credential' && roleEmails.includes(lowercaseEmail)) {
-        try {
-          const newUserCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-          const role = emailToRoleMap[lowercaseEmail];
-          await updateProfile(newUserCredential.user, {
-            displayName: `${role.charAt(0).toUpperCase() + role.slice(1)} User`,
-          });
-          toast({
-            title: `Created ${role} account!`,
-            description: 'This special account has been created for you.',
-          });
-          handleLoginSuccess(newUserCredential, lowercaseEmail);
-        } catch (createError: any) {
-          console.error('Auto-signup Error:', createError);
-          toast({
-            variant: 'destructive',
-            title: 'Setup Failed',
-            description: createError.message || 'Could not create the special role account.',
-          });
-        }
-      } else {
-        console.error('Login Error:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: error.message || 'An unexpected error occurred. Please try again.',
-        });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function handleGuestLogin() {
-    setIsGuestLoading(true);
-    try {
-        const userCredential = await signInAnonymously(auth);
-        await updateProfile(userCredential.user, {
-            displayName: "Guest User"
-        });
-        toast({
-            title: 'Welcome, Guest!',
-            description: `You are now browsing as a ${selectedRole}.`,
-        });
-        const redirectPath = getRedirectPath(selectedRole, true);
-        router.push(redirectPath);
-    } catch (error: any) {
-        console.error('Guest Login Error:', error);
-        toast({
-            variant: 'destructive',
-            title: 'Guest Login Failed',
-            description: error.message || 'Could not sign in as guest. Please try again.',
-        });
-    } finally {
-        setIsGuestLoading(false);
-    }
+    const redirectPath = getRedirectPath(selectedRole);
+    router.push(redirectPath);
   }
 
   return (
     <ClientOnly>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Select a Role</CardTitle>
           <CardDescription>
-            Use a role-specific email to see different dashboards.
-            <br />
-            (e.g., admin@nexus.com, student@nexus.com, etc.)
+            Choose a role to view the corresponding dashboard. No password needed.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
+              <div className="space-y-2">
+                  <Label>Select a Role to View As</Label>
+                  <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as UserRole)}>
+                      <SelectTrigger>
+                          <SelectValue placeholder="Select a role..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                          {availableRoles.map(role => (
+                              <SelectItem key={role} value={role} className="capitalize">{role}</SelectItem>
+                          ))}
+                      </SelectContent>
+                  </Select>
+              </div>
+               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email (optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="m@example.com" {...field} />
+                      <Input placeholder="any@email.com" {...field} />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -187,54 +113,22 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Password (optional)</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" placeholder="any password" {...field} />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading || isGuestLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Login
+                Continue as {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
               </Button>
             </form>
           </Form>
-          
-          <div className="relative my-4">
-            <Separator />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 bg-card text-sm text-muted-foreground">
-              OR
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-                <Label>Select a Role to View As</Label>
-                <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as UserRole)}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select a role..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {availableRoles.map(role => (
-                            <SelectItem key={role} value={role} className="capitalize">{role}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
-          
-            <Button variant="outline" className="w-full" onClick={handleGuestLogin} disabled={isLoading || isGuestLoading}>
-                {isGuestLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Continue as Guest
-            </Button>
-          </div>
 
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign up
-            </Link>
+            This is a simplified login for demonstration purposes.
           </div>
         </CardContent>
       </Card>
