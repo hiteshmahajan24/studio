@@ -65,23 +65,6 @@ const navItemsByRole = {
   superadmin: [], // Superadmin has a separate view
 };
 
-const LogoIcon = () => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5 transition-transform group-hover:scale-110"
-    >
-      <path d="m12 3-8.85 3.93a1 1 0 0 0-.15 1.76l8.85 4.38a1 1 0 0 0 .3 0l8.85-4.38a1 1 0 0 0-.15-1.76L12 3Z" />
-      <path d="M20.85 8.68 12 13.06l-8.85-4.38" />
-      <path d="m12 21 8.85-4.38a1 1 0 0 0 .15-1.76L12 10.5l-8.85 4.38a1 1 0 0 0-.15 1.76L12 21Z" />
-    </svg>
-  );
-
 export function SidebarNav({ userRole }: { userRole: UserRole }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -106,8 +89,8 @@ export function SidebarNav({ userRole }: { userRole: UserRole }) {
           href={getHref(logoHref)}
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
-          <LogoIcon />
-          <span className="sr-only">NexusConnect</span>
+          <Handshake className="h-5 w-5 transition-transform group-hover:scale-110" />
+          <span className="sr-only">Alumni Setu</span>
         </Link>
         
           {navItems.map((item) => (

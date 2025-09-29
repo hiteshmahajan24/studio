@@ -19,7 +19,7 @@ const spaceGrotesk = Space_Grotesk({
 
 
 export const metadata: Metadata = {
-  title: 'NexusConnect',
+  title: '🌉 Alumni Setu',
   description: 'Your gateway to knowledge, mentorship, and opportunities.',
 };
 
