@@ -478,6 +478,8 @@ export const mockArticles: MockArticle[] = [
   { id: 'article-7', title: 'Is GraphQL Still Relevant in 2024?', authorId: 'user-1', imageId: 'article-graphql', tags: ['Web Dev', 'API'], readTime: 6, likes: 88, comments: 21 },
   { id: 'article-8', title: 'Getting Started with Pandas for Data Analysis', authorId: 'user-2', imageId: 'article-pandas', tags: ['Data Science', 'Python'], readTime: 11, likes: 210, comments: 15 },
   { id: 'article-9', title: 'Understanding CI/CD Pipelines', authorId: 'mentor-2', imageId: 'event-cloud', tags: ['DevOps', 'CI/CD'], readTime: 10, likes: 150, comments: 14 },
+  { id: 'article-10', title: 'Why I Chose Java for Enterprise', authorId: 'mentor-4', imageId: 'article-java', tags: ['Java', 'Backend'], readTime: 8, likes: 130, comments: 19 },
+  { id: 'article-11', title: 'SQL vs. NoSQL: A Modern Perspective', authorId: 'mentor-2', imageId: 'article-database', tags: ['Databases', 'Architecture'], readTime: 12, likes: 220, comments: 30 },
 ];
 
 export type AcademicCourse = {

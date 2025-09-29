@@ -7,7 +7,7 @@ import { PenSquare } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockArticles } from '@/lib/mock-data';
 import { ArticleCard } from '@/components/articles/article-card';
-import Link from 'next/link';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function AlumniArticlesPage() {
   const myArticles = mockArticles.filter(a => a.authorId.startsWith('mentor-')); // Simulate alumni articles
@@ -19,10 +19,26 @@ export default function AlumniArticlesPage() {
           <h1 className="text-3xl font-bold">Share Your Experience</h1>
           <p className="text-muted-foreground">Write articles to guide students and share your professional journey.</p>
         </div>
-        <Button>
-          <PenSquare className="mr-2" />
-          Write a New Article
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <PenSquare className="mr-2" />
+              Write a New Article
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
+              <AlertDialogDescription>
+                The article editor has not been implemented yet. This is a placeholder action.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Understood</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <Tabs defaultValue="my-articles">

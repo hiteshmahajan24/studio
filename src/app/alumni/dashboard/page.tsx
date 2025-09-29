@@ -11,6 +11,8 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import * as React from 'react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+
 
 const alumniStats = [
   { name: 'Mentees Guided', value: '5', icon: Handshake },
@@ -94,17 +96,49 @@ export default function AlumniPage() {
             <CardDescription>Contribute to the community's growth.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full">
-                <PlusCircle className="mr-2" /> Post a Job Opening
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="w-full">
+                    <PlusCircle className="mr-2" /> Post a Job Opening
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    The form to post a job has not been implemented yet. This is a placeholder action.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Understood</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Button variant="outline" className="w-full" asChild>
-                <Link href="/alumni/articles">
+                <Link href="/alumni/articles?role=alumni">
                     <Newspaper className="mr-2" /> Write an Article
                 </Link>
             </Button>
-            <Button variant="outline" className="w-full">
-                <Users className="mr-2" /> Refer a Candidate
-            </Button>
+             <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                    <Users className="mr-2" /> Refer a Candidate
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Feature Not Implemented</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    The candidate referral form has not been implemented yet. This is a placeholder action.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Understood</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardContent>
         </Card>
       </div>
@@ -163,7 +197,7 @@ export default function AlumniPage() {
                             </div>
                         </div>
                         <Button variant="ghost" size="sm" asChild>
-                            <Link href="/alumni/networking">
+                            <Link href="/alumni/networking?role=alumni">
                                 Connect
                             </Link>
                         </Button>
