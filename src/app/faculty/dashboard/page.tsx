@@ -51,7 +51,7 @@ export default function FacultyPage() {
                         <CardDescription>An overview of your currently assigned courses.</CardDescription>
                     </div>
                     <Button variant="outline" size="sm" asChild>
-                        <Link href="/student/academics"><PlusCircle className="mr-2"/> New Assignment</Link>
+                        <Link href="/faculty/assignments"><PlusCircle className="mr-2"/> New Assignment</Link>
                     </Button>
                 </div>
             </CardHeader>
@@ -73,7 +73,7 @@ export default function FacultyPage() {
                                 <TableCell>{course.progress}%</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="ghost" size="sm" asChild>
-                                        <Link href="/student/academics">Manage</Link>
+                                        <Link href="/faculty/assignments">Manage</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -89,7 +89,7 @@ export default function FacultyPage() {
             </CardHeader>
             <CardContent className="space-y-4">
                  <Button className="w-full" asChild>
-                    <Link href="/student/mentorship">
+                    <Link href="/faculty/mentorship">
                         <Handshake className="mr-2"/> View 3 Pending Requests
                     </Link>
                 </Button>
