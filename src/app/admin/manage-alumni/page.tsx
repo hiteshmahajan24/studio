@@ -2,35 +2,10 @@
 'use client';
 
 import * as React from 'react';
-import {
-  MoreHorizontal,
-  PlusCircle,
-  File,
-  Upload,
-} from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from '@/components/ui/select';
+import { MoreHorizontal, PlusCircle, File, Upload, Loader2, AlertTriangle, Wand2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +13,7 @@ import { allUsers, type UserProfile } from '@/lib/mock-data';
 import { AddAlumniDialog } from '@/components/admin/add-alumni-dialog';
 import { ClientOnly } from '@/components/layout/client-only';
 import { useToast } from '@/hooks/use-toast';
+import { mapCsvToAlumni } from '@/ai/flows/map-csv-to-alumni';
 
 const alumniData = allUsers.filter(u => u.community === 'Alumni');
 
@@ -47,6 +23,7 @@ export default function AlumniDatabasePage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [yearFilter, setYearFilter] = React.useState('all');
   const [majorFilter, setMajorFilter] = React.useState('all');
+  const [isImporting, setIsImporting] = React.useState(false);
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -59,6 +36,8 @@ export default function AlumniDatabasePage() {
         const searchTermLower = searchTerm.toLowerCase();
         return (
             (alumnus.name.toLowerCase().includes(searchTermLower) || 
+             alumnus.email.toLowerCase().includes(searchTermLower) ||
+             (alumnus.currentCompany || '').toLowerCase().includes(searchTermLower) ||
              alumnus.title.toLowerCase().includes(searchTermLower) || 
              alumnus.education.degree.toLowerCase().includes(searchTermLower)) &&
             (yearFilter === 'all' || alumnus.education.year === yearFilter) &&
@@ -68,18 +47,18 @@ export default function AlumniDatabasePage() {
     setDisplayedAlumni(filtered);
   }, [searchTerm, yearFilter, majorFilter, allAlumni]);
 
-  const handleAddAlumni = (newAlumnusData: Omit<UserProfile, 'id' | 'community' | 'leaderboardRank' | 'experience' | 'avatarId'>) => {
+  const handleAddAlumni = (newAlumnusData: any) => {
     const newAlumnus: UserProfile = {
       id: `user-${Date.now()}`,
       ...newAlumnusData,
-      title: 'Alumni',
+      title: newAlumnusData.title || 'Alumni',
       avatarId: `mentor-${(Math.floor(Math.random() * 6) + 1)}`, // random avatar
       expertise: [],
       industry: 'N/A',
-      bio: '',
+      bio: 'Manually added by admin.',
       community: 'Alumni',
       leaderboardRank: 999,
-      experience: [],
+      experience: newAlumnusData.currentCompany ? [{ role: newAlumnusData.title, company: newAlumnusData.currentCompany, period: 'Present' }] : [],
     };
 
     setAllAlumni(prevAlumni => [newAlumnus, ...prevAlumni]);
@@ -91,17 +70,19 @@ export default function AlumniDatabasePage() {
   }
 
   const handleExport = () => {
-    const headers = ['Name', 'Title', 'Graduation Year', 'Major', 'Email'];
+    const headers = ['Name', 'Email', 'Phone', 'Address', 'Graduation Year', 'Major', 'Company', 'Role'];
     const csvRows = [
       headers.join(','),
       ...displayedAlumni.map((alumnus) =>
         [
           `"${alumnus.name.replace(/"/g, '""')}"`,
-          `"${alumnus.title.replace(/"/g, '""')}"`,
+          alumnus.email,
+          alumnus.phone || '',
+          `"${alumnus.address?.replace(/"/g, '""') || ''}"`,
           alumnus.education.year,
           alumnus.education.degree,
-          // This is a mock value, it would come from the user object in a real app
-          `${alumnus.name.split(' ')[0].toLowerCase()}@nexus.edu`
+          `"${alumnus.currentCompany?.replace(/"/g, '""') || ''}"`,
+          `"${alumnus.title.replace(/"/g, '""')}"`,
         ].join(',')
       ),
     ];
@@ -130,52 +111,54 @@ export default function AlumniDatabasePage() {
   const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
+    
+    setIsImporting(true);
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
         try {
             const text = e.target?.result as string;
-            const rows = text.split('\n').slice(1); // Skip header row
-            const newAlumni: UserProfile[] = rows.map((row, index) => {
-                const columns = row.split(',');
-                if (columns.length < 4) return null;
+            const { alumni: parsedAlumni } = await mapCsvToAlumni({ csvData: text });
 
-                return {
+            if (parsedAlumni && parsedAlumni.length > 0) {
+              const newAlumni: UserProfile[] = parsedAlumni.map((record, index) => ({
                     id: `import-${Date.now()}-${index}`,
-                    name: columns[0]?.trim(),
+                    name: record.name,
+                    email: record.email,
+                    phone: record.phone,
+                    address: record.address,
                     education: {
-                        degree: columns[3]?.trim(),
+                        degree: record.major,
                         university: 'Imported',
-                        year: columns[2]?.trim()
+                        year: String(record.graduationYear)
                     },
-                    title: columns[1]?.trim(),
+                    currentCompany: record.currentCompany,
+                    title: record.role || 'Alumni',
                     community: 'Alumni',
                     avatarId: `mentor-${(Math.floor(Math.random() * 6) + 1)}`,
                     expertise: [],
                     industry: 'N/A',
-                    bio: 'Imported via CSV.',
+                    bio: 'Imported via AI-parsed CSV.',
                     leaderboardRank: 999,
-                    experience: [],
-                };
-            }).filter((a): a is UserProfile => a !== null && !!a.name);
+                    experience: record.currentCompany ? [{ role: record.role || 'Alumni', company: record.currentCompany, period: 'Present' }] : [],
+                }));
 
-            if (newAlumni.length > 0) {
               setAllAlumni(prev => [...newAlumni, ...prev]);
               toast({
-                  title: "Import Successful",
-                  description: `${newAlumni.length} alumni have been added to the database.`
+                  title: "AI Import Successful",
+                  description: `${newAlumni.length} alumni have been intelligently parsed and added.`
               });
             } else {
-              throw new Error("No valid data found in CSV.")
+              throw new Error("AI could not parse valid data from the CSV.")
             }
         } catch (error) {
+            console.error(error);
             toast({
                 variant: 'destructive',
                 title: "Import Failed",
-                description: "Could not parse the CSV file. Please check the format and try again."
+                description: error instanceof Error ? error.message : "Could not parse the file. Please check format and try again."
             });
         } finally {
-            // Reset file input value to allow re-uploading the same file
+            setIsImporting(false);
             if(fileInputRef.current) fileInputRef.current.value = "";
         }
     };
@@ -187,7 +170,7 @@ export default function AlumniDatabasePage() {
     <div className="space-y-8">
        <div>
         <h1 className="text-3xl font-bold">Alumni Database</h1>
-        <p className="text-muted-foreground">Search, manage, and view all alumni in the network.</p>
+        <p className="text-muted-foreground">Search, manage, and import alumni from the network.</p>
       </div>
         <Card>
             <ClientOnly>
@@ -195,7 +178,7 @@ export default function AlumniDatabasePage() {
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 flex-1">
                             <Input 
-                                placeholder="Search by name, title, major..." 
+                                placeholder="Search by name, email, company..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="max-w-sm"
@@ -223,9 +206,9 @@ export default function AlumniDatabasePage() {
                         </div>
                         <div className="flex items-center gap-2">
                              <input type="file" ref={fileInputRef} onChange={handleFileImport} accept=".csv" className="hidden" />
-                             <Button size="sm" variant="outline" onClick={handleImportClick}>
-                                <Upload className="mr-2 h-3.5 w-3.5" />
-                                Import
+                             <Button size="sm" variant="outline" onClick={handleImportClick} disabled={isImporting}>
+                                {isImporting ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Wand2 className="mr-2 h-3.5 w-3.5" />}
+                                AI Import
                             </Button>
                              <Button size="sm" variant="outline" onClick={handleExport}>
                                 <File className="mr-2 h-3.5 w-3.5" />
@@ -245,7 +228,8 @@ export default function AlumniDatabasePage() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Title</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Company</TableHead>
                                 <TableHead>Graduation Year</TableHead>
                                 <TableHead>Major</TableHead>
                                 <TableHead>
@@ -257,7 +241,8 @@ export default function AlumniDatabasePage() {
                             {displayedAlumni.map(alumnus => (
                                 <TableRow key={alumnus.id}>
                                     <TableCell className="font-medium">{alumnus.name}</TableCell>
-                                    <TableCell>{alumnus.title}</TableCell>
+                                    <TableCell className="text-muted-foreground">{alumnus.email}</TableCell>
+                                    <TableCell>{alumnus.currentCompany || 'N/A'}</TableCell>
                                     <TableCell>{alumnus.education.year}</TableCell>
                                     <TableCell>{alumnus.education.degree}</TableCell>
                                     <TableCell>

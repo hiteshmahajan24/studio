@@ -160,6 +160,9 @@ type Education = {
 export type UserProfile = {
   id: string;
   name: string;
+  email: string;
+  phone?: string;
+  address?: string;
   title: string;
   avatarId: string;
   expertise: string[];
@@ -169,6 +172,7 @@ export type UserProfile = {
   leaderboardRank: number;
   experience: Experience[];
   education: Education;
+  currentCompany?: string;
 }
 
 export type Mentor = Omit<UserProfile, 'experience' | 'education'> & {
@@ -180,6 +184,7 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-1',
     name: 'Dr. Evelyn Reed', 
+    email: 'evelyn.reed@nexus.edu',
     title: 'AI Research Scientist', 
     avatarId: 'mentor-1', 
     expertise: ['AI/ML', 'Python', 'Research'],
@@ -192,7 +197,9 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-2',
     name: 'David Chen', 
+    email: 'david.chen@alum.nexus.edu',
     title: 'Principal Engineer @ Tech Solutions', 
+    currentCompany: 'Tech Solutions',
     avatarId: 'mentor-2', 
     expertise: ['System Design', 'Cloud Architecture', 'DevOps'],
     industry: 'Software',
@@ -204,7 +211,9 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-3',
     name: 'Sarah Jones', 
+    email: 'sarah.jones@alum.nexus.edu',
     title: 'UX Design Lead', 
+    currentCompany: 'Creative Co.',
     avatarId: 'mentor-3', 
     expertise: ['UX/UI', 'Figma', 'User Research'],
     industry: 'Design',
@@ -216,7 +225,9 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-4',
     name: 'Marcus Holloway', 
+    email: 'marcus.holloway@industry.com',
     title: 'Cybersecurity Analyst', 
+    currentCompany: 'SecureNet',
     avatarId: 'mentor-4', 
     expertise: ['Security', 'Networking', 'Penetration Testing'],
     industry: 'Cybersecurity',
@@ -228,7 +239,9 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-5',
     name: 'Priya Sharma', 
+    email: 'priya.sharma@alum.nexus.edu',
     title: 'Product Manager @ FinTech Corp', 
+    currentCompany: 'FinTech Corp',
     avatarId: 'mentor-5', 
     expertise: ['Product Management', 'Agile', 'Market Analysis'],
     industry: 'FinTech',
@@ -240,7 +253,9 @@ export const allMentors: Mentor[] = [
   { 
     id: 'mentor-6',
     name: 'James Carter', 
+    email: 'james.carter@industry.com',
     title: 'Mobile Engineering Lead', 
+    currentCompany: 'AppSphere',
     avatarId: 'mentor-6', 
     expertise: ['iOS', 'Android', 'React Native'],
     industry: 'Mobile',
@@ -255,14 +270,15 @@ export const allUsers: UserProfile[] = [
   ...allMentors.map(m => ({
     ...m,
     experience: [
-      { role: m.title, company: m.industry === 'Tech' ? 'Innovate Inc.' : 'Creative Co.', period: '2020 - Present'},
+      { role: m.title, company: m.currentCompany || (m.industry === 'Tech' ? 'Innovate Inc.' : 'Creative Co.'), period: '2020 - Present'},
       { role: 'Senior Developer', company: 'Legacy Systems', period: '2017 - 2020'}
     ],
-    education: { degree: 'M.S. in Computer Science', university: 'State University', year: '2017'}
+    education: { degree: 'M.S. in Computer Science', university: 'Nexus University', year: '2017'}
   })),
   {
     id: 'user-1',
     name: 'Alex Martinez',
+    email: 'alex.martinez@student.nexus.edu',
     title: 'Software Engineering Student',
     avatarId: 'student-avatar',
     expertise: ['React', 'TypeScript', 'Next.js'],
@@ -270,12 +286,13 @@ export const allUsers: UserProfile[] = [
     bio: 'A passionate student focusing on modern web technologies. Eager to learn and contribute to open-source projects.',
     community: 'Student',
     experience: [],
-    education: { degree: 'B.S. in Computer Science', university: 'State University', year: '2025 (Expected)'},
+    education: { degree: 'B.S. in Computer Science', university: 'Nexus University', year: '2025 (Expected)'},
     leaderboardRank: 12,
   },
     {
     id: 'user-2',
     name: 'Jessica Miller',
+    email: 'jessica.miller@student.nexus.edu',
     title: 'Data Science Student',
     avatarId: 'mentor-5', // Reusing for mock
     expertise: ['Python', 'Pandas', 'Scikit-learn', 'AI/ML'],
@@ -283,7 +300,7 @@ export const allUsers: UserProfile[] = [
     bio: 'Fascinated by data and the stories it can tell. Currently working on a project for sentiment analysis.',
     community: 'Student',
     experience: [],
-    education: { degree: 'B.S. in Statistics', university: 'State University', year: '2025 (Expected)'},
+    education: { degree: 'B.S. in Statistics', university: 'Nexus University', year: '2025 (Expected)'},
     leaderboardRank: 2,
   }
 ];

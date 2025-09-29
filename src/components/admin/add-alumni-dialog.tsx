@@ -24,14 +24,18 @@ import type { UserProfile } from '@/lib/mock-data';
 const formSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters." }),
     email: z.string().email({ message: "Please enter a valid email." }),
+    phone: z.string().optional(),
+    address: z.string().optional(),
     education: z.object({
         year: z.coerce.number().min(1950, "Invalid year.").max(new Date().getFullYear() + 5, "Invalid year."),
         degree: z.string().min(2, { message: "Major is required." }),
         university: z.string().optional(),
     }),
+    currentCompany: z.string().optional(),
+    title: z.string().optional(),
 });
 
-type AddAlumniFormValues = Omit<UserProfile, 'id' | 'community' | 'leaderboardRank' | 'experience' | 'avatarId' | 'title' | 'expertise' | 'industry' | 'bio'>
+type AddAlumniFormValues = Omit<UserProfile, 'id' | 'community' | 'leaderboardRank' | 'experience' | 'avatarId' | 'expertise' | 'industry' | 'bio'>;
 
 type AddAlumniDialogProps = {
   children: React.ReactNode;
@@ -47,20 +51,24 @@ export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps)
     defaultValues: {
         name: "",
         email: "",
+        phone: "",
+        address: "",
         education: {
             year: new Date().getFullYear() - 1,
             degree: "",
             university: "Nexus University"
-        }
+        },
+        currentCompany: "",
+        title: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    // Simulate some async action
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    onAddAlumni(values);
+    // The 'title' field from the form is the main role, 'experience' will be empty for new manual entries.
+    onAddAlumni({ ...values, title: values.title || 'Alumni' });
 
     setIsLoading(false);
     setIsOpen(false);
@@ -70,7 +78,7 @@ export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps)
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Add Alumni Manually</DialogTitle>
           <DialogDescription>
@@ -78,7 +86,7 @@ export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps)
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 max-h-[70vh] overflow-y-auto pr-4">
                 <FormField
                     control={form.control}
                     name="name"
@@ -100,6 +108,32 @@ export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps)
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                             <Input placeholder="john.doe@email.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Phone Number</FormLabel>
+                        <FormControl>
+                            <Input placeholder="(123) 456-7890" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                            <Input placeholder="123 Main St, Anytown, USA" {...field} />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
@@ -127,6 +161,34 @@ export function AddAlumniDialog({ children, onAddAlumni }: AddAlumniDialogProps)
                             <FormLabel>Major</FormLabel>
                             <FormControl>
                                 <Input placeholder="e.g., Computer Science" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                 <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="currentCompany"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Current Company</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., Innovate Inc." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Role/Title</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., Software Engineer" {...field} />
                             </FormControl>
                             <FormMessage />
                             </FormItem>
