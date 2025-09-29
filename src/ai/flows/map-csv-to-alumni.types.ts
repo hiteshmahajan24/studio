@@ -1,5 +1,4 @@
 
-'use server';
 import { z } from 'zod';
 
 // Schema for a single Alumni record, mirroring the UserProfile structure for alumni
