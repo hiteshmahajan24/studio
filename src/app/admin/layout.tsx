@@ -62,11 +62,16 @@ function LoadingSkeleton() {
           </header>
           <main className="flex-1 space-y-8 p-4 md:p-6 lg:p-8">
              <div className="space-y-8 animate-pulse">
-                <Skeleton className="h-[100px]" />
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    <Skeleton className="h-[200px]" />
-                    <Skeleton className="h-[200px]" />
-                    <Skeleton className="h-[200px]" />
+                <Skeleton className="h-[60px]" />
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <Skeleton className="h-[90px]" />
+                    <Skeleton className="h-[90px]" />
+                    <Skeleton className="h-[90px]" />
+                    <Skeleton className="h-[90px]" />
+                </div>
+                 <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
+                    <Skeleton className="lg:col-span-3 h-[350px]" />
+                    <Skeleton className="lg:col-span-2 h-[350px]" />
                 </div>
             </div>
           </main>
